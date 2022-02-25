@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 
+#include "bit_algorithm.hpp"
 #include "bit.hpp"
 
 namespace bit {
@@ -11,23 +12,23 @@ template<class WordType, class Allocator = std::allocator<WordType>>
 class bit_vector {
     private:
         size_t length_;
-        size_t digits = bit::binary_digits<WordType>::value;
+        size_t digits = binary_digits<WordType>::value;
         std::vector<WordType, Allocator> word_vector;
-        bit::bit_iterator<decltype(std::begin(word_vector))> head;
+        bit_iterator<decltype(std::begin(word_vector))> head;
 
 
     public:
         /*
          * Types and typedefs
          */
-        using value_type = bit::bit_value;
+        using value_type = bit_value;
         using allocator_type = Allocator;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
-        using reference = bit::bit_reference<WordType>;
+        using reference = bit_reference<WordType>;
         using const_reference = const reference;
-        using pointer = bit::bit_pointer<WordType>;
-        using iterator = bit::bit_iterator<decltype(std::begin(word_vector))>;
+        using pointer = bit_pointer<WordType>;
+        using iterator = bit_iterator<decltype(std::begin(word_vector))>;
         using const_iterator = const iterator;
         
         /*
@@ -86,10 +87,8 @@ class bit_vector {
         constexpr const_reference front() const {return head[0];};
         constexpr reference back() {return head[length_ - 1];};
         constexpr const_reference back() const {return head[length_ - 1];};
-
         constexpr WordType* data() noexcept {return length_ ? &(word_vector[0]) : 0;};
         constexpr const WordType* data() const noexcept {return length_ ? &(word_vector[0]) : 0;};
-
 
         /* 
          * Iterators
@@ -117,8 +116,45 @@ class bit_vector {
          */
         constexpr void clear() noexcept {word_vector.clear(); length_ = 0;};
         constexpr iterator insert(const_iterator pos, const value_type& value) {
-                
+            if (this->capacity() == length_ - 1) {
+                word_vector.push_back(0U);
+            }
+            shift_right(head + pos, head + length_, 1);
+            head[pos] = value;
+            length_ += 1;
+            return head + pos;
         };
+        constexpr iterator insert(const_iterator pos, size_type count, const value_type& value) {
+            while (this->capacity() <= length_ - count) {
+                word_vector.push_back(0U);
+            }
+            shift_right(head + pos, head + length_, count);
+            fill(head + pos, head + pos + count, value);
+            length_ += count;
+            return head + pos;
+        };
+        constexpr iterator insert(const_iterator pos, iterator first, iterator last) {
+            auto count = distance(first, last);    
+            while (this->capacity() <= length_ - count) {
+                word_vector.push_back(0U);
+            }
+            shift_right(head + pos, head + length_, count);
+            copy(first, last, head + pos);
+            length_ += count;
+        };
+        constexpr iterator erase(const_iterator pos) {
+            // TODO need to resize?
+            shift_left(head + pos, head + length_, 1);    
+            length_ -= 1;
+            return head + pos;
+        };
+        constexpr iterator erase(const_iterator first, const_iterator last) {
+            // TODO resize?
+            // TODO return correct iterator
+            auto count = distance(first, last);    
+            shift_left(first, first + length_, count);
+            length_ -= count;
+            return last
 };
 
 }
