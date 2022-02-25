@@ -32,7 +32,7 @@ set_property(GLOBAL PROPERTY CXX_STANDARD 20)
 set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
 
 # specify global include directories
-include_directories(./ext/bit/cpp)
+include_directories(./include ./ext/bit/cpp ./ext/bit-algorithms/include)
 
 # specify test-specific flags
 target_compile_options(tests PUBLIC -O0 -g -fno-omit-frame-pointer -pg)
@@ -40,7 +40,7 @@ target_compile_options(tests PUBLIC -O0 -g -fno-omit-frame-pointer -pg)
 # specify test-specific libraries
 find_library(GTEST NAMES gtest gtest_main)
 find_path(GTEST_INCLUDE "gtest/gtest.h")
-target_include_directories(tests PRIVATE ${GTEST_INCLUDE} include/)
+target_include_directories(tests PRIVATE ${GTEST_INCLUDE})
 
 target_link_libraries(tests PRIVATE ${GTEST} -pthread)
 
