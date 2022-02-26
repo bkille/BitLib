@@ -37,12 +37,28 @@ include_directories(./include ./ext/bit/cpp ./ext/bit-algorithms/include)
 # specify test-specific flags
 target_compile_options(tests PUBLIC -O0 -g -fno-omit-frame-pointer -pg)
 
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+FetchContent_MakeAvailable(googletest)
+
 # specify test-specific libraries
 find_library(GTEST NAMES gtest)
 find_library(GTEST_MAIN NAMES gtest_main)
 find_path(GTEST_INCLUDE "gtest/gtest.h")
 target_include_directories(tests PRIVATE ${GTEST_INCLUDE})
-
 target_link_libraries(tests PRIVATE ${GTEST} ${GTEST_MAIN} -pthread)
 
 install(TARGETS tests DESTINATION .)
+
+enable_testing()
+add_test(NAME VectorTests COMMAND tests)
+add_custom_target(check
+    COMMAND env CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND} --verbose
+    DEPENDS tests)
+
+
