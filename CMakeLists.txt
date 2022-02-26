@@ -49,8 +49,9 @@ FetchContent_MakeAvailable(googletest)
 # specify test-specific libraries
 #find_library(GTEST NAMES gtest)
 #find_library(GTEST_MAIN NAMES gtest_main)
-find_path(GTEST_INCLUDE "gtest/gtest.h")
-target_include_directories(tests PRIVATE ${GTEST_INCLUDE})
+#find_path(GTEST_INCLUDE "gtest/gtest.h")
+#target_include_directories(tests PRIVATE ${GTEST_INCLUDE})
+include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest)
 target_link_libraries(tests PRIVATE gtest_main -pthread)
 
 install(TARGETS tests DESTINATION .)
