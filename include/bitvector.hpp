@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 #include "bit_algorithm.hpp"
 #include "bit.hpp"
@@ -136,28 +137,51 @@ class bit_vector {
             return begin() + d;
         };
         constexpr iterator insert(const_iterator pos, iterator first, iterator last) {
-            const auto count = distance(first, last);    
+            const auto d = distance(begin(), pos);
+            const size_t count = distance(first, last);    
             while (capacity() <= (length_ > count ? length_ - count : 0)) {
                 word_vector.push_back(0U);
             }
-            shift_right(begin() + pos, begin() + length_, count);
-            copy(first, last, begin() + pos);
+            shift_right(begin() + d, begin() + length_, count);
+            copy(first, last, begin() + d);
             length_ += count;
+            return begin() + d;
         };
         constexpr iterator erase(const_iterator pos) {
-            // TODO need to resize?
-            shift_left(begin() + pos, begin() + length_, 1);    
+            const auto d = distance(begin(), pos);
+            shift_left(pos, begin() + length_, 1);    
             length_ -= 1;
-            return begin() + pos;
+            return pos;
         };
         constexpr iterator erase(const_iterator first, const_iterator last) {
-            // TODO resize?
             // TODO return correct iterator
             auto count = distance(first, last);    
             shift_left(first, first + length_, count);
             length_ -= count;
             return last;
         }
+        constexpr void push_back(const value_type& value) {
+            if (this->capacity() <= length_ - 1) {
+                word_vector.push_back(0U);
+            }
+            begin()[length_] = value;
+            length_ += 1;
+            return;
+        };
+        constexpr void resize(size_type count) {
+            word_vector.resize(std::ceil(float(count) / digits));
+            length_ = count;
+            return;
+        };
+        constexpr void resize(size_type count, const value_type& value) {
+            auto old_length = length_;
+            word_vector.resize(std::ceil(float(count) / digits));
+            length_ = count;
+            if (length_ > old_length) {
+                fill(begin() + length_, end(), value);
+            }
+            return;
+        };
 };
 
 }

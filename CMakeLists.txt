@@ -38,10 +38,11 @@ include_directories(./include ./ext/bit/cpp ./ext/bit-algorithms/include)
 target_compile_options(tests PUBLIC -O0 -g -fno-omit-frame-pointer -pg)
 
 # specify test-specific libraries
-find_library(GTEST NAMES gtest gtest_main)
+find_library(GTEST NAMES gtest)
+find_library(GTEST_MAIN NAMES gtest_main)
 find_path(GTEST_INCLUDE "gtest/gtest.h")
 target_include_directories(tests PRIVATE ${GTEST_INCLUDE})
 
-target_link_libraries(tests PRIVATE ${GTEST} -pthread)
+target_link_libraries(tests PRIVATE ${GTEST} ${GTEST_MAIN} -pthread)
 
 install(TARGETS tests DESTINATION .)
