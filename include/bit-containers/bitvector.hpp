@@ -23,6 +23,7 @@ class bit_vector {
          * Types and typedefs
          */
         using value_type = bit_value;
+        using base_type = WordType;
         using allocator_type = Allocator;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
@@ -41,7 +42,7 @@ class bit_vector {
         constexpr bit_vector(size_t N) : word_vector(std::ceil(float(N) / digits)), length_(N) {};
         constexpr bit_vector(std::string_view s) : word_vector(std::ceil(float(s.length()) / digits)), length_(s.length()) {
             for (size_t i = 0; i < s.length(); ++i) {
-                word_vector[i] = s[i] & static_cast<WordType>(1);
+                begin()[i] = bit_value(static_cast<WordType>(s[i] & static_cast<WordType>(1)));
             }
         }; 
 

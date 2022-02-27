@@ -17,7 +17,7 @@ set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
 add_compile_options(-std=c++20 -march=native -pedantic -Wall -Wextra -Wfatal-errors)
 include_directories("include/" "ext/simdpp")
 
-file(GLOB TEST_SOURCES "tests/*.cpp")
+file(GLOB TEST_SOURCES "tests/unit-tests/*.cpp")
 add_executable(tests ${TEST_SOURCES})
 ################
 # Benchmarking #
