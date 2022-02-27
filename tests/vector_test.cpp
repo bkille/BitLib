@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <math.h>
 
-#include "bitvector.hpp"
+#include "bit-containers/bit-containers.hpp"
 
 class VectorTest : public testing::Test {
     protected:
@@ -185,9 +185,5 @@ TEST_F(VectorTest, Erase1) {
     EXPECT_TRUE(std::equal(v3_.begin(), v3_.end(), v3_copy.begin() + 1));
     EXPECT_EQ(std::distance(v3_.begin(), bitret), v3_copy.size() - 2);
 }
-
-
-
-
 
 

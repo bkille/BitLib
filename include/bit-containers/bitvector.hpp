@@ -4,8 +4,8 @@
 #include <iostream>
 #include <algorithm>
 
-#include "bit_algorithm.hpp"
-#include "bit.hpp"
+#include "bit-iterator/bit.hpp"
+#include "bit-algorithms/bit_algorithm.hpp"
 
 namespace bit {
 
@@ -36,7 +36,7 @@ class bit_vector {
          * Constructors, copies and moves...
          */
         constexpr bit_vector() : word_vector{}, length_(0) {};
-        constexpr bit_vector(const bit::bit_vector<unsigned char>& other)
+        constexpr bit_vector(const bit_vector<WordType>& other)
             : word_vector{other.word_vector.begin(), other.word_vector.end()}, length_(other.length_) {};
         constexpr bit_vector(size_t N) : word_vector(std::ceil(float(N) / digits)), length_(N) {};
         constexpr bit_vector(std::string_view s) : word_vector(std::ceil(float(s.length()) / digits)), length_(s.length()) {

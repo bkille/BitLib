@@ -1,3 +1,4 @@
+option(BUILD_BENCHMARKS "Build Google Bechmarks" OFF)
 set(CMAKE_C_COMPILER "/usr/bin/gcc-11")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
 cmake_minimum_required(VERSION 3.14)
@@ -8,35 +9,46 @@ project(Bit-Vector VERSION 0.1)
 # set output directory of builds
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option(BUILD_BENCHMARKS "Build Google Bechmarks" OFF)
-
-# specify global compiler flags
-add_compile_options(-std=c++20 -march=native -pedantic -Wall -Wextra -Wfatal-errors)
-
-# add the tests executable
-file(GLOB TEST_SOURCES "test/*.cpp")
-add_executable(tests ${TEST_SOURCES})
-
-# configure benchmarks
-#if (BUILD_BENCHMARKS)
-    #add_executable(benchmarks src/benchmarks/benchmark_main.cc)
-    #target_compile_options(benchmarks PUBLIC -O3 -DNDEBUG -mtune=native)
-    #find_package(benchmark)
-    #target_link_libraries(benchmarks benchmark::benchmark)
-    #target_include_directories(benchmarks PRIVATE ./ext/libsimdpp ./include ./ext/libsimdpp ./ext/bit)
-    #install(TARGETS benchmarks DESTINATION .)
-#endif()
-
 # specify the C++ standard
 set_property(GLOBAL PROPERTY CXX_STANDARD 20)
 set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
 
-# specify global include directories
-include_directories(./include ./ext/bit/cpp ./ext/bit-algorithms/include)
+# specify global compiler flags
+add_compile_options(-std=c++20 -march=native -pedantic -Wall -Wextra -Wfatal-errors)
+include_directories("include/" "ext/simdpp")
 
+file(GLOB TEST_SOURCES "tests/*.cpp")
+add_executable(tests ${TEST_SOURCES})
+################
+# Benchmarking #
+################
+if (BUILD_BENCHMARKS)
+    # add the benchmarks executable
+    file(GLOB BENCH_SOURCES "tests/benchmarks/*.cc")
+    add_executable(benchmarks ${BENCH_SOURCES})
+    include(FetchContent)
+    FetchContent_Declare(
+        googlebench
+        GIT_REPOSITORY git@github.com:google/benchmark.git
+        GIT_TAG 0d98dba29d66e93259db7daa53a9327df767a415 #v1.6.1
+    )
+    # For Windows: Prevent overriding the parent project's compiler/linker settings
+    FetchContent_MakeAvailable(googlebench)
+
+    # specify test-specific libraries
+    include_directories(${googlebench_SOURCE_DIR}/benchmark/include)
+    target_link_libraries(benchmarks PRIVATE benchmark::benchmark -pthread)
+
+    target_compile_options(benchmarks PUBLIC -O3 -DNDEBUG -mtune=native)
+    install(TARGETS benchmarks DESTINATION .)
+endif()
+
+
+###########
+# Testing #
+###########
 # specify test-specific flags
 target_compile_options(tests PUBLIC -O0 -g -fno-omit-frame-pointer -pg)
-
 
 include(FetchContent)
 FetchContent_Declare(
@@ -47,12 +59,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 # specify test-specific libraries
-#find_library(GTEST NAMES gtest)
-#find_library(GTEST_MAIN NAMES gtest_main)
-#find_path(GTEST_INCLUDE "gtest/gtest.h")
-#target_include_directories(tests PRIVATE ${GTEST_INCLUDE})
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest)
-target_link_libraries(tests PRIVATE gtest_main -pthread)
+target_link_libraries(tests PRIVATE gtest gtest_main -pthread)
 
 install(TARGETS tests DESTINATION .)
 
