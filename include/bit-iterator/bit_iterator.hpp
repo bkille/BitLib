@@ -153,15 +153,15 @@ template <class T>
 constexpr bit_iterator<Iterator>::bit_iterator(
     const bit_iterator<T>& other
 )
-: _current(other._current)
-, _position(other._position)
+: _current(other.base())
+, _position(other.position())
 {
 }
 
 // Explicitly constructs an aligned bit iterator from an iterator
 template <class Iterator>
 constexpr bit_iterator<Iterator>::bit_iterator(
-    iterator_type i
+    const iterator_type i
 )
 : _current(i)
 , _position(0)
@@ -171,7 +171,7 @@ constexpr bit_iterator<Iterator>::bit_iterator(
 // Explicitly constructs an unaligned bit iterator from an iterator
 template <class Iterator>
 constexpr bit_iterator<Iterator>::bit_iterator(
-    iterator_type i, 
+    const iterator_type i, 
     size_type pos
 )
 : _current(i)

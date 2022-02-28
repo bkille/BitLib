@@ -187,3 +187,7 @@ TYPED_TEST(VectorTest, Erase1) {
     EXPECT_TRUE(std::equal(this->v3_.begin(), this->v3_.end(), v3_copy.begin() + 1));
     EXPECT_EQ(std::distance(this->v3_.begin(), bitret), v3_copy.size() - 2);
 }
+
+TYPED_TEST(VectorTest, Print) {
+    std::cout << this->v3_ << std::endl;
+}

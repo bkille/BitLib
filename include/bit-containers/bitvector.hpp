@@ -31,7 +31,7 @@ class bit_vector {
         using const_reference = const reference;
         using pointer = bit_pointer<WordType>;
         using iterator = bit_iterator<decltype(std::begin(word_vector))>;
-        using const_iterator = iterator const;
+        using const_iterator = bit_iterator<const decltype(std::begin(word_vector))>;
         
         /*
          * Constructors, copies and moves...
@@ -97,10 +97,10 @@ class bit_vector {
          */
         constexpr iterator begin() noexcept {return iterator(word_vector.begin());}
         constexpr iterator end() noexcept {return begin() + length_;}
-        constexpr const_iterator begin() const noexcept {return begin();}
-        constexpr const_iterator end() const noexcept {return begin() + length_;}
-        constexpr const_iterator cbegin() const noexcept {return begin();}
-        constexpr const_iterator cend() const noexcept {return begin() + length_;}
+        //constexpr const_iterator begin() const noexcept {return iterator(word_vector.begin());}
+        //constexpr const_iterator end() const noexcept {return const_iterator(word_vector.cbegin()) + length_;}
+        //constexpr const_iterator cbegin() const noexcept {return begin();}
+        //constexpr const_iterator cend() const noexcept {return begin() + length_;}
         
 
         /* 
@@ -203,7 +203,23 @@ class bit_vector {
                 ++position;
             }
             return ret;
-        }
+        };
+
+        friend std::ostream& operator<<(std::ostream& os, bit_vector bv) {
+            iterator mem = bv.begin();
+            auto position = 0;
+            for (iterator it = bv.begin(); it != bv.end(); ++it) {
+                if (position % bv.digits == 0 && position != 0) {
+                    os << " ";
+                } else if (position % 8 == 0 && position != 0) {
+                    os << '.';
+                }
+                os << (*it == bit1 ? '1' : '0');
+                mem = it;
+                ++position;
+            }
+            return os;
+        };
 };
 
 

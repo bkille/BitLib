@@ -1,6 +1,7 @@
 set(CMAKE_C_COMPILER "/usr/bin/gcc-11")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
 set(DBENCHMARK_ENABLE_GTEST_TESTS OFF)
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg)
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
@@ -22,6 +23,15 @@ file(GLOB TEST_SOURCES "tests/unit-tests/*.cpp")
 add_executable(tests ${TEST_SOURCES})
 file(GLOB BENCH_SOURCES "tests/benchmarks/*.cc")
 add_executable(bench ${BENCH_SOURCES})
+# Example targets
+file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
+add_executable(example_print ${EXAMPLE1_SOURCES})
+
+############
+# Examples #
+############
+target_compile_options(example_print PUBLIC ${DEBUG_FLAGS})
+install(TARGETS example_print DESTINATION .)
 
 ################
 # Benchmarking #
@@ -47,7 +57,7 @@ install(TARGETS bench DESTINATION .)
 # Testing #
 ###########
 # specify test-specific flags
-target_compile_options(tests PUBLIC -O0 -g -fno-omit-frame-pointer -pg)
+target_compile_options(tests PUBLIC ${DEBUG_FLAGS})
 
 include(FetchContent)
 FetchContent_Declare(
