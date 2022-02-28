@@ -288,9 +288,8 @@ ForwardIt word_shift_left(ForwardIt first,
 {
     if (n <= 0) return last;
     if (n >= distance(first, last)) return first;
-    ForwardIt mid = first;
-    std::advance(mid, n);
-    auto ret = std::copy(mid, last, first);
+    ForwardIt mid = first + n;
+    auto ret = std::move(mid, last, first);
     std::fill(ret, last, 0);
     return ret;
 }
