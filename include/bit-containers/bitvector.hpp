@@ -97,6 +97,7 @@ class bit_vector {
          */
         constexpr iterator begin() noexcept {return iterator(word_vector.begin());}
         constexpr iterator end() noexcept {return begin() + length_;}
+        // TODO Need bit constructors for const iterators
         //constexpr const_iterator begin() const noexcept {return iterator(word_vector.begin());}
         //constexpr const_iterator end() const noexcept {return const_iterator(word_vector.cbegin()) + length_;}
         //constexpr const_iterator cbegin() const noexcept {return begin();}
@@ -205,6 +206,7 @@ class bit_vector {
             return ret;
         };
 
+        // TODO Make constexpr
         friend std::ostream& operator<<(std::ostream& os, bit_vector bv) {
             iterator mem = bv.begin();
             auto position = 0;
