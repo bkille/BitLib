@@ -97,6 +97,17 @@ class VectorTest : public testing::Test {
             random_bitvecs.push_back(bitvec);
             random_boolvecs.push_back(boolvec);
         }
+        size_t big_size = 64*64*10;
+        for (int i = -4; i < 4; ++i) {
+            size_t cont_size = big_size + i;
+            auto bitvec = bit::bit_vector<WordType>(bit_size);
+            std::memcpy(&(*bitvec.begin().base()), &(random_vec[0]), word_size);
+            bitvec.resize(cont_size);
+
+            auto boolvec = boolvec_from_bitvec(bitvec);
+            random_bitvecs.push_back(bitvec);
+            random_boolvecs.push_back(boolvec);
+        }
     }
 };
 TYPED_TEST_SUITE(VectorTest, BaseTypes);
@@ -116,6 +127,17 @@ class SingleRangeTest : public testing::Test {
     void SetUp() override {
         random_vec = get_random_vec<WordType>(word_size);
         for (size_t cont_size = 1; cont_size < bit_size; ++cont_size) {
+            auto bitvec = bit::bit_vector<WordType>(bit_size);
+            std::memcpy(&(*bitvec.begin().base()), &(random_vec[0]), word_size);
+            bitvec.resize(cont_size);
+
+            auto boolvec = boolvec_from_bitvec(bitvec);
+            random_bitvecs.push_back(bitvec);
+            random_boolvecs.push_back(boolvec);
+        }
+        size_t big_size = 64*64*10;
+        for (int i = -4; i < 4; ++i) {
+            size_t cont_size = big_size + i;
             auto bitvec = bit::bit_vector<WordType>(bit_size);
             std::memcpy(&(*bitvec.begin().base()), &(random_vec[0]), word_size);
             bitvec.resize(cont_size);
