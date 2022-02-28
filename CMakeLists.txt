@@ -1,6 +1,6 @@
-option(BUILD_BENCHMARKS "Build Google Bechmarks" OFF)
 set(CMAKE_C_COMPILER "/usr/bin/gcc-11")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
+set(DBENCHMARK_ENABLE_GTEST_TESTS OFF)
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
@@ -17,31 +17,30 @@ set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
 add_compile_options(-std=c++20 -march=native -pedantic -Wall -Wextra -Wfatal-errors)
 include_directories("include/" "ext/simdpp")
 
+# Add targets
 file(GLOB TEST_SOURCES "tests/unit-tests/*.cpp")
 add_executable(tests ${TEST_SOURCES})
+file(GLOB BENCH_SOURCES "tests/benchmarks/*.cc")
+add_executable(bench ${BENCH_SOURCES})
+
 ################
 # Benchmarking #
 ################
-if (BUILD_BENCHMARKS)
-    # add the benchmarks executable
-    file(GLOB BENCH_SOURCES "tests/benchmarks/*.cc")
-    add_executable(benchmarks ${BENCH_SOURCES})
-    include(FetchContent)
-    FetchContent_Declare(
-        googlebench
-        GIT_REPOSITORY git@github.com:google/benchmark.git
-        GIT_TAG 0d98dba29d66e93259db7daa53a9327df767a415 #v1.6.1
-    )
-    # For Windows: Prevent overriding the parent project's compiler/linker settings
-    FetchContent_MakeAvailable(googlebench)
+include(FetchContent)
+FetchContent_Declare(
+    googlebench
+    GIT_REPOSITORY git@github.com:google/benchmark.git
+    GIT_TAG 0d98dba29d66e93259db7daa53a9327df767a415 #v1.6.1
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+FetchContent_MakeAvailable(googlebench)
 
-    # specify test-specific libraries
-    include_directories(${googlebench_SOURCE_DIR}/benchmark/include)
-    target_link_libraries(benchmarks PRIVATE benchmark::benchmark -pthread)
+# specify test-specific libraries
+include_directories(${googlebench_SOURCE_DIR}/benchmark/include tests/utils)
+target_link_libraries(bench PRIVATE benchmark::benchmark -pthread)
 
-    target_compile_options(benchmarks PUBLIC -O3 -DNDEBUG -mtune=native)
-    install(TARGETS benchmarks DESTINATION .)
-endif()
+target_compile_options(bench PUBLIC -O3 -DNDEBUG -mtune=native)
+install(TARGETS bench DESTINATION .)
 
 
 ###########
@@ -67,7 +66,7 @@ install(TARGETS tests DESTINATION .)
 enable_testing()
 add_test(NAME VectorTests COMMAND tests)
 add_custom_target(check
-    COMMAND env CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=1 ${CMAKE_CTEST_COMMAND} --verbose
+    COMMAND env CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
     DEPENDS tests)
 
 
