@@ -1,5 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <math.h>
+#include "test_utils.hpp"
+#include "bit-algorithms/count.hpp"
 
 auto BM_BitCount = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;

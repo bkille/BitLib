@@ -16,16 +16,9 @@
 #include <vector>
 #include <list>
 #include <forward_list>
-#include <iostream>
-#include <cstdlib>
-#include <memory>
-#include <cxxabi.h>
-#include <string>
-#include <typeinfo>
 // Project sources
 #include "bit-iterator/bit.hpp"
-#include "bit-algorithms/bit_algorithm.hpp"
-#include "utils/test_utils.hpp"
+//#include "utils/test_utils.hpp"
 #include "count_bench.hpp"
 #include "rotate_bench.hpp"
 #include "reverse_bench.hpp"
@@ -33,6 +26,12 @@
 #include "search_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
+#include <iostream>
+#include <cstdlib>
+#include <memory>
+#include <cxxabi.h>
+#include <string>
+#include <typeinfo>
 // ========================================================================== //
 
 std::string demangle(const char* name) {
