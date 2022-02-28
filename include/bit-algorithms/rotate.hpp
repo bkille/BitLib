@@ -14,7 +14,9 @@
 
 // ============================== PREAMBLE ================================== //
 // C++ standard library
+#include <iostream>
 // Project sources
+#include "bit-algorithms/bit_algorithm.hpp"
 // Third-party libraries
 // Miscellaneous
 namespace bit {
@@ -423,7 +425,8 @@ bit_iterator<ForwardIt> rotate(
     _assert_range_viability(first, n_first);
     _assert_range_viability(n_first, last);
     _assert_range_viability(first, last);
-    if (first == n_first) return n_first;
+    //if (first == n_first) return n_first;
+    if (first == n_first) return last;
 
     // Types and constants
     using word_type = typename bit_iterator<ForwardIt>::word_type;
@@ -452,10 +455,10 @@ bit_iterator<ForwardIt> rotate(
             size_type p = last_pos - n_first.position();
             size_type d = last_pos - first.position();
             
-            word_type mask = ((1 << d) - 1) << first.position();
+            word_type mask = ((1ULL << d) - 1) << first.position();
             word_type rotated = *first.base() & mask;
-            rotated = static_cast<word_type>(rotated << k) 
-                | static_cast<word_type>(rotated >> p);
+            rotated = static_cast<word_type>(rotated >> k) 
+                | static_cast<word_type>(rotated << p);
             *first.base() = _bitblend<word_type>(
                 *first.base(),
                 rotated,

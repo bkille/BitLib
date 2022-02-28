@@ -17,7 +17,7 @@
 // ============================== PREAMBLE ================================== //
 // C++ standard library
 // Project sources
-#include <iterator>
+#include "bit-iterator/bit.hpp"
 // Third-party libraries
 // Miscellaneous
 namespace bit {

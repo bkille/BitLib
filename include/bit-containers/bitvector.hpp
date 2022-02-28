@@ -183,7 +183,29 @@ class bit_vector {
             }
             return;
         };
+
+
+        /*
+         * Helper functions
+         */
+        const std::string debug_string(const_iterator first, const_iterator last) {
+            std::string ret = "";
+            auto mem = first;
+            auto position = 0;
+            for (auto it = first; it != last; ++it) {
+                if (position % digits == 0 && position != 0) {
+                    ret += " ";
+                } else if (position % 8 == 0 && position != 0) {
+                    ret += '.';
+                }
+                ret += *it == bit1 ? '1' : '0';
+                mem = it;
+                ++position;
+            }
+            return ret;
+        }
 };
+
 
 }
 
