@@ -19,7 +19,7 @@ The code below is from `example/print.cpp`.
 
 int main() {
     bit::bit_vector<unsigned char> bv1 {"01001010010"};
-    std::cout << bv1 << std::endl;
+    std::cout << bv1.debug_string() << std::endl;
     return 0;
 }
 ```
