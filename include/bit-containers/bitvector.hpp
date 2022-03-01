@@ -190,11 +190,29 @@ class bit_vector {
         /*
          * Helper functions
          */
-        const std::string debug_string(const_iterator first, const_iterator last) {
+        std::string debug_string(const_iterator first, const_iterator last) {
             std::string ret = "";
-            const_iterator mem = first;
+            iterator mem = first;
             auto position = 0;
-            for (const_iterator it = first; it != last; ++it) {
+            for (iterator it = first; it != last; ++it) {
+                if (position % digits == 0 && position != 0) {
+                    ret += " ";
+                } else if (position % 8 == 0 && position != 0) {
+                    ret += '.';
+                }
+                ret += *it == bit1 ? '1' : '0';
+                mem = it;
+                ++position;
+            }
+            return ret;
+        };
+        std::string debug_string() {
+            auto first = begin();
+            auto last = end();
+            std::string ret = "";
+            iterator mem = first;
+            auto position = 0;
+            for (iterator it = first; it != last; ++it) {
                 if (position % digits == 0 && position != 0) {
                     ret += " ";
                 } else if (position % 8 == 0 && position != 0) {

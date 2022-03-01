@@ -18,15 +18,25 @@ The code below is from `example/print.cpp`.
 
 
 int main() {
-    bit::bit_vector<unsigned char> bv1 {"01001010010"};
-    std::cout << bv1.debug_string() << std::endl;
+    bit::bit_vector<unsigned char> bv1 {"011111010010"};
+    std::cout << "Original bitvec:  " << bv1.debug_string() << std::endl;
+    bit::reverse(bv1.begin(), bv1.end());
+    std::cout << "Reversed bitvec:  " << bv1.debug_string() << std::endl;
+    bit::rotate(bv1.begin(), bv.begin() + 3, bv1.end());
+    std::cout << "Rotated bitvec:   " << bv1.debug_string() << std::endl;
+    bv1.push_back(bit::bit0);
+    bv1.insert(bv.end(), 10, bit::bit1);
+    std::cout << "Extended bitvec:  " << bv1.debug_string() << std::endl;
     return 0;
 }
 ```
 
 When executed, the following is printed:
 ```
-01001010 010
+Original bitvec:  01111101 0010
+Reversed bitvec:  01001011 1110
+Rotated bitvec:   01011111 0010
+Extended bitvec:  01011111 00100111 1111111
 ```
 
 
