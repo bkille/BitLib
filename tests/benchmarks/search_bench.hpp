@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
-#include "bit-iterator/bit.hpp"
-#include "bit-algorithms/search.hpp"
+#include "bitlib/bit-algorithms/search.hpp"
 
 auto BM_BitSearch = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;

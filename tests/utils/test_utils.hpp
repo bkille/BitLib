@@ -21,7 +21,7 @@
 #include <list>
 #include <forward_list>
 // Project sources
-#include "bit-iterator/bit.hpp"
+#include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
 // Miscellaneous
 

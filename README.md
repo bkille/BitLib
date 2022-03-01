@@ -12,9 +12,7 @@ Many of the implementations in `include/bit-algorithms` come from some of my pre
 The code below is from `example/print.cpp`. 
 ```
 #include <iostream>
-#include "bit-iterator/bit.hpp"
-#include "bit-algorithms/bit_algorithm.hpp"
-#include "bit-containers/bitvector.hpp"
+#include "bitlib.hpp""
 
 
 int main() {
@@ -38,6 +36,9 @@ Reversed bitvec:  01001011 1110
 Rotated bitvec:   01011111 0010
 Extended bitvec:  01011111 00100111 1111111
 ```
+
+## Documentation
+Given that the majority of the library is focused on having the same interface as the C++ STL iterators, containers, and algorithms, users should use the official [STL documentation website](https://en.cppreference.com/). We do plan on adding our own documentation in the future, however. 
 
 
 ## Performance Benchmarks

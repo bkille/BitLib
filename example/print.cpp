@@ -1,7 +1,5 @@
 #include <iostream>
-#include "bit-iterator/bit.hpp"
-#include "bit-algorithms/bit_algorithm.hpp"
-#include "bit-containers/bitvector.hpp"
+#include "bitlib/bitlib.hpp"
 
 
 int main() {
@@ -14,5 +12,6 @@ int main() {
     bv1.push_back(bit::bit0);
     bv1.insert(bv1.end(), 10, bit::bit1);
     std::cout << "Extended bitvec:  " << bv1.debug_string() << std::endl;
+    std::cout << distance(bv1.begin(), bv1.end()) << std::endl;
     return 0;
 }

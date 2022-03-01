@@ -19,8 +19,8 @@
 #include <limits>
 #include <cstring>
 // Project sources
-#include "bit-iterator/bit_iterator.hpp"
-#include "bit-containers/bit-containers.hpp"
+#include "bitlib/bit-iterator/bit_iterator.hpp"
+#include "bitlib/bit-containers/bit-containers.hpp"
 // Third-party libraries
 #include "gtest/gtest.h"
 // Miscellaneous

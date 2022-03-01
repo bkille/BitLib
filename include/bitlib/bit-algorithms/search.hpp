@@ -16,7 +16,7 @@
 // C++ standard library
 #include <iostream>
 // Project sources
-#include "bit-iterator/bit.hpp"
+#include "bitlib/bit-iterator/bit.hpp"
 #include "bit_algorithm.hpp"
 // Third-party libraries
 // Miscellaneous

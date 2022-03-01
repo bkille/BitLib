@@ -11,8 +11,8 @@
 #include <math.h>
 #include <algorithm>
 // Project sources
-#include "bit-algorithms/bit_algorithm.hpp"
-#include "bit-containers/bit-containers.hpp"
+#include "bitlib/bit-algorithms/bit_algorithm.hpp"
+#include "bitlib/bit-containers/bit-containers.hpp"
 #include "fixtures.hpp"
 // Third-party libraries
 #include "gtest/gtest.h"

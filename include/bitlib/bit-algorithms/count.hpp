@@ -11,7 +11,7 @@
 // C++ standard library
 #include <iterator>
 // Project sources
-#include "bit-iterator/bit.hpp"
+#include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
 #include "simdpp/simd.h"
 // Miscellaneous

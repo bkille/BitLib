@@ -10,7 +10,7 @@
 // C++ standard library
 #include <math.h>
 // Project sources
-#include "bit-containers/bit-containers.hpp"
+#include "bitlib/bit-containers/bit-containers.hpp"
 #include "fixtures.hpp"
 // Third-party libraries
 #include "gtest/gtest.h"

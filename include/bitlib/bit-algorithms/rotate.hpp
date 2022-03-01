@@ -16,7 +16,7 @@
 // C++ standard library
 #include <iostream>
 // Project sources
-#include "bit-algorithms/bit_algorithm.hpp"
+#include "bit_algorithm.hpp"
 // Third-party libraries
 // Miscellaneous
 namespace bit {

@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <random>
 #include <math.h>
+#include "bitlib/bitlib.hpp"
 
 
 auto BM_BitShiftLeft = [](benchmark::State& state, auto input) {
@@ -22,12 +23,13 @@ auto BM_BitShiftLeft = [](benchmark::State& state, auto input) {
 auto BM_BitShiftLeft_UU = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
     using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    using iterator_type = typename container_type::iterator;
     unsigned int total_bits = std::get<2>(input);
     auto digits = bit::binary_digits<word_type>::value;
     auto container_size = ceil(float(total_bits) / digits);
     container_type bitcont = make_random_container<container_type>(container_size); 
-    auto first = bit::bit_iterator<decltype(std::begin(bitcont))>(std::begin(bitcont)) + 1;
-    auto last = bit::bit_iterator<decltype(std::end(bitcont))>(std::end(bitcont)) - 1;
+    bit::bit_iterator<iterator_type> first = bit::bit_iterator<iterator_type>(bitcont.begin()) + 1;
+    bit::bit_iterator<iterator_type> last = bit::bit_iterator<iterator_type>(bitcont.end()) - 1;
     auto n = bit::distance(first, last) / 2 + 3;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::shift_left(first, last, n));

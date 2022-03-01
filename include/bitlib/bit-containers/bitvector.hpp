@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <vector>
 
-#include "bit-iterator/bit.hpp"
-#include "bit-algorithms/bit_algorithm.hpp"
+#include "bitlib/bit-iterator/bit.hpp"
+#include "bitlib/bit-algorithms/bit_algorithm.hpp"
 
 namespace bit {
 

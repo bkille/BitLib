@@ -17,7 +17,7 @@
 #include <list>
 #include <forward_list>
 // Project sources
-#include "bit-iterator/bit.hpp"
+#include "bitlib/bitlib.hpp"
 //#include "utils/test_utils.hpp"
 #include "count_bench.hpp"
 #include "rotate_bench.hpp"
