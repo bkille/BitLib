@@ -1,8 +1,7 @@
-# bit-algorithms
+# BitLib
 
-![Actions](https://github.com/bkille/TheBitLibrary/actions/workflows/main.yml/badge.svg)
+![Actions](https://github.com/bkille/BitLib/actions/workflows/main.yml/badge.svg)
 
-An exploratory implementation of bit overloads of the C++ standard algorithms.
 
 ## Description
 While [bit iterators](https://github.com/vreverdy/bit) are currently being proposed and reviewed by the ISO C++ Standards Committee, this repository is intended for practical use of bit containers and algorithms based on bit iterators. Primarily, this repository acts as an efficient replacement of `std::vector<bool>`. It provides implementations of many of the functions in `<algorithms>` optimized for containers of bits, in addition to providing a `bitvector` class, which has the same interface as `std::vector<bool>`.
