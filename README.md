@@ -9,6 +9,7 @@ While [bit iterators](https://github.com/vreverdy/bit) are currently being propo
 Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
 
 ## Example
+The code below is from `example/print.cpp`. 
 ```
 #include <iostream>
 #include "bit-iterator/bit.hpp"
@@ -21,9 +22,11 @@ int main() {
     std::cout << bv1 << std::endl;
     return 0;
 }
+```
 
-// Will output
-// 01001010 010
+When executed, the following is printed:
+```
+01001010 010
 ```
 
 
