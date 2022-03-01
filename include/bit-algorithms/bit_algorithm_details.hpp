@@ -30,8 +30,8 @@ namespace bit {
 // May be negative if last comes before first (Only when input is RAI)
 template <class InputIt>
 typename bit_iterator<InputIt>::difference_type 
-    distance(bit_iterator<InputIt> first,
-             bit_iterator<InputIt> last
+    distance(bit_iterator<const InputIt> first,
+             bit_iterator<const InputIt> last
 )
 {
     _assert_range_viability(first, last); 

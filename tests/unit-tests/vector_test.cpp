@@ -188,6 +188,6 @@ TYPED_TEST(VectorTest, Erase1) {
     EXPECT_EQ(std::distance(this->v3_.begin(), bitret), v3_copy.size() - 2);
 }
 
-TYPED_TEST(VectorTest, Print) {
-    std::cout << this->v3_ << std::endl;
-}
+//TYPED_TEST(VectorTest, Print) {
+    //std::cout << this->v3_ << std::endl;
+//}

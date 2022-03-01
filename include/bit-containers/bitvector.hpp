@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 #include "bit-iterator/bit.hpp"
 #include "bit-algorithms/bit_algorithm.hpp"
@@ -30,8 +31,8 @@ class bit_vector {
         using reference = bit_reference<WordType>;
         using const_reference = const reference;
         using pointer = bit_pointer<WordType>;
-        using iterator = bit_iterator<decltype(std::begin(word_vector))>;
-        using const_iterator = bit_iterator<const decltype(std::begin(word_vector))>;
+        using iterator = bit_iterator<typename std::vector<WordType>::iterator>;
+        using const_iterator = bit_iterator<const typename std::vector<WordType>::const_iterator>;
         
         /*
          * Constructors, copies and moves...
@@ -98,10 +99,10 @@ class bit_vector {
         constexpr iterator begin() noexcept {return iterator(word_vector.begin());}
         constexpr iterator end() noexcept {return begin() + length_;}
         // TODO Need bit constructors for const iterators
-        //constexpr const_iterator begin() const noexcept {return iterator(word_vector.begin());}
-        //constexpr const_iterator end() const noexcept {return const_iterator(word_vector.cbegin()) + length_;}
-        //constexpr const_iterator cbegin() const noexcept {return begin();}
-        //constexpr const_iterator cend() const noexcept {return begin() + length_;}
+        constexpr const_iterator begin() const noexcept {return const_iterator(word_vector.begin());}
+        constexpr const_iterator end() const noexcept {return const_iterator(word_vector.cbegin()) + length_;}
+        constexpr const_iterator cbegin() const noexcept {return const_iterator(word_vector.begin());}
+        constexpr const_iterator cend() const noexcept {return const_iterator(word_vector.cbegin()) + length_;}
         
 
         /* 
@@ -119,7 +120,7 @@ class bit_vector {
          */
         constexpr void clear() noexcept {word_vector.clear(); length_ = 0;};
         constexpr iterator insert(const_iterator pos, const value_type& value) {
-            const auto d = distance(begin(), pos);
+            const auto d = distance(cbegin(), pos);
             if (this->capacity() <= length_ - 1) {
                 word_vector.push_back(0U);
             }
@@ -129,7 +130,7 @@ class bit_vector {
             return begin() + d;
         };
         constexpr iterator insert(const_iterator pos, size_type count, const value_type& value) {
-            const auto d = distance(begin(), pos);
+            const auto d = distance(cbegin(), pos);
             while (capacity() <= (length_ > count ? length_ - count : 0)) {
                 word_vector.push_back(0U);
             }
@@ -139,7 +140,7 @@ class bit_vector {
             return begin() + d;
         };
         constexpr iterator insert(const_iterator pos, iterator first, iterator last) {
-            const auto d = distance(begin(), pos);
+            const auto d = distance(cbegin(), pos);
             const size_t count = distance(first, last);    
             while (capacity() <= (length_ > count ? length_ - count : 0)) {
                 word_vector.push_back(0U);
@@ -149,13 +150,13 @@ class bit_vector {
             length_ += count;
             return begin() + d;
         };
-        constexpr iterator erase(const_iterator pos) {
+        constexpr iterator erase(iterator pos) {
             const auto d = distance(begin(), pos);
             shift_left(pos, begin() + length_, 1);    
             length_ -= 1;
             return pos;
         };
-        constexpr iterator erase(const_iterator first, const_iterator last) {
+        constexpr iterator erase(iterator first, iterator last) {
             // TODO return correct iterator
             auto count = distance(first, last);    
             shift_left(first, first + length_, count);
@@ -191,9 +192,9 @@ class bit_vector {
          */
         const std::string debug_string(const_iterator first, const_iterator last) {
             std::string ret = "";
-            auto mem = first;
+            const_iterator mem = first;
             auto position = 0;
-            for (auto it = first; it != last; ++it) {
+            for (const_iterator it = first; it != last; ++it) {
                 if (position % digits == 0 && position != 0) {
                     ret += " ";
                 } else if (position % 8 == 0 && position != 0) {
@@ -207,21 +208,9 @@ class bit_vector {
         };
 
         // TODO Make constexpr
-        friend std::ostream& operator<<(std::ostream& os, bit_vector bv) {
-            iterator mem = bv.begin();
-            auto position = 0;
-            for (iterator it = bv.begin(); it != bv.end(); ++it) {
-                if (position % bv.digits == 0 && position != 0) {
-                    os << " ";
-                } else if (position % 8 == 0 && position != 0) {
-                    os << '.';
-                }
-                os << (*it == bit1 ? '1' : '0');
-                mem = it;
-                ++position;
-            }
-            return os;
-        };
+        //friend std::ostream& operator<<(std::ostream& os, bit_vector bv) {
+            //return os << bv.debug_string(bv.cbegin(), bv.cend());;
+        //};
 };
 
 
