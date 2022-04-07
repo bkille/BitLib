@@ -21,6 +21,7 @@
 // Project sources
 #include "bitlib/bit-iterator/bit_iterator.hpp"
 #include "bitlib/bit-containers/bit-containers.hpp"
+#include "test_utils.hpp"
 // Third-party libraries
 #include "gtest/gtest.h"
 // Miscellaneous
@@ -30,48 +31,8 @@
 //TODO tests need a lot of cleanup. We should only copy what we need from random_vec
 //and also refactor the vec generation to reduce duplication
 
-// Comparator for bit_iterator to other iterators
-constexpr auto comparator = [](auto b1, auto b2){
-    return static_cast<bool>(b1) == static_cast<bool>(b2);
-};
-
 using BaseTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long long>;
 //using BaseTypes = ::testing::Types<unsigned char>;
-
-inline unsigned long long generate_random_number(size_t min, size_t max) {
-    // First create an instance of an engine.
-    std::random_device rnd_device;
-    // Specify the engine and distribution.
-    std::mt19937 mersenne_engine {rnd_device()};  // Generates random integers
-    std::uniform_int_distribution<unsigned long long> dist {min, max};
-    
-    return dist(mersenne_engine);
-}
-
-template <typename WordType>
-std::vector<WordType> get_random_vec(unsigned long long int size) {
-    // First create an instance of an engine.
-    std::random_device rnd_device;
-    // Specify the engine and distribution.
-    std::mt19937 mersenne_engine {rnd_device()};  // Generates random integers
-    std::uniform_int_distribution<WordType> dist {std::numeric_limits<WordType>::min(), std::numeric_limits<WordType>::max()};
-    
-    auto gen = [&dist, &mersenne_engine](){
-                   return dist(mersenne_engine);
-   };
-    std::vector<WordType> vec(size);
-    generate(begin(vec), end(vec), gen);
-    return vec;
-}
-
-template <typename WordType>
-std::vector<bool> boolvec_from_bitvec(bit::bit_vector<WordType> bv) {
-    std::vector<bool> ret_vec{};
-    for (auto value : bv) {
-       ret_vec.push_back(value == bit::bit1 ? true : false); 
-    }
-    return ret_vec;
-}
 
 
 template<typename WordType>

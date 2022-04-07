@@ -44,7 +44,7 @@ FetchContent_Declare(
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 FetchContent_MakeAvailable(googlebench)
 
-# specify test-specific libraries
+# specify benchmark-specific libraries
 include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils)
 target_link_libraries(bench PRIVATE benchmark::benchmark -pthread)
 
@@ -67,7 +67,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 # specify test-specific libraries
-include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest)
+include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
 target_link_libraries(tests PRIVATE gtest gtest_main -pthread)
 
 install(TARGETS tests DESTINATION .)
