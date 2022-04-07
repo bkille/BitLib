@@ -15,6 +15,7 @@
 // ================================ PREAMBLE ================================ //
 // C++ standard library
 #include <type_traits>
+#include <math.h>
 // Project sources
 #include "bitlib/bitlib.hpp"
 // Third-party libraries
@@ -75,13 +76,15 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
 
     if (remaining_bits_to_copy > 0) { 
         const bool is_first_aligned = first.position() == 0;
+        //size_type words_to_copy = std::ceil(remaining_bits_to_copy / static_cast<float>(digits));
         // d_first will be aligned at this point
-        if (is_first_aligned) {
+        if (is_first_aligned && remaining_bits_to_copy > digits) {
             auto N = std::distance(first.base(), last.base());
             it = std::copy(first.base(), last.base(), it);
             first += digits * N;
             remaining_bits_to_copy -= digits * N;
         } else {
+            // TODO benchmark if its faster to std::copy the entire range then shift
             while (remaining_bits_to_copy >= digits) {
                 *it = get_word<word_type>(first, digits);
                 remaining_bits_to_copy -= digits;

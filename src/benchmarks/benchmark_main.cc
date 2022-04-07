@@ -23,6 +23,7 @@
 #include "rotate_bench.hpp"
 #include "reverse_bench.hpp"
 #include "shift_bench.hpp"
+#include "copy_bench.hpp"
 #include "search_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
@@ -192,23 +193,41 @@ int main(int argc, char** argv) {
             "std::count (large)",
             size_large);
 
-    // Search benchmarks
-    register_word_containers<decltype(BM_BitSearch), std::vector>(
-            BM_BitSearch, 
-            "Search_Bit_Large",
+    // Count benchmarks 
+    register_word_containers<decltype(BM_BitCopy), std::vector>(
+            BM_BitCopy, 
+            "bit::copy (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolCopy), std::vector>(
+            BM_BoolCopy, 
+            "std::copy (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitCopy), std::vector>(
+            BM_BitCopy, 
+            "bit::copy (large) (UU)",
             size_large);
-    register_bool_containers<decltype(BM_BoolSearch), std::vector>(
-            BM_BoolSearch, 
-            "Search_Bool_Large",
+    register_bool_containers<decltype(BM_BoolCopy), std::vector>(
+            BM_BoolCopy, 
+            "std::copy (large)",
             size_large);
-    register_word_containers<decltype(BM_BitSearch_WorstCase), std::vector>(
-            BM_BitSearch_WorstCase, 
-            "Search_Bit_Large_WorstCase",
-            size_large);
-    register_bool_containers<decltype(BM_BoolSearch_WorstCase), std::vector>(
-            BM_BoolSearch_WorstCase, 
-            "Search_Bool_Large_WorstCase",
-            size_large);
+
+    //// Search benchmarks
+    //register_word_containers<decltype(BM_BitSearch), std::vector>(
+            //BM_BitSearch, 
+            //"Search_Bit_Large",
+            //size_large);
+    //register_bool_containers<decltype(BM_BoolSearch), std::vector>(
+            //BM_BoolSearch, 
+            //"Search_Bool_Large",
+            //size_large);
+    //register_word_containers<decltype(BM_BitSearch_WorstCase), std::vector>(
+            //BM_BitSearch_WorstCase, 
+            //"Search_Bit_Large_WorstCase",
+            //size_large);
+    //register_bool_containers<decltype(BM_BoolSearch_WorstCase), std::vector>(
+            //BM_BoolSearch_WorstCase, 
+            //"Search_Bool_Large_WorstCase",
+            //size_large);
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();
 }
