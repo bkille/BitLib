@@ -41,7 +41,5 @@ jobs:
       run: make tests
 
     - name: Test
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: make check
+      run: ./bin/tests --gtest_repeat=100 --gtest_break_on_failure
       
