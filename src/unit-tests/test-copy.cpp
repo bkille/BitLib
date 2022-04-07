@@ -28,7 +28,6 @@ TYPED_TEST(DoubleRangeTest, Copy) {
         long long start1 = generate_random_number(0, std::min<long long>(bitvec1.size() - 1, 16));
         long long start2 = generate_random_number(0, std::min<long long>(bitvec2.size() - 1, 16));
         long long end1 = generate_random_number(std::max<long long>(0, start2 - start1), bitvec1.size() - start1);
-        std::cout << "Cont size: " << bitvec1.size() << "=" << bitvec2.size() << '\t' << start1 << ":" << bitvec1.size() - end1 << "\t->\t" << start2 << std::endl;
         auto bitret = bit::copy(bitvec1.begin() + start1, bitvec1.end() - end1, bitvec2.begin() + start2); 
         auto boolret = std::copy(boolvec1.begin() + start1, boolvec1.end() - end1, boolvec2.begin() + start2); 
         EXPECT_EQ(bit::distance(bitvec2.begin(), bitret), std::distance(boolvec2.begin(), boolret));
