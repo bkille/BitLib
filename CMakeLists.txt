@@ -19,9 +19,9 @@ add_compile_options(-std=c++20 -march=native -pedantic -Wall -Wextra -Wfatal-err
 include_directories("include/" "ext/simdpp")
 
 # Add targets
-file(GLOB TEST_SOURCES "tests/unit-tests/*.cpp")
+file(GLOB TEST_SOURCES "src/unit-tests/*.cpp")
 add_executable(tests ${TEST_SOURCES})
-file(GLOB BENCH_SOURCES "tests/benchmarks/*.cc")
+file(GLOB BENCH_SOURCES "src/benchmarks/*.cc")
 add_executable(bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
@@ -45,7 +45,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googlebench)
 
 # specify test-specific libraries
-include_directories(${googlebench_SOURCE_DIR}/benchmark/include tests/utils)
+include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils)
 target_link_libraries(bench PRIVATE benchmark::benchmark -pthread)
 
 target_compile_options(bench PUBLIC -O3 -DNDEBUG -mtune=native)
