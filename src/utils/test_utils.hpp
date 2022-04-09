@@ -122,7 +122,7 @@ std::vector<WordType> get_random_vec(
 template <typename WordType>
 std::vector<bool> boolvec_from_bitvec(bit::bit_vector<WordType> bv) {
     std::vector<bool> ret_vec{};
-    for (auto value : bv) {
+    for (bit::bit_value value : bv) {
        ret_vec.push_back(value == bit::bit1 ? true : false); 
     }
     return ret_vec;

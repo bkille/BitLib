@@ -108,10 +108,9 @@ template <class T, class InputIt>
 T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
 {
     using native_word_type = typename bit_iterator<InputIt>::word_type;
-    constexpr T native_digits = binary_digits<native_word_type>::value; 
-    constexpr T ret_digits = binary_digits<T>::value; 
-    assert(ret_digits >= len);
-    T offset = native_digits - first.position();
+    constexpr T digits = binary_digits<native_word_type>::value; 
+    assert(digits >= len);
+    T offset = digits - first.position();
     T ret_word = *first.base() >> first.position();
 
     // We've already assigned enough bits
@@ -123,16 +122,16 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     len -= offset;
     // Fill up ret_word starting at bit [offset] using it
     // TODO define a mask and use the _bitblend that takes in the extra mask
-    while (len > native_digits) {
+    while (len > digits) {
         ret_word = _bitblend(
                 ret_word,      
                 static_cast<T>(static_cast<T>(*it) << offset),   
                 offset,
-                native_digits
+                digits
         );
         ++it;
-        offset += native_digits;
-        len -= native_digits;
+        offset += digits;
+        len -= digits;
     }
     // Assign remaining len bits of last word
     ret_word = _bitblend(

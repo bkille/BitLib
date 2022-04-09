@@ -14,34 +14,23 @@
 #define _Bit_Algorithm_VERSION_MAJOR @Bit_Algorithm_VERSION_MAJOR@
 #define _Bit_Algorithm_VERSION_MINOR @Bit_Algorithm_VERSION_MINOR@
 #if __AVX512BW__
-#   pragma message("Building with AVX512BW support")
 #   define SIMDPP_ARCH_X86_AVX512BW true
 #elif __AVX512DQ__
-#   pragma message("Building with AVX512DQ support")
 #   define SIMDPP_ARCH_X86_AVX512DQ true
 #elif __AVX512VL__
-#   pragma message("Building with AVX512VL support")
 #   define SIMDPP_ARCH_X86_AVX512VL true
 #elif __AVX512F__
-#   pragma message("Building with AVX512F support")
 #   define SIMDPP_ARCH_X86_AVX512DQ true
 #elif __AVX2__
-#   pragma message("Building with AVX2 support")
 #   define SIMDPP_ARCH_X86_AVX2 true
 #elif __AVX__
-#   pragma message("Building with AVX support")
 #   define SIMDPP_ARCH_X86_AVX true
 #elif __SSE4_1__
-#   pragma message("Building with SSE4.1 support")
 #   define SIMDPP_ARCH_X86_SSE4_1 true
 #elif __SSE3__
-#   pragma message("Building with SSE3 support")
 #   define SIMDPP_ARCH_X86_SSE3 true
 #elif __SSE2__
-#   pragma message("Building with SSE2 support")
 #   define SIMDPP_ARCH_X86_SSE2 true
-#else
-#  pragma message("Building with no vectorization")
 #endif
 // ========================================================================== //
 
@@ -54,7 +43,6 @@
 #include "all_of.hpp"
 #include "any_of.hpp"
 #include "bit_algorithm_details.hpp"
-#include "bit_algorithm.hpp"
 #include "copy_backward.hpp"
 #include "copy.hpp"
 #include "copy_n.hpp"

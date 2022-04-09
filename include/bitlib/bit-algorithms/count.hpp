@@ -116,11 +116,9 @@ count(
     // Types and constants
     using word_type = typename bit_iterator<InputIt>::word_type;
     using difference_type = typename bit_iterator<InputIt>::difference_type;
-    constexpr difference_type digits = binary_digits<word_type>::value;
 
     // Initialization
     difference_type result = 0;
-    auto it = first.base();
 
     // Computation when bits belong to several underlying words
     if (first.base() != last.base()) {
