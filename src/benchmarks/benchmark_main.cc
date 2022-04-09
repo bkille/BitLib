@@ -24,6 +24,7 @@
 #include "reverse_bench.hpp"
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
+#include "move_bench.hpp"
 #include "search_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
@@ -193,7 +194,7 @@ int main(int argc, char** argv) {
             "std::count (large)",
             size_large);
 
-    // Count benchmarks 
+    // Copy benchmarks 
     register_word_containers<decltype(BM_BitCopy), std::vector>(
             BM_BitCopy, 
             "bit::copy (small) (UU)",
@@ -209,6 +210,24 @@ int main(int argc, char** argv) {
     register_bool_containers<decltype(BM_BoolCopy), std::vector>(
             BM_BoolCopy, 
             "std::copy (large)",
+            size_large);
+
+    // Move benchmarks 
+    register_word_containers<decltype(BM_BitMove), std::vector>(
+            BM_BitMove, 
+            "bit::move (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolMove), std::vector>(
+            BM_BoolMove, 
+            "std::move (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitMove), std::vector>(
+            BM_BitMove, 
+            "bit::move (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolMove), std::vector>(
+            BM_BoolMove, 
+            "std::move (large)",
             size_large);
 
     //// Search benchmarks
