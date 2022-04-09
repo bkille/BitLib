@@ -27,7 +27,7 @@ TYPED_TEST(DoubleRangeTest, Move) {
         std::vector<bool> boolvec2 = this->random_boolvecs2[idx];
         unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(bitvec1.size() - 1, 16));
         unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(bitvec2.size() - 1, 16));
-        unsigned long long end1 = generate_random_number(0, bitvec1.size() - std::max(start1, start2));
+        long long end1 = generate_random_number(std::max<long long>(0, start2 - start1), bitvec1.size() - start1);
         auto bitret = bit::move(bitvec1.begin() + start1, bitvec1.end() - end1, bitvec2.begin() + start2); 
         auto boolret = std::move(boolvec1.begin() + start1, boolvec1.end() - end1, boolvec2.begin() + start2); 
         EXPECT_EQ(bit::distance(bitvec2.begin(), bitret), std::distance(boolvec2.begin(), boolret));
