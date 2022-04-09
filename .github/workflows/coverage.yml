@@ -10,6 +10,7 @@ on:
     paths-ignore:
       - '**/*.md'
 
+
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: RelWithDebInfo
@@ -27,6 +28,8 @@ jobs:
           - { compiler: GNU, CC: gcc-11, CXX: g++-11 }
 
     steps:
+    - name: Cancel Workflow Action
+      uses: styfle/cancel-workflow-action@0.9.1
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -36,6 +39,7 @@ jobs:
         sudo apt install build-essential manpages-dev software-properties-common
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
         sudo apt update && sudo apt install ${{ matrix.compiler.CC }} ${{ matrix.compiler.CXX }}
+        pip install lcov
         cmake --version
 
     
