@@ -25,6 +25,7 @@
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
 #include "move_bench.hpp"
+#include "swap_ranges-bench.hpp"
 #include "search_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
@@ -33,6 +34,7 @@
 #include <memory>
 #include <cxxabi.h>
 #include <string>
+#include <string_view>
 #include <typeinfo>
 // ========================================================================== //
 
@@ -48,7 +50,7 @@ std::string demangle(const char* name) {
 
 
 template<class F> 
-constexpr void register_types(F test_lambda_f, std::string func_name, unsigned int size) {
+constexpr void register_types(F test_lambda_f, std::string_view func_name, unsigned int size) {
     return;
 }
 
@@ -194,7 +196,25 @@ int main(int argc, char** argv) {
             "std::count (large)",
             size_large);
 
-    // Copy benchmarks 
+    // swap_ranges benchmarks
+    register_word_containers<decltype(BM_BitSwapRanges), std::vector>(
+            BM_BitSwapRanges, 
+            "bit::swap_ranges (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolSwapRanges), std::vector>(
+            BM_BoolSwapRanges, 
+            "std::swap_ranges (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitSwapRanges), std::vector>(
+            BM_BitSwapRanges, 
+            "bit::swap_ranges (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolSwapRanges), std::vector>(
+            BM_BoolSwapRanges, 
+            "std::swap_ranges (large)",
+            size_large);
+
+    // copy benchmarks
     register_word_containers<decltype(BM_BitCopy), std::vector>(
             BM_BitCopy, 
             "bit::copy (small) (UU)",
@@ -212,7 +232,7 @@ int main(int argc, char** argv) {
             "std::copy (large)",
             size_large);
 
-    // Move benchmarks 
+    // move benchmarks 
     register_word_containers<decltype(BM_BitMove), std::vector>(
             BM_BitMove, 
             "bit::move (small) (UU)",
