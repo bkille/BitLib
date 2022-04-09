@@ -24,6 +24,7 @@
 #include "reverse_bench.hpp"
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
+#include "move_bench.hpp"
 #include "copy_backward_bench.hpp"
 #include "swap_ranges-bench.hpp"
 #include "search_bench.hpp"
@@ -34,6 +35,7 @@
 #include <memory>
 #include <cxxabi.h>
 #include <string>
+#include <string_view>
 #include <typeinfo>
 // ========================================================================== //
 
@@ -49,7 +51,7 @@ std::string demangle(const char* name) {
 
 
 template<class F> 
-constexpr void register_types(F test_lambda_f, std::string func_name, unsigned int size) {
+constexpr void register_types(F test_lambda_f, std::string_view func_name, unsigned int size) {
     return;
 }
 
@@ -195,7 +197,7 @@ int main(int argc, char** argv) {
             "std::count (large)",
             size_large);
 
-    // Count benchmarks 
+    // swap_ranges benchmarks
     register_word_containers<decltype(BM_BitSwapRanges), std::vector>(
             BM_BitSwapRanges, 
             "bit::swap_ranges (small) (UU)",
@@ -211,6 +213,42 @@ int main(int argc, char** argv) {
     register_bool_containers<decltype(BM_BoolSwapRanges), std::vector>(
             BM_BoolSwapRanges, 
             "std::swap_ranges (large)",
+            size_large);
+            
+    // copy benchmarks
+    register_word_containers<decltype(BM_BitCopy), std::vector>(
+            BM_BitCopy, 
+            "bit::copy (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolCopy), std::vector>(
+            BM_BoolCopy, 
+            "std::copy (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitCopy), std::vector>(
+            BM_BitCopy, 
+            "bit::copy (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolCopy), std::vector>(
+            BM_BoolCopy, 
+            "std::copy (large)",
+            size_large);
+
+    // move benchmarks 
+    register_word_containers<decltype(BM_BitMove), std::vector>(
+            BM_BitMove, 
+            "bit::move (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolMove), std::vector>(
+            BM_BoolMove, 
+            "std::move (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitMove), std::vector>(
+            BM_BitMove, 
+            "bit::move (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolMove), std::vector>(
+            BM_BoolMove, 
+            "std::move (large)",
             size_large);
 
     // copy_backward benchmarks
