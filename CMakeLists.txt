@@ -1,6 +1,6 @@
 set(CMAKE_C_COMPILER "/usr/bin/gcc-11")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
-set(DBENCHMARK_ENABLE_GTEST_TESTS OFF)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
 set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg)
 cmake_minimum_required(VERSION 3.14)
 
