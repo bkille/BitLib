@@ -24,6 +24,7 @@
 #include "reverse_bench.hpp"
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
+#include "copy_backward_bench.hpp"
 #include "swap_ranges-bench.hpp"
 #include "search_bench.hpp"
 // Third party libraries
@@ -210,6 +211,24 @@ int main(int argc, char** argv) {
     register_bool_containers<decltype(BM_BoolSwapRanges), std::vector>(
             BM_BoolSwapRanges, 
             "std::swap_ranges (large)",
+            size_large);
+
+    // copy_backward benchmarks
+    register_word_containers<decltype(BM_BitCopyBackward), std::vector>(
+            BM_BitCopyBackward, 
+            "bit::copy_backward (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolCopyBackward), std::vector>(
+            BM_BoolCopyBackward, 
+            "std::copy_backward (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitCopyBackward), std::vector>(
+            BM_BitCopyBackward, 
+            "bit::copy_backward (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolCopyBackward), std::vector>(
+            BM_BoolCopyBackward, 
+            "std::copy_backward (large)",
             size_large);
 
     //// Search benchmarks

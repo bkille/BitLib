@@ -2,7 +2,7 @@
 #include "test_utils.hpp"
 #include "bitlib/bitlib.hpp"
 
-auto BM_BitSwapRanges = [](benchmark::State& state, auto input) {
+auto BM_BitCopyBackward = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
     using WordType = typename std::tuple_element<1, decltype(input)>::type;
     unsigned int total_bits = std::get<2>(input);
@@ -14,18 +14,19 @@ auto BM_BitSwapRanges = [](benchmark::State& state, auto input) {
     auto first2 = bit::bit_iterator<decltype(std::begin(bitvec2))>(std::begin(bitvec2));
     unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(total_bits - 1, 16));
     unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(total_bits - 1, 16));
-    long long end1 = generate_random_number(std::max<long long>(0, start2 - start1), total_bits - start1);
+    auto end1 = generate_random_number(std::max<long long>(0, start2 - start1), total_bits - start1);
+    long long n = total_bits - start1 - end1;
 
     for (auto _ : state)
-        bit::swap_ranges(
+        bit::copy_backward(
             first1 + start1,
             first1 + total_bits - end1,
-            first2 + start2
+            first2 + start2 + n
         );
 };
 
 
-auto BM_BoolSwapRanges = [](benchmark::State& state, auto input) {
+auto BM_BoolCopyBackward = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
     unsigned int total_bits = std::get<2>(input);
     auto container_size = total_bits;
@@ -36,13 +37,14 @@ auto BM_BoolSwapRanges = [](benchmark::State& state, auto input) {
 
     unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(boolvec1.size() - 1, 16));
     unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(boolvec2.size() - 1, 16));
-    long long end1 = generate_random_number(std::max<long long>(0, start2 - start1), total_bits - start1);
+    auto end1 = generate_random_number(std::max<long long>(0, start2 - start1), total_bits - start1);
+    long long n = total_bits - start1 - end1;
 
     for (auto _ : state)
-        std::swap_ranges(
+        std::copy_backward(
             first1 + start1,
             first1 + total_bits - end1,
-            first2 + start2
+            first2 + start2 + n
         );
 };
 
