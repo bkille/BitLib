@@ -1,6 +1,6 @@
 # BitLib
 
-![Actions](https://github.com/bkille/BitLib/actions/workflows/cmake.yml/badge.svg)
+![Actions](https://github.com/bkille/BitLib/actions/workflows/cmake.yml/badge.svg?branch=master)
 
 
 ## Description
