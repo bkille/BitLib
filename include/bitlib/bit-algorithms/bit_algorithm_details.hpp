@@ -109,7 +109,6 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
 {
     using native_word_type = typename bit_iterator<InputIt>::word_type;
     constexpr T native_digits = binary_digits<native_word_type>::value; 
-    constexpr T ret_digits = binary_digits<T>::value; 
     assert(ret_digits >= len);
     T offset = native_digits - first.position();
     T ret_word = *first.base() >> first.position();

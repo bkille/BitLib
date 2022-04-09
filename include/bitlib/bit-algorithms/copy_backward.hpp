@@ -60,7 +60,7 @@ constexpr bit_iterator<RandomAccessIt2> copy_backward(bit_iterator<RandomAccessI
                 *it,
                 static_cast<word_type>(
                   get_word<word_type>(last - partial_bits_to_copy, partial_bits_to_copy) 
-                ) << d_last.position() - partial_bits_to_copy,
+                ) << (d_last.position() - partial_bits_to_copy),
                 d_last.position() - partial_bits_to_copy,
                 static_cast<word_type>(partial_bits_to_copy)
         );

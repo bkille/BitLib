@@ -32,9 +32,8 @@ bit_iterator<RandomAccessIt> find_dispatch(
     std::size_t digits = binary_digits<word_type>::value;
 
     // Initialization
-    const bool is_first_aligned = first.position() == 0;
     const bool is_last_aligned = last.position() == 0;
-    assert(is_first_aligned);
+    assert(first.position() == 0);
 
     auto it = first.base();
     const auto N = SIMDPP_FAST_INT64_SIZE;
@@ -99,9 +98,8 @@ bit_iterator<InputIt> find_dispatch(
     using size_type = typename bit_iterator<InputIt>::size_type;
 
     // Initialization
-    const bool is_first_aligned = first.position() == 0;
     const bool is_last_aligned = last.position() == 0;
-    assert(is_first_aligned);
+    assert(first.position() == 0);
 
     auto it = first.base();
     while (it != last.base()) {

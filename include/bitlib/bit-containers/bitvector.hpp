@@ -13,11 +13,9 @@ namespace bit {
 template<class WordType, class Allocator = std::allocator<WordType>>
 class bit_vector {
     private:
-        size_t length_;
         size_t digits = binary_digits<WordType>::value;
         std::vector<WordType, Allocator> word_vector;
-        bit_iterator<decltype(std::begin(word_vector))> head;
-
+        size_t length_;
 
     public:
         /*
@@ -71,7 +69,7 @@ class bit_vector {
         constexpr reference operator[](size_type pos) const {return begin()[pos];};
        
         constexpr reference at(size_type pos) {
-            if (pos < length_ && pos >= 0) {
+            if (pos < length_) {
                 return begin()[pos];
             } else {
                 throw std::out_of_range("Position is out of range");
@@ -79,7 +77,7 @@ class bit_vector {
         }
 
         constexpr const_reference at(size_type pos) const {
-            if (pos < length_ && pos > 0) {
+            if (pos < length_) {
                 return begin()[pos];
             } else {
                 throw std::out_of_range("Position is out of range");
@@ -151,7 +149,6 @@ class bit_vector {
             return begin() + d;
         };
         constexpr iterator erase(iterator pos) {
-            const auto d = distance(begin(), pos);
             shift_left(pos, begin() + length_, 1);    
             length_ -= 1;
             return pos;
