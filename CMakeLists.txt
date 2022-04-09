@@ -1,5 +1,5 @@
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg)
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage)
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
@@ -66,7 +66,7 @@ FetchContent_MakeAvailable(googletest)
 
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(tests PRIVATE gtest gtest_main -pthread)
+target_link_libraries(tests PRIVATE gtest gtest_main -pthread -lgcov --coverage)
 
 install(TARGETS tests DESTINATION .)
 
