@@ -1,4 +1,4 @@
-name: Build
+name: Coverage
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
     branches: [ master ]
     paths-ignore:
       - '**/*.md'
+
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -22,13 +23,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]    
+        os: [ubuntu-20.04]    
         compiler:
           - { compiler: GNU, CC: gcc-11, CXX: g++-11 }
-          - { compiler: LLVM, CC: clang-10, CXX: clang++-10 }
-        exclude:
-          - os: ubuntu-20.04
-            compiler: { compiler: LLVM, CC: clang-10, CXX: clang++-10 }
 
     steps:
     - name: Cancel Workflow Action
@@ -41,7 +38,8 @@ jobs:
       run: |
         sudo apt install build-essential manpages-dev software-properties-common
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        sudo apt update && sudo apt install ${{ matrix.compiler.CC }} ${{ matrix.compiler.CXX }}
+        sudo apt update && sudo apt install lcov ${{ matrix.compiler.CC }} ${{ matrix.compiler.CXX }}
+        pip install --user lcov
         cmake --version
 
     
@@ -59,5 +57,21 @@ jobs:
       run: make tests
 
     - name: Test
-      run: ./bin/tests --gtest_repeat=100 --gtest_break_on_failure --gtest_brief=1
-      
+      run: ./bin/tests --gtest_repeat=1 --gtest_break_on_failure --gtest_brief=1
+
+    - name: Run lcov 
+      run: |
+        lcov --directory CMakeFiles/tests.dir/src/unit-tests/ --gcov-tool /usr/bin/gcov-11 --output-file lcov.out --include "*bitlib*" -c
+        lcov -r lcov.out "*/usr/*" -r lcov.out "*_deps/*" -r lcov.out "*unit-tests*" -r lcov.out "*ext/*" -o lcov_filtered.out
+
+    - name: Code Coverage Report
+      uses: romeovs/lcov-reporter-action@v0.2.11
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        lcov-file: lcov_filtered.out
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: lcov_filtered.out 
