@@ -51,47 +51,69 @@ I used Google's [benchmark](https://github.com/google/benchmark) library for com
 For example, `bit::rotate (large) (ARA)` refers to our library's implementation of the `rotate` algorithm operating on a container of 32768 bits, where `first` and `last` are aligned but `n_first` is selected at random.
 
 ```
-Run on (64 X 2300 MHz CPU s)
+Run on (80 X 1144.24 MHz CPU s)
 CPU Caches:
-  L1 Data 32 KiB (x32)
-  L1 Instruction 32 KiB (x32)
-  L2 Unified 1024 KiB (x32)
-  L3 Unified 22528 KiB (x2)
-Load Average: 0.41, 0.67, 0.73
-***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
---------------------------------------------------------------------
-Benchmark                          Time             CPU   Iterations
---------------------------------------------------------------------
-bit::shift_left (small) (UU)        3.77 ns         3.77 ns    185649261
-std::shift_left (small)             45.6 ns         45.6 ns     15359502
-bit::shift_left (large) (AA)         254 ns          254 ns      2760779
-std::shift_left (large)           195023 ns       195021 ns         3590
-bit::shift_right (small) (UU)       3.77 ns         3.77 ns    185654156
-std::shift_right (small)            34.6 ns         34.6 ns     20218713
-bit::shift_right (large) (AA)        240 ns          240 ns      2921340
-std::shift_right (large)          131946 ns       131946 ns         5294
-bit::reverse (small) (UU)           8.87 ns         8.87 ns     78851173
-std::reverse (small)                39.1 ns         39.1 ns     17922588
-bit::reverse (large) (AA)            962 ns          962 ns       727702
-std::reverse (large)              246764 ns       246770 ns         2844
-bit::rotate (small) (ARA)           6.76 ns         6.76 ns    105597804
-std::rotate (small)                 71.5 ns         71.5 ns      8798226
-bit::rotate (large) (ARA)           7577 ns         7577 ns        93948
-std::rotate (large)               505214 ns       505212 ns         1383
-bit::count (small) (AA)             1.16 ns         1.16 ns    603331880
-std::count (small)                  17.9 ns         17.9 ns     39219825
-bit::count (large) (AA)              664 ns          664 ns      1054400
-std::count (large)                 72859 ns        72860 ns         9610
+  L1 Data 32 KiB (x40)
+  L1 Instruction 32 KiB (x40)
+  L2 Unified 1024 KiB (x40)
+  L3 Unified 28160 KiB (x2)
+Load Average: 1.14, 1.20, 1.27
+--------------------------------------------------------------------------
+Benchmark                                Time             CPU   Iterations
+--------------------------------------------------------------------------
+bit::shift_left (small) (UU)          2.61 ns         2.61 ns    268554879
+bit::shift_left (small) (AA)          2.71 ns         2.71 ns    257942581
+std::shift_left (small)               23.5 ns         23.5 ns     29733027
+bit::shift_left (large) (UU)           154 ns          154 ns      4574307
+bit::shift_left (small) (AA)          2.76 ns         2.76 ns    256811575
+std::shift_left (large)              97789 ns        97785 ns         7168
+bit::shift_right (small) (UU)         2.45 ns         2.45 ns    286391427
+std::shift_right (small)              22.2 ns         22.2 ns     31586703
+bit::shift_right (large) (AA)          139 ns          139 ns      5017866
+std::shift_right (large)             82441 ns        82437 ns         8491
+bit::reverse (small) (UU)             5.46 ns         5.46 ns    127987521
+std::reverse (small)                  25.0 ns         25.0 ns     28066883
+bit::reverse (large) (AA)              580 ns          580 ns      1197374
+bit::reverse (large) (UU)              765 ns          765 ns       920478
+std::reverse (large)                178233 ns       178226 ns         3893
+bit::rotate (small) (ARA)             5.44 ns         5.44 ns    128481219
+std::rotate (small)                   57.8 ns         57.8 ns     10000000
+bit::rotate (large) (ARA)             4772 ns         4772 ns       171120
+std::rotate (large)                 357265 ns       357251 ns         2113
+bit::count (small) (AA)               1.09 ns         1.09 ns    643063971
+std::count (small)                    9.52 ns         9.52 ns     73400317
+bit::count (large) (AA)                443 ns          443 ns      1576447
+std::count (large)                   35990 ns        35988 ns        19427
+bit::swap_ranges (small) (UU)         5.83 ns         5.83 ns    119831059
+std::swap_ranges (small)              8.75 ns         8.75 ns    100000000
+bit::swap_ranges (large) (UU)         2082 ns         2082 ns       527351
+std::swap_ranges (large)            345883 ns       345870 ns        28154
+bit::copy (small) (UU)                7.23 ns         7.23 ns     98213498
+std::copy (small)                     3.83 ns         3.83 ns   1000000000
+bit::copy (large) (UU)                2158 ns         2158 ns       667486
+std::copy (large)                    92918 ns        92914 ns         6808
+bit::move (small) (UU)                6.28 ns         6.28 ns     85940974
+std::move (small)                     15.4 ns         15.4 ns     40480293
+bit::move (large) (UU)                1703 ns         1703 ns      1000000
+std::move (large)                    69221 ns        69218 ns        10000
+bit::copy_backward (small) (UU)       8.97 ns         8.97 ns     77872677
+std::copy_backward (small)            1.63 ns         1.63 ns   1000000000
+bit::copy_backward (large) (UU)       2294 ns         2294 ns      1095120
+std::copy_backward (large)          184672 ns       184665 ns        16136
 ```
 
 | Benchmark | Size  | Speedup |
 |-----------|-------|---------|
-| shift     | small | 10.6x   |
-| shift     | large | 662x    |
+| shift     | small | 10x   |
+| shift     | large | 600x    |
 | reverse   | small | 4.4x    |
 | reverse   | large | 258x    |
-| rotate    | small | 9.7x    |
-| rotate    | large | 66.7x   |
-| count     | small | 15.4x   |
-| count     | large | 110x    |
+| rotate    | small | 10x    |
+| rotate    | large | 70x   |
+| count     | small | 9x   |
+| count     | large | 80x    |
+| copy      | small | 0.5x |
+| copy      | large | 43x |
+| copy_backward      | small | 0.15x |
+| copy_backward      | large | 80x |
 
