@@ -43,7 +43,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
 
     // Assertions
     _assert_range_viability(first, last);
-    static_assert(std::is_same<dst_word_type, src_word_type>::value, "Underlying word types must be equal");
+    static_assert(::std::is_same<dst_word_type, src_word_type>::value, "Underlying word types must be equal");
     if (first == last) return d_first;
 
 
@@ -56,7 +56,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
 
     // d_first is not aligned. Copy partial word to align it
     if (!is_d_first_aligned) {
-        size_type partial_bits_to_copy = std::min(
+        size_type partial_bits_to_copy = ::std::min(
                 remaining_bits_to_copy,
                 digits - d_first.position()
                 );
@@ -70,26 +70,26 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
                 static_cast<word_type>(partial_bits_to_copy)
                 );
         remaining_bits_to_copy -= partial_bits_to_copy;
-        std::advance(first, partial_bits_to_copy);
+        ::std::advance(first, partial_bits_to_copy);
         it++;
     }
 
     if (remaining_bits_to_copy > 0) { 
         const bool is_first_aligned = first.position() == 0;
-        //size_type words_to_copy = std::ceil(remaining_bits_to_copy / static_cast<float>(digits));
+        //size_type words_to_copy = ::std::ceil(remaining_bits_to_copy / static_cast<float>(digits));
         // d_first will be aligned at this point
         if (is_first_aligned && remaining_bits_to_copy > digits) {
-            auto N = std::distance(first.base(), last.base());
-            it = std::copy(first.base(), last.base(), it);
+            auto N = ::std::distance(first.base(), last.base());
+            it = ::std::copy(first.base(), last.base(), it);
             first += digits * N;
             remaining_bits_to_copy -= digits * N;
         } else {
-            // TODO benchmark if its faster to std::copy the entire range then shift
+            // TODO benchmark if its faster to ::std::copy the entire range then shift
             while (remaining_bits_to_copy >= digits) {
                 *it = get_word<word_type>(first, digits);
                 remaining_bits_to_copy -= digits;
                 it++; 
-                std::advance(first, digits);
+                ::std::advance(first, digits);
             }
         }
         if (remaining_bits_to_copy > 0) {
