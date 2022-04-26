@@ -34,6 +34,6 @@ TYPED_TEST(SingleRangeTest, Count) {
             EXPECT_EQ(bitret, boolret);
         }  
     }
-};
+}
 
 

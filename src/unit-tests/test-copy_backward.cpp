@@ -37,6 +37,6 @@ TYPED_TEST(DoubleRangeTest, CopyBackward) {
                     boolvec2.begin(), boolvec2.end(), comparator)
         );
     }
-};
+}
 
 

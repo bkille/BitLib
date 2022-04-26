@@ -34,7 +34,7 @@ TYPED_TEST(SingleRangeTest, ShiftLeft) {
                     boolvec.begin(), boolret, comparator)
         );
     }
-};
+}
 
 
 TYPED_TEST(SingleRangeTest, ShiftRight) {
@@ -51,7 +51,7 @@ TYPED_TEST(SingleRangeTest, ShiftRight) {
                     boolret, boolvec.end(), comparator)
         );
     }
-};
+}
 
 //REGISTER_TYPED_TEST_SUITE_P(, DoesBlah, HasPropertyA);
 //INSTANTIATE_TYPED_TEST_SUITE_P(Instantiation, SingleRangeTest, BaseTypes);

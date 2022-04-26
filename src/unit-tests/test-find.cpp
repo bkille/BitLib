@@ -34,6 +34,6 @@ TYPED_TEST(SingleRangeTest, Find) {
             EXPECT_EQ(std::distance(bitvec.begin(), bitret), std::distance(boolvec.begin(), boolret));
         }  
     }
-};
+}
 
 

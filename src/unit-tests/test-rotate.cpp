@@ -44,6 +44,6 @@ TYPED_TEST(SingleRangeTest, Rotate) {
             }
         }  
     }
-};
+}
 
 
