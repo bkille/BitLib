@@ -1,5 +1,5 @@
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage)
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address)
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
@@ -24,6 +24,8 @@ add_executable(bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
 add_executable(example_print ${EXAMPLE1_SOURCES})
+file(GLOB EXAMPLE2_SOURCES "example/vectorbool.cpp")
+add_executable(example_vectorbool ${EXAMPLE2_SOURCES})
 
 ############
 # Examples #
@@ -66,7 +68,7 @@ FetchContent_MakeAvailable(googletest)
 
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(tests PRIVATE gtest gtest_main -pthread -lgcov --coverage)
+target_link_libraries(tests PRIVATE gtest gtest_main -pthread -lgcov --coverage -fsanitize=address)
 
 install(TARGETS tests DESTINATION .)
 
