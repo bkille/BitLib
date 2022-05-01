@@ -116,7 +116,6 @@ bit::shift_left (small) (UU)          2.61 ns         2.61 ns    268554879
 bit::shift_left (small) (AA)          2.71 ns         2.71 ns    257942581
 std::shift_left (small)               23.5 ns         23.5 ns     29733027
 bit::shift_left (large) (UU)           154 ns          154 ns      4574307
-bit::shift_left (small) (AA)          2.76 ns         2.76 ns    256811575
 std::shift_left (large)              97789 ns        97785 ns         7168
 bit::shift_right (small) (UU)         2.45 ns         2.45 ns    286391427
 std::shift_right (small)              22.2 ns         22.2 ns     31586703
