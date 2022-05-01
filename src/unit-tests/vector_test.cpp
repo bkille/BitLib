@@ -133,18 +133,49 @@ TYPED_TEST(VectorTest, MoveConstructor) {
 // Test read
 TYPED_TEST(VectorTest, BracketRead) {
     EXPECT_EQ(this->v3_[0], bit::bit0);
+    for (unsigned int vec_idx = 0; vec_idx < this->random_bitvecs.size(); ++vec_idx) {
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        for (unsigned int i = 0; i < boolvec.size(); i++) {
+            EXPECT_TRUE(comparator(bitvec[i], boolvec[i]));
+        }
+    }
 }
 
 // Test write
 TYPED_TEST(VectorTest, BracketWrite) {
     this->v3_[0] = bit::bit1;
     EXPECT_EQ(this->v3_[0], bit::bit1);
+    for (unsigned int vec_idx = 0; vec_idx < this->random_bitvecs.size(); ++vec_idx) {
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        for (unsigned int i = 0; i < boolvec.size(); i++) {
+            bitvec[i] = ~bitvec[i];
+            boolvec[i] = !boolvec[i];
+        }
+        EXPECT_TRUE(std::equal(
+                bitvec.begin(), 
+                bitvec.end(), 
+                boolvec.begin(), 
+                boolvec.end(), 
+                comparator));
+}
 }
 
 // Test at
 TYPED_TEST(VectorTest, AtRead) {
     EXPECT_EQ(this->v3_.at(0), bit::bit0);
     EXPECT_EQ(this->v3_.at(8), bit::bit1);
+    for (unsigned int vec_idx = 0; vec_idx < this->random_bitvecs.size(); ++vec_idx) {
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        for (unsigned int i = 0; i < boolvec.size(); i++) {
+            EXPECT_TRUE(comparator(bitvec.at(i), boolvec.at(i)));
+        }
+        for (unsigned int i = boolvec.size(); i < boolvec.size() + 4*this->digits; i++) {
+            EXPECT_THROW(bitvec.at(i), std::out_of_range);
+        }
+    }
 }
 
 
@@ -162,6 +193,8 @@ TYPED_TEST(VectorTest, AtRead) {
 TYPED_TEST(VectorTest, Empty) {
     EXPECT_TRUE(this->empty_vec.empty());
     EXPECT_FALSE(this->v2_.empty());
+    this->v2_.clear();
+    EXPECT_TRUE(this->v2_.empty());
 }
 
 // Test size
@@ -184,10 +217,19 @@ TYPED_TEST(VectorTest, ReserveAndCapacity) {
 // Test shrink_to_fit
 TYPED_TEST(VectorTest, ShrinkToFit) {
     this->empty_vec.shrink_to_fit();
-    EXPECT_EQ(this->empty_vec.size(), 0);
+    EXPECT_EQ(this->empty_vec.capacity(), 0);
     this->empty_vec.reserve(12345);
     this->empty_vec.shrink_to_fit();
-    EXPECT_EQ(this->empty_vec.size(), 0);
+    EXPECT_EQ(this->empty_vec.capacity(), 0);
+    for (unsigned int vec_idx = 0; vec_idx < this->random_bitvecs.size(); ++vec_idx) {
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        for (unsigned int _ = 0; _ < this->digits; _++) {
+            bitvec.pop_back();
+        }
+        auto old_cap = bitvec.capacity();
+        bitvec.shrink_to_fit();
+        EXPECT_LT(bitvec.capacity(), old_cap);
+    }
 }
 
 /*
@@ -206,6 +248,12 @@ TYPED_TEST(VectorTest, Clear) {
     EXPECT_EQ(this->v2_.size(), 0);
     this->v3_.clear();
     EXPECT_EQ(this->v3_.size(), 0);
+    for (unsigned int vec_idx = 0; vec_idx < this->random_bitvecs.size(); ++vec_idx) {
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        bitvec.clear();
+        EXPECT_EQ(bitvec.size(), 0);
+        EXPECT_THROW(bitvec.at(0), std::out_of_range);
+    }
 }
 
 // Test insert

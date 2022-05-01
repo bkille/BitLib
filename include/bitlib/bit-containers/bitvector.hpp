@@ -90,7 +90,7 @@ class bit_vector {
         constexpr reference back() {return begin()[length_ - 1];};
         constexpr const_reference back() const {return begin()[length_ - 1];};
         constexpr WordType* data() noexcept {return length_ ? &(word_vector[0]) : 0;};
-        constexpr const WordType* data() const noexcept {return length_ ? &(word_vector[0]) : 0;};
+        constexpr const WordType* data() const noexcept {return word_vector.size() ? &(word_vector[0]) : 0;};
 
         /* 
          * Iterators
