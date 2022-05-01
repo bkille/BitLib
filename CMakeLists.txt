@@ -1,5 +1,5 @@
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg)
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fsanitize=address)
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
@@ -64,9 +64,15 @@ FetchContent_Declare(
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 FetchContent_MakeAvailable(googletest)
 
+FetchContent_Declare(
+    fmt
+    URL https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
+)
+FetchContent_MakeAvailable(fmt)
+
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(tests PRIVATE gtest gtest_main -pthread)
+target_link_libraries(tests PRIVATE gtest gtest_main -pthread fmt::fmt-header-only -fsanitize=address)
 
 install(TARGETS tests DESTINATION .)
 
