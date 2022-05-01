@@ -38,7 +38,7 @@ int main() {
 }
 ```
 
-Another example can be seen which showcases some of the capabilities of the `bit_iterators/` library:
+Another example can be seen which showcases some of the capabilities of the `bitlib/bit_iterators` library:
 
 ```cpp
 #include <iostream>
