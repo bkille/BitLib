@@ -4,7 +4,6 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <fmt/core.h>
 
 #include "bitlib/bit-iterator/bit.hpp"
 #include "bitlib/bit-algorithms/bit_algorithm.hpp"
@@ -215,9 +214,6 @@ class bit_vector {
         /*
          * Helper functions
          */
-        std::string debug_info() {
-            return fmt::format("cap={}, words={}, size={}", capacity(), word_vector.size(), size());
-        }
 
         std::string debug_string(const_iterator first, const_iterator last) {
             std::string ret = "";
