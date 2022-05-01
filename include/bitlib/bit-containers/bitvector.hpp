@@ -164,6 +164,9 @@ class bit_vector {
         constexpr iterator erase(iterator pos) {
             shift_left(pos, begin() + length_, 1);    
             length_ -= 1;
+            if (length_ % digits == 0) {
+                word_vector.pop_back();
+            }
             return pos;
         };
         constexpr iterator erase(iterator first, iterator last) {
@@ -175,14 +178,22 @@ class bit_vector {
             }
             shift_left(first, end(), count);
             length_ -= count;
+            word_vector.resize(std::ceil(float(length_) / digits));
             return begin() + d;
         }
         constexpr void push_back(const value_type& value) {
-            if (this->capacity() <= length_ - 1) {
+            if (this->word_vector.size()*digits == length_) {
                 word_vector.push_back(0U);
             }
             begin()[length_] = value;
             length_ += 1;
+            return;
+        };
+        constexpr void pop_back() {
+            length_ -= 1;
+            if (length_ % digits == 0) {
+                word_vector.pop_back();
+            }
             return;
         };
         constexpr void resize(size_type count) {
