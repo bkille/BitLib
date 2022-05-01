@@ -15,6 +15,7 @@
 // ============================== PREAMBLE ================================== //
 // C++ standard library
 // Project sources
+#include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
 // Miscellaneous
 namespace bit {
@@ -92,9 +93,12 @@ constexpr bit_iterator<ForwardIt2> swap_ranges(
                     first1.position(), 
                     digits1 - first1.position()
             );
-            while (it1 != last1.base()) {
-                std::swap(*it1++, *it2++);
-            }
+            it2 = std::swap_ranges(it1, last1.base(), it2);
+            it1 = last1.base();
+            //while (it1 != last1.base()) {
+                //TODO std::swap_ranges
+                //std::swap(*it1++, *it2++);
+            //}
             if (!is_last1_aligned) {
                 _bitexch<word_type1, size_type1>(
                         *it1, 
@@ -156,7 +160,7 @@ constexpr bit_iterator<ForwardIt2> swap_ranges(
             // Exchange last partial words
             if (!is_last1_aligned) {
                 size_type2 partial_digits_to_copy = digits2 - first2.position();
-                if (last1.position() < partial_digits_to_copy) {
+                if (last1.position() <= partial_digits_to_copy) {
                     _bitexch<word_type1, size_type1>(
                             *it1,
                             *it2,

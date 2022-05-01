@@ -34,6 +34,6 @@ TYPED_TEST(SingleRangeTest, Reverse) {
             );
         }  
     }
-};
+}
 
 

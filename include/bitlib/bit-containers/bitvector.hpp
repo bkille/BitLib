@@ -47,18 +47,18 @@ class bit_vector {
 
         constexpr ~bit_vector() {};
 
-        bit_vector& operator=(const bit_vector& other) {
-             length_ = other.length_;
-             digits = other.digits;
-             word_vector = other.word_vector;
-             return *this;
+        bit_vector& operator=(bit_vector& other) {
+            length_ = other.length_;
+            digits = other.digits;
+            word_vector = other.word_vector;
+            return *this;
         };
 
         bit_vector& operator=(bit_vector&& other) {
-             length_ = other.length_;
-             digits = other.digits;
-             word_vector = std::move(other.word_vector);
-             return *this;
+            length_ = other.length_;
+            digits = other.digits;
+            word_vector = std::move(other.word_vector);
+            return *this;
         };
 
 
@@ -89,7 +89,7 @@ class bit_vector {
         constexpr reference back() {return begin()[length_ - 1];};
         constexpr const_reference back() const {return begin()[length_ - 1];};
         constexpr WordType* data() noexcept {return length_ ? &(word_vector[0]) : 0;};
-        constexpr const WordType* data() const noexcept {return length_ ? &(word_vector[0]) : 0;};
+        constexpr const WordType* data() const noexcept {return word_vector.size() ? &(word_vector[0]) : 0;};
 
         /* 
          * Iterators
@@ -119,53 +119,80 @@ class bit_vector {
         constexpr void clear() noexcept {word_vector.clear(); length_ = 0;};
         constexpr iterator insert(const_iterator pos, const value_type& value) {
             const auto d = distance(cbegin(), pos);
-            if (this->capacity() <= length_ - 1) {
+            if (this->word_vector.size()*digits == length_) {
                 word_vector.push_back(0U);
             }
+            length_ += 1;
             shift_right(begin() + d, begin() + length_, 1);
             begin()[d] = value;
-            length_ += 1;
             return begin() + d;
         };
         constexpr iterator insert(const_iterator pos, size_type count, const value_type& value) {
             const auto d = distance(cbegin(), pos);
-            while (capacity() <= (length_ > count ? length_ - count : 0)) {
-                word_vector.push_back(0U);
+            if (count == 0) {
+                return begin() + d;
             }
+            const float bits_available = word_vector.size()*digits;
+            const auto need_to_add = length_ + count > bits_available;
+            if (need_to_add) {
+                const auto words_to_add = std::ceil((length_ + count - bits_available) / digits);
+                word_vector.resize(word_vector.size() + words_to_add);
+            }
+            length_ += count;
             shift_right(begin() + d, begin() + length_, count);
             fill(begin() + d, begin() + d + count, value);
-            length_ += count;
             return begin() + d;
         };
         constexpr iterator insert(const_iterator pos, iterator first, iterator last) {
             const auto d = distance(cbegin(), pos);
             const size_t count = distance(first, last);    
-            while (capacity() <= (length_ > count ? length_ - count : 0)) {
-                word_vector.push_back(0U);
+            if (count == 0) {
+                return begin() + d;
             }
+            const float bits_available = word_vector.size()*digits;
+            const auto need_to_add = length_ + count > bits_available;
+            if (need_to_add) {
+                const auto words_to_add = std::ceil((length_ + count - bits_available) / digits);
+                word_vector.resize(word_vector.size() + words_to_add);
+            }
+            length_ += count;
             shift_right(begin() + d, begin() + length_, count);
             copy(first, last, begin() + d);
-            length_ += count;
             return begin() + d;
         };
         constexpr iterator erase(iterator pos) {
             shift_left(pos, begin() + length_, 1);    
             length_ -= 1;
+            if (length_ % digits == 0) {
+                word_vector.pop_back();
+            }
             return pos;
         };
         constexpr iterator erase(iterator first, iterator last) {
             // TODO return correct iterator
+            const auto d = distance(begin(), first);
             auto count = distance(first, last);    
-            shift_left(first, first + length_, count);
+            if (count == 0) {
+                return last;
+            }
+            shift_left(first, end(), count);
             length_ -= count;
-            return last;
+            word_vector.resize(std::ceil(float(length_) / digits));
+            return begin() + d;
         }
         constexpr void push_back(const value_type& value) {
-            if (this->capacity() <= length_ - 1) {
+            if (this->word_vector.size()*digits == length_) {
                 word_vector.push_back(0U);
             }
             begin()[length_] = value;
             length_ += 1;
+            return;
+        };
+        constexpr void pop_back() {
+            length_ -= 1;
+            if (length_ % digits == 0) {
+                word_vector.pop_back();
+            }
             return;
         };
         constexpr void resize(size_type count) {
@@ -187,6 +214,7 @@ class bit_vector {
         /*
          * Helper functions
          */
+
         std::string debug_string(const_iterator first, const_iterator last) {
             std::string ret = "";
             iterator mem = first;

@@ -31,10 +31,7 @@ TYPED_TEST(SingleRangeTest, Rotate) {
             size_t middle_count = 16;
             while (middle_count--) {
                 unsigned long long middle = generate_random_number(start, bitvec.size() - 1);
-                //std::cout << bitvec.debug_string(bitvec.begin(), bitvec.end()) << std::endl;
-                //std::cout << bitvec.size() << "->" << start <<":"<<middle<<":" <<bitvec.size() << std::endl;
                 auto bitret = bit::rotate(bitvec.begin() + start, bitvec.begin() + middle, bitvec.end()); 
-                //std::cout << bitvec.debug_string(bitvec.begin(), bitvec.end()) << std::endl;
                 auto boolret = std::rotate(boolvec.begin() + start, boolvec.begin() + middle, boolvec.end()); 
                 EXPECT_TRUE(std::equal(
                             bitvec.begin(), bitvec.end(),
@@ -44,6 +41,6 @@ TYPED_TEST(SingleRangeTest, Rotate) {
             }
         }  
     }
-};
+}
 
 
