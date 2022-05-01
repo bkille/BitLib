@@ -40,12 +40,13 @@ class VectorTest : public testing::Test {
     protected:
 
     using base_type = WordType;
-    bit::bit_vector<WordType> empty_vec;
+    using vec_type = bit::bit_vector<WordType>;
+    vec_type empty_vec;
     std::vector<bool> empty_vec_bool;
-    bit::bit_vector<WordType> v2_ {18};
-    bit::bit_vector<WordType> v3_ {"010111111"};
+    vec_type v2_ {18};
+    vec_type v3_ {"010111111"};
 
-    std::vector<bit::bit_vector<WordType>> random_bitvecs;
+    std::vector<vec_type> random_bitvecs;
     std::vector<std::vector<bool>> random_boolvecs;
     std::vector<WordType> random_vec;
     const size_t word_size = 4;
@@ -53,10 +54,10 @@ class VectorTest : public testing::Test {
     const size_t bit_size = word_size*digits;
 
     void SetUp() override {
-        empty_vec = bit::bit_vector<WordType>(); 
+        empty_vec = vec_type(); 
         random_vec = get_random_vec<WordType>(word_size);
         for (size_t cont_size = 1; cont_size < bit_size; ++cont_size) {
-            auto bitvec = bit::bit_vector<WordType>(bit_size);
+            auto bitvec = vec_type(bit_size);
             std::memcpy(&(*bitvec.begin().base()), &(random_vec[0]), word_size);
             bitvec.resize(cont_size);
 
@@ -67,7 +68,7 @@ class VectorTest : public testing::Test {
         size_t big_size = 64*64*10;
         for (int i = -4; i < 4; ++i) {
             size_t cont_size = big_size + i;
-            auto bitvec = bit::bit_vector<WordType>(bit_size);
+            auto bitvec = vec_type(bit_size);
             std::memcpy(&(*bitvec.begin().base()), &(random_vec[0]), word_size);
             bitvec.resize(cont_size);
 
