@@ -41,14 +41,16 @@ class VectorTest : public testing::Test {
 
     using base_type = WordType;
     bit::bit_vector<WordType> empty_vec;
-    bit::bit_vector<WordType> v2_ {256};
+    std::vector<bool> empty_vec_bool;
+    bit::bit_vector<WordType> v2_ {18};
     bit::bit_vector<WordType> v3_ {"010111111"};
 
     std::vector<bit::bit_vector<WordType>> random_bitvecs;
     std::vector<std::vector<bool>> random_boolvecs;
     std::vector<WordType> random_vec;
-    size_t word_size = 4;
-    size_t bit_size = word_size*bit::binary_digits<WordType>::value;
+    const size_t word_size = 4;
+    const size_t digits = bit::binary_digits<WordType>::value;
+    const size_t bit_size = word_size*digits;
 
     void SetUp() override {
         empty_vec = bit::bit_vector<WordType>(); 
