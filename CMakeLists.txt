@@ -24,6 +24,8 @@ add_executable(bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
 add_executable(example_print ${EXAMPLE1_SOURCES})
+file(GLOB EXAMPLE2_SOURCES "example/vectorbool.cpp")
+add_executable(example_vectorbool ${EXAMPLE2_SOURCES})
 
 ############
 # Examples #

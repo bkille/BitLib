@@ -14,17 +14,23 @@ The code below is from `example/print.cpp`.
 #include <iostream>
 #include "bitlib.hpp""
 
-
 int main() {
     bit::bit_vector<unsigned char> bv1 {"011111010010"};
     std::cout << "Original bitvec:  " << bv1.debug_string() << std::endl;
+
+    // Same behavior as std::reverse
     bit::reverse(bv1.begin(), bv1.end());
     std::cout << "Reversed bitvec:  " << bv1.debug_string() << std::endl;
+
+    // Same behavior as std::rotate
     bit::rotate(bv1.begin(), bv.begin() + 3, bv1.end());
     std::cout << "Rotated bitvec:   " << bv1.debug_string() << std::endl;
+
+    // Same behavior as the corresponding std::vector::push_back and std::vector::insert
     bv1.push_back(bit::bit0);
     bv1.insert(bv.end(), 10, bit::bit1);
     std::cout << "Extended bitvec:  " << bv1.debug_string() << std::endl;
+
     return 0;
 }
 ```
@@ -36,6 +42,53 @@ Reversed bitvec:  01001011 1110
 Rotated bitvec:   01011111 0010
 Extended bitvec:  01011111 00100111 1111111
 ```
+
+Another example can be seen which showcases some of the capabilities of the `bit_iterators/` library:
+
+```
+#include <iostream>
+#include "bitlib/bitlib.hpp"
+
+// Here are a couple examples of what BitLib can accomplish that std::vector<bool> can not. While 
+// we still have to explicitly define the type as either reference or pointer, they at least compile
+// and behave as expected
+//
+// It should be noted that I am not responsible for the creation of this aspect of the library, 
+// the bit_iterator/ is thanks to Dr. Vincent Reverdy.
+
+template<typename WordType>
+void flip_bits(bit::bit_vector<WordType>& bvec) {
+    // Unable to take references to bool, but it works for bits!
+    for (bit::bit_reference<WordType> bval :  bvec) {
+        bval = ~bval;
+    }
+    return;
+}
+
+template<typename WordType>
+void bit_pointers(bit::bit_vector<WordType>& bvec) {
+    // Unable to take pointers to bool, but it works for bits!
+    bit::bit_pointer<WordType> p = &bvec[0];
+    *p = bit::bit1;
+    return;
+}
+
+int main() {
+    bit::bit_vector<unsigned char> bvec("111000110010");
+    std::cout << bvec.debug_string() << std::endl;
+    // Outputs 111000110010
+
+    flip_bits(bvec);
+    std::cout << bvec.debug_string() << std::endl;
+    // Outputs 000111001101
+
+    bit_pointers(bvec);
+    std::cout << bvec.debug_string() << std::endl;
+    // Outputs 100111001101
+    return 0;
+}
+```
+
 
 ## Documentation
 Given that the majority of the library is focused on having the same interface as the C++ STL iterators, containers, and algorithms, users should use the official [STL documentation website](https://en.cppreference.com/). We do plan on adding our own documentation in the future, however. 

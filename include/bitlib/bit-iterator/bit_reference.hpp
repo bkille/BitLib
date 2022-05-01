@@ -44,6 +44,7 @@ class bit_reference
     public:
     template <class T> 
     constexpr bit_reference(const bit_reference<T>& other) noexcept;
+    constexpr bit_reference(const bit_reference& other) noexcept;
     explicit constexpr bit_reference(word_type& ref) noexcept;
     constexpr bit_reference(word_type& ref, size_type pos);
 
@@ -140,6 +141,15 @@ template <class WordType>
 template <class T> 
 constexpr bit_reference<WordType>::bit_reference(
     const bit_reference<T>& other
+) noexcept
+: _ptr(other._ptr)
+, _mask(other._mask)
+{
+}
+
+template <class WordType>
+constexpr bit_reference<WordType>::bit_reference(
+    const bit_reference<WordType>& other
 ) noexcept
 : _ptr(other._ptr)
 , _mask(other._mask)
