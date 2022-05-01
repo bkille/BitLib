@@ -10,9 +10,9 @@ Many of the implementations in `include/bit-algorithms` come from some of my pre
 
 ## Example
 The code below is from `example/print.cpp`. 
-```
+```cpp
 #include <iostream>
-#include "bitlib.hpp""
+#include "bitlib.hpp"
 
 int main() {
     bit::bit_vector<unsigned char> bv1 {"011111010010"};
@@ -40,7 +40,7 @@ int main() {
 
 Another example can be seen which showcases some of the capabilities of the `bit_iterators/` library:
 
-```
+```cpp
 #include <iostream>
 #include "bitlib/bitlib.hpp"
 
