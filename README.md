@@ -17,10 +17,12 @@ The code below is from `example/print.cpp`.
 int main() {
     bit::bit_vector<unsigned char> bv1 {"011111010010"};
     std::cout << "Original bitvec:  " << bv1.debug_string() << std::endl;
+    // Original bitvec:  01111101 0010
 
     // Same behavior as std::reverse
     bit::reverse(bv1.begin(), bv1.end());
     std::cout << "Reversed bitvec:  " << bv1.debug_string() << std::endl;
+    // Reversed bitvec:  01001011 1110
 
     // Same behavior as std::rotate
     bit::rotate(bv1.begin(), bv.begin() + 3, bv1.end());
@@ -30,17 +32,10 @@ int main() {
     bv1.push_back(bit::bit0);
     bv1.insert(bv.end(), 10, bit::bit1);
     std::cout << "Extended bitvec:  " << bv1.debug_string() << std::endl;
+    // Extended bitvec:  01011111 00100111 1111111
 
     return 0;
 }
-```
-
-When executed, the following is printed:
-```
-Original bitvec:  01111101 0010
-Reversed bitvec:  01001011 1110
-Rotated bitvec:   01011111 0010
-Extended bitvec:  01011111 00100111 1111111
 ```
 
 Another example can be seen which showcases some of the capabilities of the `bit_iterators/` library:
@@ -59,7 +54,8 @@ Another example can be seen which showcases some of the capabilities of the `bit
 template<typename WordType>
 void flip_bits(bit::bit_vector<WordType>& bvec) {
     // Unable to take references to bool, but it works for bits!
-    for (bit::bit_reference<WordType> bval :  bvec) {
+    // for (bit::bit_reference<WordType> bval :  bvec) also works
+    for (auto bval :  bvec) {
         bval = ~bval;
     }
     return;
@@ -68,7 +64,8 @@ void flip_bits(bit::bit_vector<WordType>& bvec) {
 template<typename WordType>
 void bit_pointers(bit::bit_vector<WordType>& bvec) {
     // Unable to take pointers to bool, but it works for bits!
-    bit::bit_pointer<WordType> p = &bvec[0];
+    auto p = &bvec[0];
+    // bit::bit_pointer<WordType> p = &bvec[0]; also works
     *p = bit::bit1;
     return;
 }
@@ -76,15 +73,16 @@ void bit_pointers(bit::bit_vector<WordType>& bvec) {
 int main() {
     bit::bit_vector<unsigned char> bvec("111000110010");
     std::cout << bvec.debug_string() << std::endl;
-    // Outputs 111000110010
+    // Outputs 11100011 0010
 
     flip_bits(bvec);
     std::cout << bvec.debug_string() << std::endl;
-    // Outputs 000111001101
+    // Outputs 00011100 1101
 
     bit_pointers(bvec);
     std::cout << bvec.debug_string() << std::endl;
-    // Outputs 100111001101
+    // Outputs 10011100 1101
+
     return 0;
 }
 ```

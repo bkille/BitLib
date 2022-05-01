@@ -11,7 +11,8 @@
 template<typename WordType>
 void flip_bits(bit::bit_vector<WordType>& bvec) {
     // Unable to take references to bool, but it works for bits!
-    for (bit::bit_reference<WordType> bval :  bvec) {
+    // Instead of auto, one could also use bit_reference<WordType> to be more explicit.
+    for (auto bval :  bvec) {
         bval = ~bval;
     }
     return;
@@ -20,7 +21,8 @@ void flip_bits(bit::bit_vector<WordType>& bvec) {
 template<typename WordType>
 void bit_pointers(bit::bit_vector<WordType>& bvec) {
     // Unable to take pointers to bool, but it works for bits!
-    bit::bit_pointer<WordType> p = &bvec[0];
+    // Instead of auto, one could also use bit_pointer<WordType> to be more explicit.
+    auto p = &bvec[0];
     *p = bit::bit1;
     return;
 }
