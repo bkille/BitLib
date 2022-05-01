@@ -366,14 +366,135 @@ TYPED_TEST(VectorTest, InsertAtRand3) {
 }
 
 // Test erase
-TYPED_TEST(VectorTest, Erase1) {
-    auto v3_copy = this->v3_;
-    auto bitret = this->v3_.erase(this->v3_.begin());
-    EXPECT_TRUE(std::equal(this->v3_.begin(), this->v3_.end(), v3_copy.begin() + 1));
-    EXPECT_EQ(std::distance(this->v3_.begin(), bitret), 0);
-    bitret = this->v3_.erase(this->v3_.end() - 1);
-    EXPECT_TRUE(std::equal(this->v3_.begin(), this->v3_.end(), v3_copy.begin() + 1));
-    EXPECT_EQ(std::distance(this->v3_.begin(), bitret), v3_copy.size() - 2);
+TYPED_TEST(VectorTest, EraseAtBegin1) {
+    // First signature
+    for (auto _ = 16; _--;) {
+        auto vec_idx = generate_random_number(0, this->random_bitvecs.size() - 1);
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        if (boolvec.size() == 0) { continue; }
+        auto bitret = bitvec.erase(bitvec.begin());
+        auto boolret = boolvec.erase(boolvec.begin());
+        EXPECT_TRUE(std::equal(
+                    bitvec.begin(), 
+                    bitvec.end(), 
+                    boolvec.begin(), 
+                    boolvec.end(), 
+                    comparator));
+        EXPECT_EQ(
+                std::distance(bitvec.begin(), bitret), 
+                std::distance(boolvec.begin(), boolret));
+    }
+}
+
+TYPED_TEST(VectorTest, EraseAtEnd1) {
+    // First signature
+    for (auto _ = 16; _--;) {
+        auto vec_idx = generate_random_number(0, this->random_bitvecs.size() - 1);
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        if (boolvec.size() == 0) { continue; }
+        auto bitret = bitvec.erase(bitvec.end() - 1);
+        auto boolret = boolvec.erase(boolvec.end() - 1);
+        EXPECT_TRUE(std::equal(
+                    bitvec.begin(), 
+                    bitvec.end(), 
+                    boolvec.begin(), 
+                    boolvec.end(), 
+                    comparator));
+        EXPECT_EQ(
+                std::distance(bitvec.begin(), bitret), 
+                std::distance(boolvec.begin(), boolret));
+    }
+}
+
+TYPED_TEST(VectorTest, EraseAtRand1) {
+    // First signature
+    for (auto _ = 16; _--;) {
+        auto vec_idx = generate_random_number(0, this->random_bitvecs.size() - 1);
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        if (boolvec.size() == 0) { continue; }
+        auto erase_location = generate_random_number(0, boolvec.size() - 1);
+        auto bitret = bitvec.erase(bitvec.begin() + erase_location);
+        auto boolret = boolvec.erase(boolvec.begin() + erase_location);
+        EXPECT_TRUE(std::equal(
+                    bitvec.begin(), 
+                    bitvec.end(), 
+                    boolvec.begin(), 
+                    boolvec.end(), 
+                    comparator));
+        EXPECT_EQ(
+                std::distance(bitvec.begin(), bitret), 
+                std::distance(boolvec.begin(), boolret));
+    }
+}
+
+TYPED_TEST(VectorTest, EraseAtBegin2) {
+    // Second signature
+    for (auto _ = 16; _--;) {
+        auto vec_idx = generate_random_number(0, this->random_bitvecs.size() - 1);
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        if (boolvec.size() == 0) { continue; }
+        auto erase_size = generate_random_number(0, boolvec.size() - 1);
+        auto bitret = bitvec.erase(bitvec.begin(), bitvec.begin() + erase_size);
+        auto boolret = boolvec.erase(boolvec.begin(), boolvec.begin() + erase_size);
+        EXPECT_TRUE(std::equal(
+                    bitvec.begin(), 
+                    bitvec.end(), 
+                    boolvec.begin(), 
+                    boolvec.end(), 
+                    comparator));
+        EXPECT_EQ(
+                std::distance(bitvec.begin(), bitret), 
+                std::distance(boolvec.begin(), boolret));
+    }
+}
+
+TYPED_TEST(VectorTest, EraseAtEnd2) {
+    // Second signature
+    for (auto _ = 16; _--;) {
+        auto vec_idx = generate_random_number(0, this->random_bitvecs.size() - 1);
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        if (boolvec.size() == 0) { continue; }
+        auto erase_start = generate_random_number(0, boolvec.size() - 1);
+        auto bitret = bitvec.erase(bitvec.begin() + erase_start, bitvec.end());
+        auto boolret = boolvec.erase(boolvec.begin() + erase_start, boolvec.end());
+        EXPECT_TRUE(std::equal(
+                    bitvec.begin(), 
+                    bitvec.end(), 
+                    boolvec.begin(), 
+                    boolvec.end(), 
+                    comparator));
+        EXPECT_EQ(
+                std::distance(bitvec.begin(), bitret), 
+                std::distance(boolvec.begin(), boolret));
+    }
+}
+
+TYPED_TEST(VectorTest, EraseAtRand2) {
+    // Second signature
+    for (auto _ = 16; _--;) {
+        auto vec_idx = generate_random_number(0, this->random_bitvecs.size() - 1);
+        auto& bitvec = this->random_bitvecs[vec_idx];
+        auto& boolvec = this->random_boolvecs[vec_idx];
+        if (boolvec.size() == 0) { continue; }
+        auto erase_start = generate_random_number(0, boolvec.size() - 1);
+        auto erase_end = generate_random_number(erase_start, boolvec.size());
+        auto bitret = bitvec.erase(bitvec.begin() + erase_start, bitvec.begin() + erase_end);
+        auto boolret = boolvec.erase(boolvec.begin() + erase_start, boolvec.begin() + erase_end);
+        EXPECT_TRUE(std::equal(
+                    bitvec.begin(), 
+                    bitvec.end(), 
+                    boolvec.begin(), 
+                    boolvec.end(), 
+                    comparator));
+        EXPECT_EQ(
+                std::distance(bitvec.begin(), bitret), 
+                std::distance(boolvec.begin(), boolret));
+    }
 }
 
 //TYPED_TEST(VectorTest, Print) {

@@ -168,10 +168,14 @@ class bit_vector {
         };
         constexpr iterator erase(iterator first, iterator last) {
             // TODO return correct iterator
+            const auto d = distance(begin(), first);
             auto count = distance(first, last);    
-            shift_left(first, first + length_, count);
+            if (count == 0) {
+                return last;
+            }
+            shift_left(first, end(), count);
             length_ -= count;
-            return last;
+            return begin() + d;
         }
         constexpr void push_back(const value_type& value) {
             if (this->capacity() <= length_ - 1) {
