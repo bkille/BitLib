@@ -53,18 +53,7 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
             write_word<word_type>(fill_word, bit_iterator<word_type*>(&(*it)), last.position());
         }
     }
-
-
-
 }
-
-// Status: to do
-template <class ExecutionPolicy, class ForwardIt>
-void fill(ExecutionPolicy&& policy, bit_iterator<ForwardIt> first,
-    bit_iterator<ForwardIt> last, const bit_value& bv) {
-    (policy, first, last, bv);
-}
-
 
 // ========================================================================== //
 } // namespace bit

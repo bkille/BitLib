@@ -27,7 +27,6 @@
 #include "move_bench.hpp"
 #include "copy_backward_bench.hpp"
 #include "swap_ranges-bench.hpp"
-#include "search_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
 #include <iostream>

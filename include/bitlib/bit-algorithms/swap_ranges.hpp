@@ -193,15 +193,6 @@ constexpr bit_iterator<ForwardIt2> swap_ranges(
 }
 
 
-// Status: to do
-template <class ExecutionPolicy, class ForwardIt1, class ForwardIt2>
-bit_iterator<ForwardIt2> swap_ranges(ExecutionPolicy&& policy,
-    bit_iterator<ForwardIt1> first1, bit_iterator<ForwardIt1> last1,
-    bit_iterator<ForwardIt2> first2) {
-    (policy, first1, last1);
-    return first2;
-}
-
 // ========================================================================== //
 } // namespace bit
 #endif // _SWAP_RANGES_HPP_INCLUDED

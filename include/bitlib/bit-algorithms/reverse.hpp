@@ -110,13 +110,6 @@ constexpr void reverse(
     }
 }
 
-// Status: to do
-template <class ExecutionPolicy, class BidirIt>
-void reverse(ExecutionPolicy&& policy, bit_iterator<BidirIt> first,
-    bit_iterator<BidirIt> last) {
-    (policy, first, last);
-}
-
 
 // -------------------------------------------------------------------------- //
 
