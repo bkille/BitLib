@@ -55,8 +55,9 @@ Another example can be seen which showcases some of the capabilities of the `bit
 template<typename WordType>
 void flip_bits(bit::bit_vector<WordType>& bvec) {
     // Unable to take references to bool, but it works for bits!
-    // for (bit::bit_reference<WordType> bval :  bvec) also works
-    for (auto bval :  bvec) {
+    // for (auto bval :  bvec) actually iterates over bit-references, which is misleading since
+    // this syntax typically implies that bval would be a copy.
+    for (bit::bit_reference<WordType> bval :  bvec) {
         bval = ~bval;
     }
     return;
