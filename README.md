@@ -27,6 +27,7 @@ int main() {
     // Same behavior as std::rotate
     bit::rotate(bv1.begin(), bv.begin() + 3, bv1.end());
     std::cout << "Rotated bitvec:   " << bv1.debug_string() << std::endl;
+    // Rotated bitvec:   01011111 0010
 
     // Same behavior as the corresponding std::vector::push_back and std::vector::insert
     bv1.push_back(bit::bit0);
