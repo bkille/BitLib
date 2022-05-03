@@ -9,11 +9,11 @@ project(Bit-Vector VERSION 0.1)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # specify the C++ standard
-set_property(GLOBAL PROPERTY CXX_STANDARD 20)
+set_property(GLOBAL PROPERTY CXX_STANDARD 17)
 set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
 
 # specify global compiler flags
-add_compile_options(-std=c++20 -march=native -pedantic -Wall -Wextra -Wfatal-errors)
+add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
 include_directories("include/" "ext/simdpp")
 
 # Add targets

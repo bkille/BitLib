@@ -45,7 +45,7 @@ class bit_vector {
             }
         }; 
 
-        constexpr ~bit_vector() {};
+        ~bit_vector() {};
 
         bit_vector& operator=(bit_vector& other) {
             length_ = other.length_;
