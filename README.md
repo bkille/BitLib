@@ -27,6 +27,7 @@ int main() {
     // Same behavior as std::rotate
     bit::rotate(bv1.begin(), bv.begin() + 3, bv1.end());
     std::cout << "Rotated bitvec:   " << bv1.debug_string() << std::endl;
+    // Rotated bitvec:   01011111 0010
 
     // Same behavior as the corresponding std::vector::push_back and std::vector::insert
     bv1.push_back(bit::bit0);
@@ -54,8 +55,9 @@ Another example can be seen which showcases some of the capabilities of the `bit
 template<typename WordType>
 void flip_bits(bit::bit_vector<WordType>& bvec) {
     // Unable to take references to bool, but it works for bits!
-    // for (bit::bit_reference<WordType> bval :  bvec) also works
-    for (auto bval :  bvec) {
+    // for (auto bval :  bvec) actually iterates over bit-references, which is misleading since
+    // this syntax typically implies that bval would be a copy.
+    for (bit::bit_reference<WordType> bval :  bvec) {
         bval = ~bval;
     }
     return;
