@@ -214,16 +214,27 @@ std::copy_backward (large)          185251 ns       185244 ns         3132
 
 | Benchmark | Size  | Speedup |
 |-----------|-------|---------|
-| shift     | small | 10x   |
-| shift     | large | 600x    |
-| reverse   | small | 4.4x    |
-| reverse   | large | 258x    |
-| rotate    | small | 10x    |
-| rotate    | large | 70x   |
-| count     | small | 9x   |
-| count     | large | 80x    |
-| copy      | small | 0.5x |
-| copy      | large | 43x |
-| copy_backward      | small | 0.15x |
-| copy_backward      | large | 80x |
+|shift_left (UU) | small | 9.04x|
+|shift_left (UU) | large | 556.84x|
+|shift_right (UU) | small | 9.08x|
+|shift_right (AA) | large | 534.04x|
+|reverse (UU) | small | 4.70x|
+|reverse (AA) | large | 335.55x|
+|reverse (UU) | large | 223.67x|
+|transform(UnaryOp) (UU) | small | 0.52x|
+|transform(UnaryOp) (UU) | large | 47.38x|
+|transform(BinaryOp) (UU) | small | 0.92x|
+|transform(BinaryOp) (UU) | large | 129.64x|
+|rotate (ARA) | small | 9.23x|
+|rotate (ARA) | large | 73.98x|
+|count (AA) | small | 11.23x|
+|count (AA) | large | 75.51x|
+|swap_ranges (UU) | small | 2.07x|
+|swap_ranges (UU) | large | 142.06x|
+|copy (UU) | small | 0.36x|
+|copy (UU) | large | 3.29x|
+|move (UU) | small | 2.70x|
+|move (UU) | large | 21.48x|
+|copy_backward (UU) | small | 0.83x|
+|copy_backward (UU) | large | 51.39x|
 
