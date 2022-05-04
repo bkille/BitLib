@@ -4,60 +4,16 @@
 
 
 ## Description
-While [bit iterators](https://github.com/vreverdy/bit) are currently being proposed and reviewed by the ISO C++ Standards Committee, this repository is intended for practical use of bit containers and algorithms based on bit iterators. Primarily, this repository acts as an efficient replacement of `std::vector<bool>`. It provides implementations of many of the functions in `<algorithms>` optimized for containers of bits, in addition to providing a `bitvector` class, which has the same interface as `std::vector<bool>`.
+While [bit iterators](https://github.com/vreverdy/bit) are currently being proposed and reviewed by the ISO C++ Standards Committee, this repository is intended for practical use of bit containers and algorithms based on bit iterators. Primarily, this repository acts as an efficient replacement of `std::vector<bool>`. It provides implementations of many of the functions in `<algorithms>` optimized for containers of bits, in addition to providing a `bit_vector` class which has roughly 🚡the same interface as `std::vector<bool>`.
 
 Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
 
 ## Installation
 BitLib is a header-only libarary. In order to use BitLib, just make sure the `include/` folder is added compiler's search path. 
 
-## Usage
-The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. 
-
-### Containers
- Right now, the only container I have implemented is the bitvector. `bit::vector<WordType>` is essentially a wrapper around `std::vector<WordType>`. The interfaces are nearly identical. In addition to the normal `vector` constructors, you can also provide a string to construct your bitvector:
-```cpp
-using WordType = unsigned long long int
-bit::bit_vector<WordType> bvec1 {"011111010010"};
-```
-
-### Algorithms
-The algorithms again work in the same manner as the STL. The functions provided here have the same interface as those in the STL, however under the hood, they take advantage of bit-parallelism. It should be noted that if there is an STL algorithm that is not supported yet by BitLib, you can still use the STL implementation. For example:
-```cpp
-using WordType = unsigned long long int
-bit::bit_vector<WordType> bvec1 {"011111010010"};
-bit::bit_vector<WordType> bvec2 = bvec1;
-bit::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end());
-std::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end()); // Also works, but much slower as it works bit-by-bit
-```
-
-### Iterators
-The bit-iterators are the foundation of the library. In most cases, users will only need to work w/ the `bit::bit_vector::begin()` and `bit::bit_vector::end()` methods to obtain iterators. However, constructing a bit iterator from any address is also straightforward:
-```
-using WordType = unsigned long long int
-std::vector<WordType> wordVec = {1,2,3,4};
-bit::bit_iterator<WordType>(&(wordVec[0])); // Constructs a bit iterator starting from the first bit from the first word of the vector
-bit::bit_iterator<WordType>(&(wordVec[0]), 1); // Constructs a bit iterator from the second bit (position 1) of the first word of the vector
-```
-
-In order to grab the underlying word that a bit pointed to by a bit_iterator comes from, you can use the `bit_iterator.base()` function. 
-
-It is worth noting that the "position" of a bit always increases from LSB to MSB. For those looking to create their own algorithms from bit_iterators, this can be a common "gotcha". For example, shifting a word to the right by `k` will eliminate the first `k` bits of the container. This is only important to those implementing their own algorithms. `bit::shift_*` works as described in the documentation i.e. `shift_right` shifts the container towards `end()` and `shift_left` shifts the container towards `begin()`. 
-
-```
-       MSB|<-----|LSB
-Position: 76543210
-Value:    01010001
-Sequence: 10001010
-// Shift right 2
-       MSB|<-----|LSB
-Position: 76543210
-Value:    00010100
-Sequence: 00101000
-```
 
 ## Example
-The code below is from `example/print.cpp`. 
+The code below is from `example/print.cpp`. While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
 ```cpp
 #include <iostream>
 #include "bitlib.hpp"
@@ -91,6 +47,7 @@ Another example can be seen which showcases some of the capabilities of the `bit
 
 ```cpp
 #include <iostream>
+#include <cstdint>
 #include "bitlib/bitlib.hpp"
 
 // Here are a couple examples of what BitLib can accomplish that std::vector<bool> can not. While 
@@ -137,6 +94,52 @@ int main() {
 }
 ```
 
+## Usage
+The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. 
+
+### Containers
+ Right now, the only container I have implemented is the bitvector. `bit::vector<WordType>` is essentially a wrapper around `std::vector<WordType>`. The interfaces are nearly identical. In addition to the normal `vector` constructors, you can also provide a string to construct your bitvector:
+```cpp
+using WordType = uint64_t;
+bit::bit_vector<WordType> bvec1 {"011111010010"};
+```
+
+While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
+
+### Algorithms
+The algorithms again work in the same manner as the STL. The functions provided here have the same interface as those in the STL, however under the hood, they take advantage of bit-parallelism. It should be noted that if there is an STL algorithm that is not supported yet by BitLib, you can still use the STL implementation. For example:
+```cpp
+using WordType = uint64_t;
+bit::bit_vector<WordType> bvec1 {"011111010010"};
+bit::bit_vector<WordType> bvec2 = bvec1;
+bit::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end());
+std::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end()); // Also works, but much slower as it works bit-by-bit
+```
+
+### Iterators
+The bit-iterators are the foundation of the library. In most cases, users will only need to work w/ the `bit::bit_vector::begin()` and `bit::bit_vector::end()` methods to obtain iterators. However, constructing a bit iterator from any address is also straightforward:
+```
+using WordType = uint64_t;
+std::vector<WordType> wordVec = {1,2,3,4};
+bit::bit_iterator<WordType>(&(wordVec[0])); // Constructs a bit iterator starting from the first bit from the first word of the vector
+bit::bit_iterator<WordType>(&(wordVec[0]), 1); // Constructs a bit iterator from the second bit (position 1) of the first word of the vector
+```
+
+In order to grab the underlying word that a bit pointed to by a bit_iterator comes from, you can use the `bit_iterator.base()` function. 
+
+It is worth noting that the "position" of a bit always increases from LSB to MSB. For those looking to create their own algorithms from bit_iterators, this can be a common "gotcha". For example, shifting a word to the right by `k` will eliminate the first `k` bits of the container. This is only important to those implementing their own algorithms. `bit::shift_*` works as described in the documentation i.e. `shift_right` shifts the container towards `end()` and `shift_left` shifts the container towards `begin()`. 
+
+```
+       MSB|<-----|LSB
+Position: 76543210
+Value:    01010001
+Sequence: 10001010
+// Shift right 2
+       MSB|<-----|LSB
+Position: 76543210
+Value:    00010100
+Sequence: 00101000
+```
 
 ## Documentation
 Given that the majority of the library is focused on having the same interface as the C++ STL iterators, containers, and algorithms, users should use the official [STL documentation website](https://en.cppreference.com/). We do plan on adding our own documentation in the future, however. 
