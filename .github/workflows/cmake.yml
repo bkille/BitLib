@@ -25,10 +25,6 @@ jobs:
         os: [ubuntu-18.04, ubuntu-20.04]    
         compiler:
           - { compiler: GNU, CC: gcc-11, CXX: g++-11 }
-          - { compiler: LLVM, CC: clang-13, CXX: clang++-13 }
-        exclude:
-          - os: ubuntu-18.04
-            compiler: { compiler: LLVM, CC: clang-13, CXX: clang++-13 }
 
     steps:
     - name: Cancel Workflow Action
@@ -40,6 +36,9 @@ jobs:
     - name: Install requirements
       run: |
         sudo apt install build-essential manpages-dev software-properties-common
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt update && sudo apt install ${{ matrix.compiler.CC }} ${{ matrix.compiler.CXX }}
+        cmake --version
 
     
     - name: Configure CMake
