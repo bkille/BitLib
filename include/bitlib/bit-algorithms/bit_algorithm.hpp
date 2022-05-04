@@ -52,6 +52,7 @@
 #include "rotate.hpp"
 #include "shift.hpp"
 #include "swap_ranges.hpp"
+#include "transform.hpp"
 #include "type_traits.hpp"
 // ========================================================================== //
 
