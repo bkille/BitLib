@@ -13,8 +13,8 @@ set_property(GLOBAL PROPERTY CXX_STANDARD 17)
 set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
 
 # set up linters/checkers
-set(CMAKE_CXX_CPPCHECK cppcheck;--std=c++17;--file-filter=*bitlib*)
-set(CMAKE_CXX_CPPLINT cpplint;--linelength=100;”)
+#set(CMAKE_CXX_CPPCHECK cppcheck;--std=c++17;--file-filter=*bitlib*)
+#set(CMAKE_CXX_CPPLINT cpplint;--linelength=100;--filter=-whitespace;)
 #set(CMAKE_CXX_CLANG_TIDY 
   #clang-tidy;
   #-header-filter=include/;)
