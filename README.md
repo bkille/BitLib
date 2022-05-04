@@ -176,11 +176,13 @@ std::shift_left (large)                   124613 ns       124608 ns         5619
 bit::shift_right (small) (UU)               3.12 ns         3.12 ns    224795005
 std::shift_right (small)                    28.3 ns         28.3 ns     24736322
 bit::shift_right (large) (AA)                198 ns          198 ns      3557331
+BitArray::shift_right (large)               1574 ns         1574 ns       444657
 std::shift_right (large)                  105509 ns       105505 ns         6665
 bit::reverse (small) (UU)                   6.97 ns         6.96 ns    100781790
 std::reverse (small)                        32.6 ns         32.6 ns     21506909
 bit::reverse (large) (AA)                    677 ns          677 ns      1029718
 bit::reverse (large) (UU)                   1018 ns         1018 ns       681715
+BitArray::reverse (large)                  10200 ns        10200 ns        68540
 std::reverse (large)                      227075 ns       227074 ns         3086
 bit::transform(UnaryOp) (small) (UU)        9.78 ns         9.78 ns     72256866
 std::transform(UnaryOp) (small)             7.37 ns         7.37 ns    277564125
@@ -193,10 +195,12 @@ std::transform(BinaryOp) (large)          145481 ns       145476 ns        61477
 bit::rotate (small) (ARA)                   6.35 ns         6.35 ns    109070004
 std::rotate (small)                         70.5 ns         70.5 ns     17952078
 bit::rotate (large) (ARA)                   6359 ns         6358 ns       114733
+BitArray::rotate (large)                   21985 ns        21984 ns        31790
 std::rotate (large)                       405739 ns       405724 ns         1723
 bit::count (small) (AA)                     1.05 ns         1.05 ns    661326099
 std::count (small)                          11.8 ns         11.8 ns     59495876
 bit::count (large) (AA)                      638 ns          638 ns      1096136
+BitArray::count (large)                     1023 ns         1023 ns       684351
 std::count (large)                         48201 ns        48199 ns        14523
 bit::swap_ranges (small) (UU)               6.93 ns         6.93 ns    101144710
 std::swap_ranges (small)                    12.0 ns         12.0 ns    100000000
