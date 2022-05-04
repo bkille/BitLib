@@ -89,7 +89,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
                 *it = get_word<word_type>(first, digits);
                 remaining_bits_to_copy -= digits;
                 it++; 
-                ::std::advance(first, digits);
+                advance(first, digits);
             }
         }
         if (remaining_bits_to_copy > 0) {

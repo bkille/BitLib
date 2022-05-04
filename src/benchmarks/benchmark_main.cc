@@ -13,6 +13,7 @@
 // ============================== PREAMBLE ================================== //
 // C++ standard library
 #include <tuple>
+#include <cstdint>
 #include <vector>
 #include <list>
 #include <forward_list>
@@ -27,6 +28,7 @@
 #include "move_bench.hpp"
 #include "copy_backward_bench.hpp"
 #include "swap_ranges-bench.hpp"
+#include "transform_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
 #include <iostream>
@@ -73,7 +75,7 @@ void register_word_containers(F test_lambda_f, std::string func_name, unsigned i
 
 template <class F, template<typename...> class C, template<typename...> class... Args> 
 void register_word_containers(F test_lambda_f, std::string func_name, unsigned int size) {
-    register_types<F, C<unsigned long long int>>(test_lambda_f, func_name, size);
+    register_types<F, C<uint64_t>>(test_lambda_f, func_name, size);
     register_word_containers<F, Args...>(test_lambda_f, func_name, size);
 }
 
@@ -115,8 +117,8 @@ int main(int argc, char** argv) {
             size_large);
     register_word_containers<decltype(BM_BitShiftLeft), std::vector>(
             BM_BitShiftLeft, 
-            "bit::shift_left (small) (AA)",
-            size_small);
+            "bit::shift_left (large) (AA)",
+            size_large);
     register_bool_containers<decltype(BM_BoolShiftLeft), std::vector>(
             BM_BoolShiftLeft, 
             "std::shift_left (large)",
@@ -158,6 +160,40 @@ int main(int argc, char** argv) {
     register_bool_containers<decltype(BM_BoolReverse), std::vector>(
             BM_BoolReverse, 
             "std::reverse (large)",
+            size_large);
+
+    // transform benchmarks
+    register_word_containers<decltype(BM_BitTransformUnary), std::vector>(
+            BM_BitTransformUnary, 
+            "bit::transform(UnaryOp) (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolTransformUnary), std::vector>(
+            BM_BoolTransformUnary, 
+            "std::transform(UnaryOp) (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitTransformUnary), std::vector>(
+            BM_BitTransformUnary, 
+            "bit::transform(UnaryOp) (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolTransformUnary), std::vector>(
+            BM_BoolTransformUnary, 
+            "std::transform(UnaryOp) (large)",
+            size_large);
+    register_word_containers<decltype(BM_BitTransformBinary), std::vector>(
+            BM_BitTransformBinary, 
+            "bit::transform(BinaryOp) (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolTransformBinary), std::vector>(
+            BM_BoolTransformBinary, 
+            "std::transform(BinaryOp) (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitTransformBinary), std::vector>(
+            BM_BitTransformBinary, 
+            "bit::transform(BinaryOp) (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolTransformBinary), std::vector>(
+            BM_BoolTransformBinary, 
+            "std::transform(BinaryOp) (large)",
             size_large);
 
     // Rotate benchmarks 

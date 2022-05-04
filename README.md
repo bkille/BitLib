@@ -155,61 +155,65 @@ I used Google's [benchmark](https://github.com/google/benchmark) library for com
 For example, `bit::rotate (large) (ARA)` refers to our library's implementation of the `rotate` algorithm operating on a container of 32768 bits, where `first` and `last` are aligned but `n_first` is selected at random.
 
 ```
-2022-05-02T12:15:34-05:00
+2022-05-04T16:54:22-05:00
 Running ./bin/bench
-Run on (80 X 1439.35 MHz CPU s)
+Run on (80 X 2899.73 MHz CPU s)
 CPU Caches:
   L1 Data 32 KiB (x40)
   L1 Instruction 32 KiB (x40)
   L2 Unified 1024 KiB (x40)
   L3 Unified 28160 KiB (x2)
-Load Average: 0.18, 0.30, 1.63
---------------------------------------------------------------------------
-Benchmark                                Time             CPU   Iterations
---------------------------------------------------------------------------
-bit::shift_left (small) (UU)          2.61 ns         2.61 ns    268071890
-bit::shift_left (small) (AA)          2.98 ns         2.98 ns    234664285
-std::shift_left (small)               23.5 ns         23.5 ns     29816869
-bit::shift_left (large) (UU)           162 ns          162 ns      4297326
-bit::shift_left (small) (AA)          2.98 ns         2.98 ns    234698017
-std::shift_left (large)              97663 ns        97659 ns         7170
-bit::shift_right (small) (UU)         2.44 ns         2.44 ns    286670520
-std::shift_right (small)              22.2 ns         22.2 ns     31539227
-bit::shift_right (large) (AA)          141 ns          141 ns      4956794
-BitArray::shift_right (large)         1574 ns         1574 ns       444657
-std::shift_right (large)             82202 ns        82198 ns         8504
-bit::reverse (small) (UU)             5.44 ns         5.44 ns    128267079
-std::reverse (small)                  24.9 ns         24.9 ns     26432325
-bit::reverse (large) (AA)              580 ns          580 ns      1209237
-bit::reverse (large) (UU)              748 ns          748 ns       937796
-BitArray::reverse (large)            10200 ns        10200 ns        68540
-std::reverse (large)                159196 ns       159190 ns         4390
-bit::rotate (small) (ARA)             5.43 ns         5.43 ns    128867785
-std::rotate (small)                   25.5 ns         25.5 ns     27502077
-bit::rotate (large) (ARA)             4811 ns         4810 ns       146478
-BitArray::rotate (large)             21985 ns        21984 ns        31790
-std::rotate (large)                 369593 ns       369577 ns         2262
-bit::count (small) (AA)               1.90 ns         1.90 ns    368687307
-std::count (small)                    9.22 ns         9.22 ns     75829944
-bit::count (large) (AA)                449 ns          449 ns      1552065
-BitArray::count (large)               1023 ns         1023 ns       684351
-std::count (large)                   35858 ns        35857 ns        19474
-bit::swap_ranges (small) (UU)         5.69 ns         5.69 ns    122994258
-std::swap_ranges (small)              26.3 ns         26.3 ns    100000000
-bit::swap_ranges (large) (UU)         1478 ns         1478 ns       398502
-std::swap_ranges (large)            264861 ns       264851 ns         2535
-bit::copy (small) (UU)                6.53 ns         6.53 ns    106877661
-std::copy (small)                     7.69 ns         7.69 ns    100000000
-bit::copy (large) (UU)                 555 ns          555 ns      2496160
-std::copy (large)                    97572 ns        97568 ns        10000
-bit::move (small) (UU)                6.57 ns         6.57 ns    106398702
-std::move (small)                     7.70 ns         7.70 ns    120517641
-bit::move (large) (UU)                1063 ns         1063 ns       941543
-std::move (large)                    73594 ns        73591 ns        25308
-bit::copy_backward (small) (UU)       8.82 ns         8.82 ns    100000000
-std::copy_backward (small)            5.32 ns         5.32 ns   1000000000
-bit::copy_backward (large) (UU)       3104 ns         3104 ns       291662
-std::copy_backward (large)          185251 ns       185244 ns         3132
+Load Average: 30.12, 34.38, 27.36
+--------------------------------------------------------------------------------
+Benchmark                                      Time             CPU   Iterations
+--------------------------------------------------------------------------------
+bit::shift_left (small) (UU)                3.32 ns         3.32 ns    210813946
+bit::shift_left (small) (AA)                3.82 ns         3.82 ns    183929862
+std::shift_left (small)                     30.0 ns         30.0 ns     23354867
+bit::shift_left (large) (UU)                 224 ns          224 ns      3123287
+bit::shift_left (large) (AA)                 249 ns          249 ns      2779768
+std::shift_left (large)                   124613 ns       124608 ns         5619
+bit::shift_right (small) (UU)               3.12 ns         3.12 ns    224795005
+std::shift_right (small)                    28.3 ns         28.3 ns     24736322
+bit::shift_right (large) (AA)                198 ns          198 ns      3557331
+std::shift_right (large)                  105509 ns       105505 ns         6665
+bit::reverse (small) (UU)                   6.97 ns         6.96 ns    100781790
+std::reverse (small)                        32.6 ns         32.6 ns     21506909
+bit::reverse (large) (AA)                    677 ns          677 ns      1029718
+bit::reverse (large) (UU)                   1018 ns         1018 ns       681715
+std::reverse (large)                      227075 ns       227074 ns         3086
+bit::transform(UnaryOp) (small) (UU)        9.78 ns         9.78 ns     72256866
+std::transform(UnaryOp) (small)             7.37 ns         7.37 ns    277564125
+bit::transform(UnaryOp) (large) (UU)        1601 ns         1601 ns       500139
+std::transform(UnaryOp) (large)           126781 ns       126776 ns         8421
+bit::transform(BinaryOp) (small) (UU)       9.05 ns         9.05 ns     57675249
+std::transform(BinaryOp) (small)            9.24 ns         9.24 ns     99408220
+bit::transform(BinaryOp) (large) (UU)       3628 ns         3628 ns       203351
+std::transform(BinaryOp) (large)          145481 ns       145476 ns        61477
+bit::rotate (small) (ARA)                   6.35 ns         6.35 ns    109070004
+std::rotate (small)                         70.5 ns         70.5 ns     17952078
+bit::rotate (large) (ARA)                   6359 ns         6358 ns       114733
+std::rotate (large)                       405739 ns       405724 ns         1723
+bit::count (small) (AA)                     1.05 ns         1.05 ns    661326099
+std::count (small)                          11.8 ns         11.8 ns     59495876
+bit::count (large) (AA)                      638 ns          638 ns      1096136
+std::count (large)                         48201 ns        48199 ns        14523
+bit::swap_ranges (small) (UU)               6.93 ns         6.93 ns    101144710
+std::swap_ranges (small)                    12.0 ns         12.0 ns    100000000
+bit::swap_ranges (large) (UU)               5231 ns         5230 ns       153896
+std::swap_ranges (large)                  309796 ns       309783 ns         3836
+bit::copy (small) (UU)                      8.64 ns         8.64 ns    115207740
+std::copy (small)                           14.6 ns         14.6 ns     57036393
+bit::copy (large) (UU)                      2346 ns         2346 ns      6304472
+std::copy (large)                          97726 ns        97721 ns        10000
+bit::move (small) (UU)                      7.92 ns         7.92 ns    197443159
+std::move (small)                           27.3 ns         27.3 ns    118842385
+bit::move (large) (UU)                      2365 ns         2365 ns       522922
+std::move (large)                          68891 ns        68888 ns       103608
+bit::copy_backward (small) (UU)             9.81 ns         9.81 ns     71653257
+std::copy_backward (small)                  4.50 ns         4.50 ns    256639096
+bit::copy_backward (large) (UU)             4350 ns         4350 ns       222897
+std::copy_backward (large)                161108 ns       161102 ns         4778
 ```
 
 | Benchmark | Size  | Speedup |
