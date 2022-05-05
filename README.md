@@ -136,9 +136,9 @@ auto bitret = bit::transform(
 The bit-iterators are the foundation of the library. In most cases, users will only need to work w/ the `bit::bit_vector::begin()` and `bit::bit_vector::end()` methods to obtain iterators. However, constructing a bit iterator from any address is also straightforward:
 ```cpp
 using WordType = uint64_t;
-std::vector<WordType> wordVec = {1,2,3,4};
-bit::bit_iterator<WordType>(&(wordVec[0])); // Constructs a bit iterator starting from the first bit from the first word of the vector
-bit::bit_iterator<WordType>(&(wordVec[0]), 1); // Constructs a bit iterator from the second bit (position 1) of the first word of the vector
+std::array<WordType, 4> wordArr = {1,2,3,4};
+bit::bit_iterator<WordType*>(&(wordArr[0])); // Constructs a bit iterator starting from the first bit from the first word of the vector
+bit::bit_iterator<WordType*>(&(wordArr[0]), 1); // Constructs a bit iterator from the second bit (position 1) of the first word of the vector
 ```
 
 In order to grab the underlying word that a bit pointed to by a bit_iterator comes from, you can use the `bit_iterator.base()` function. 
