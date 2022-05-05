@@ -52,7 +52,9 @@ Another example can be seen which showcases some of the capabilities of the `bit
 
 // Here are a couple examples of what BitLib can accomplish that std::vector<bool> can not. While 
 // we still have to explicitly define the type as either reference or pointer, they at least compile
-// and behave as expected
+// and behave as expected. There is definitely some work to be done still to make bit::vector behave 
+// like a regular STL vector. Need to address the comments made here (and likely elsewhere).
+// https://www.reddit.com/r/cpp/comments/ue911x/comment/i6nql6j/?utm_source=share&utm_medium=web2x&context=3
 //
 // It should be noted that I am not responsible for the creation of this aspect of the library, 
 // the bit_iterator/ is thanks to Dr. Vincent Reverdy.
