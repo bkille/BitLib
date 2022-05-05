@@ -33,6 +33,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fmt)
 
 # Add targets
+file(GLOB_RECURSE BITLIB_HEADERS "include/bitlib/" "*.hpp")
 file(GLOB TEST_SOURCES "src/unit-tests/*.cpp")
 add_executable(tests ${TEST_SOURCES})
 file(GLOB BENCH_SOURCES "src/benchmarks/*.cc")
@@ -42,6 +43,13 @@ file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
 add_executable(example_print ${EXAMPLE1_SOURCES})
 file(GLOB EXAMPLE2_SOURCES "example/vectorbool.cpp")
 add_executable(example_vectorbool ${EXAMPLE2_SOURCES})
+add_library(bitlib INTERFACE)
+
+###########
+# Library #
+###########
+target_include_directories(bitlib INTERFACE include/ ext/simdpp)
+target_sources(bitlib INTERFACE ${BITLIB_HEADERS})
 
 ############
 # Examples #
