@@ -119,9 +119,9 @@ std::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end()); // Also work
 For algorithms which take a function (i.e. `bit::transform`), the function should have `WordType` as the input types as well as the return type. For example, to compute the intersection of two bitvectors:
 ```cpp
 using WordType = uint64_t;
-auto binary_op = std::bit_and<WordType();
+auto binary_op = std::bit_and<WordType>();
 
-// Store the AND of bitvec1 and bitvec2 ans store it in bitvec3
+// Store the AND of bitvec1 and bitvec2 in bitvec3
 auto bitret = bit::transform(
         bitvec1.begin(),
         bitvec1.end(),
