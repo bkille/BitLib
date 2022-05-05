@@ -16,7 +16,7 @@ BitLib is a header-only libarary. In order to use BitLib, just make sure the `in
 The code below is from `example/print.cpp`. While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
 ```cpp
 #include <iostream>
-#include "bitlib.hpp"
+#include "bitlib/bitlib.hpp"
 
 int main() {
     bit::bit_vector<unsigned char> bv1 {"011111010010"};
