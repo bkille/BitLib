@@ -18,7 +18,10 @@
 // Project sources
 #include "bit_algorithm_details.hpp"
 // Third-party libraries
+#include <simdpp/simd.h>
 // Miscellaneous
+#define is_aligned(POINTER, BYTE_COUNT) \
+        (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 namespace bit {
 // ========================================================================== //
 
@@ -38,6 +41,9 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
     // Initializations
     const word_type fill_word = bv == bit0 ? 0 : -1;
 
+    if (distance(first, last) == 0) {
+        return;
+    }
     if (is_within<digits>(first, last)) {
         write_word<word_type>(fill_word, first, distance(first, last));
     } else {
@@ -46,10 +52,19 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
             write_word<word_type>(fill_word, first, digits - first.position());
             ++it;
         }
-        while (it != last.base()) {
-            *it++ = fill_word;
+        const unsigned long N = SIMDPP_FAST_INT64_SIZE;
+        const unsigned long N_native_words = (N*64)/digits;
+        for (; it != last.base() && !is_aligned(&*it, 64); it++) {
+            *it = fill_word;
         }
+        for (; std::distance(it, last.base()) >= N_native_words + 2; it += N_native_words) {
+            using vec_type = simdpp::uint64<N>;
+            vec_type v = simdpp::load_splat(&fill_word);
+            simdpp::store(&(*it), v);
+        }
+        std::fill(it, last.base(), fill_word);
         if (last.position() != 0) {
+            it = last.base();
             write_word<word_type>(fill_word, bit_iterator<word_type*>(&(*it)), last.position());
         }
     }
