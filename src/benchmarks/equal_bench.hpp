@@ -12,25 +12,18 @@ auto BM_BitEqual = [](benchmark::State& state, auto input) {
     auto first1 = bit::bit_iterator<decltype(std::begin(bitvec1))>(std::begin(bitvec1));
     auto bitvec2 = get_random_vec<WordType>(container_size);
     auto first2 = bit::bit_iterator<decltype(std::begin(bitvec2))>(std::begin(bitvec2));
-    unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(total_bits - 1, 16));
-    unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(total_bits - 1, 16));
-    long long end1 = generate_random_number(
-            0, 
-            std::max<long long>(
-                0, 
-                total_bits - std::max<long long>(start1, start2)));
 
     // Only really care about benchmarking when equal, since it is worst case scenario
     std::copy(
-        first1 + start1,
-        first1 + total_bits - end1,
-        first2 + start2
+        first1 + 1,
+        first1 + total_bits - 4,
+        first2 + 2
     );
     for (auto _ : state)
         benchmark::DoNotOptimize(bit::equal(
-            first1 + start1,
-            first1 + total_bits - end1,
-            first2 + start2
+            first1 + 1,
+            first1 + total_bits - 4,
+            first2 + 2
         ));
 };
 
@@ -44,25 +37,18 @@ auto BM_BoolEqual = [](benchmark::State& state, auto input) {
     auto first1 = boolvec1.begin();
     auto first2 = boolvec2.begin();
 
-    unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(boolvec1.size() - 1, 16));
-    unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(boolvec2.size() - 1, 16));
-    long long end1 = generate_random_number(
-            0, 
-            std::max<long long>(
-                0, 
-                total_bits - std::max<long long>(start1, start2)));
 
     // Only really care about benchmarking when equal, since it is worst case scenario
     std::copy(
-        first1 + start1,
-        first1 + total_bits - end1,
-        first2 + start2
+        first1 + 1,
+        first1 + total_bits - 4,
+        first2 + 2
     );
     for (auto _ : state)
         benchmark::DoNotOptimize(std::equal(
-            first1 + start1,
-            first1 + total_bits - end1,
-            first2 + start2
+                first1 + 1,
+                first1 + total_bits - 4,
+                first2 + 2
         ));
 };
 

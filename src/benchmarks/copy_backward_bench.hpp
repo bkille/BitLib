@@ -12,9 +12,9 @@ auto BM_BitCopyBackward = [](benchmark::State& state, auto input) {
     auto first1 = bit::bit_iterator<decltype(std::begin(bitvec1))>(std::begin(bitvec1));
     auto bitvec2 = get_random_vec<WordType>(container_size);
     auto first2 = bit::bit_iterator<decltype(std::begin(bitvec2))>(std::begin(bitvec2));
-    unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(total_bits - 1, 16));
-    unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(total_bits - 1, 16));
-    auto end1 = generate_random_number(std::max<long long>(0, start2 - start1), total_bits - start1);
+    auto start1 = 3;
+    auto start2 = 1;
+    auto end1 = 4;
     long long n = total_bits - start1 - end1;
 
     for (auto _ : state)
@@ -35,9 +35,9 @@ auto BM_BoolCopyBackward = [](benchmark::State& state, auto input) {
     auto first1 = boolvec1.begin();
     auto first2 = boolvec2.begin();
 
-    unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(boolvec1.size() - 1, 16));
-    unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(boolvec2.size() - 1, 16));
-    auto end1 = generate_random_number(std::max<long long>(0, start2 - start1), total_bits - start1);
+    auto start1 = 3;
+    auto start2 = 1;
+    auto end1 = 4;
     long long n = total_bits - start1 - end1;
 
     for (auto _ : state)

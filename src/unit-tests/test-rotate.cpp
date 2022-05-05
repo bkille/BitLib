@@ -20,23 +20,6 @@
 #include "gtest/gtest.h"
 // Miscellaneous
 // ========================================================================== //
-        bit::bit_vector<WordType>& bitvec1 = this->random_bitvecs1[idx];
-        bit::bit_vector<WordType>& bitvec2 = this->random_bitvecs2[idx];
-        constexpr auto digits = bit::binary_digits<typename TestFixture::base_type>::value;
-        std::vector<bool>& boolvec1 = this->random_boolvecs1[idx];
-        std::vector<bool>& boolvec2 = this->random_boolvecs2[idx];
-        long long start1 = generate_random_number(
-                0, 
-                std::min<long long>(bitvec1.size() - 1, digits + 1));
-        long long start2 = generate_random_number(
-                0, 
-                std::min<long long>(bitvec2.size() - 1, digits + 1));
-        const auto min_range = (start2 > start1) ? start2 - start1 : 0;
-        const auto max_range = std::max<long long>(
-                min_range,
-                std::min<long long>(digits, bitvec1.size() - start1)); 
-        long long end1 = generate_random_number(min_range, max_range);
-
 
 TYPED_TEST(SingleRangeTest, Rotate) {
     using WordType = typename TestFixture::base_type;
