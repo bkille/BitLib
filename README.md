@@ -166,7 +166,7 @@ I used Google's [benchmark](https://github.com/google/benchmark) library for com
 * (size) denotes the size of the container in bits. `small = 1 << 4`, `large = 1 << 16`
 * (alignment-tags) refers to the memory alignment of the bit-iterators. `U` means the iterator does not fall on a word boundary, `R` means the iterator is placed at random, and `A` means the iterator is aligned with a word boundary.
 
-For example, `bit::rotate (large) (ARA)` refers to our library's implementation of the `rotate` algorithm operating on a container of 32768 bits, where `first` and `last` are aligned but `n_first` is selected at random.
+For example, `bit::rotate (large) (ARA)` refers to our library's implementation of the `rotate` algorithm operating on a container of 65536 bits, where `first` and `last` are aligned but `n_first` is selected at random.
 
 ```
 2022-05-04T16:54:22-05:00
