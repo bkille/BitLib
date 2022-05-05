@@ -53,8 +53,8 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
             write_word<word_type>(fill_word, first, digits - first.position());
             ++it;
         }
-        const unsigned long N = SIMDPP_FAST_INT64_SIZE;
-        const unsigned long N_native_words = (N*64)/digits;
+        const long long N = SIMDPP_FAST_INT64_SIZE;
+        const long long N_native_words = (N*64)/digits;
         for (; it != last.base() && !is_aligned(&*it, 64); it++) {
             *it = fill_word;
         }
