@@ -116,9 +116,23 @@ bit::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end());
 std::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end()); // Also works, but much slower as it works bit-by-bit
 ```
 
+For algorithms which take a function (i.e. `bit::transform`), the function should have `WordType` as the input types as well as the return type. For example, to compute the intersection of two bitvectors:
+```cpp
+using WordType = uint64_t;
+auto binary_op = std::bit_and<WordType();
+
+// Store the AND of bitvec1 and bitvec2 ans store it in bitvec3
+auto bitret = bit::transform(
+        bitvec1.begin(),
+        bitvec1.end(),
+        bitvec2.begin(),
+        bitvec3.begin()
+        binary_op); 
+```
+
 ### Iterators
 The bit-iterators are the foundation of the library. In most cases, users will only need to work w/ the `bit::bit_vector::begin()` and `bit::bit_vector::end()` methods to obtain iterators. However, constructing a bit iterator from any address is also straightforward:
-```
+```cpp
 using WordType = uint64_t;
 std::vector<WordType> wordVec = {1,2,3,4};
 bit::bit_iterator<WordType>(&(wordVec[0])); // Constructs a bit iterator starting from the first bit from the first word of the vector
