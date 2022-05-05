@@ -40,6 +40,7 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
 
     // Initializations
     const word_type fill_word = bv == bit0 ? 0 : -1;
+    const uint64_t fill_word_64 = bv == bit0 ? 0 : -1;
 
     if (distance(first, last) == 0) {
         return;
@@ -59,7 +60,7 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
         }
         for (; std::distance(it, last.base()) >= N_native_words + 2; it += N_native_words) {
             using vec_type = simdpp::uint64<N>;
-            vec_type v = simdpp::load_splat(&fill_word);
+            vec_type v = simdpp::load_splat(&fill_word_64);
             simdpp::store(&(*it), v);
         }
         std::fill(it, last.base(), fill_word);
