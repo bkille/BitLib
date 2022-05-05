@@ -9,7 +9,7 @@ While [bit iterators](https://github.com/vreverdy/bit) are currently being propo
 Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
 
 ## Installation
-BitLib is a header-only libarary. In order to use BitLib, just make sure the `include/` folder is added compiler's search path. 
+BitLib is a header-only libarary. In order to use BitLib, just make sure the `include/` folder is added compiler's search path. Currently, the BitLib library requires at least `-std=c++17`. 
 
 
 ## Example
@@ -95,10 +95,10 @@ int main() {
 ```
 
 ## Usage
-The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. 
+The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. Instead of the values being `bool`, we have `bit::bit_value`, which can take on either `bit::bit0` or `bit::bit1`. 
 
 ### Containers
- Right now, the only container I have implemented is the bitvector. `bit::vector<WordType>` is essentially a wrapper around `std::vector<WordType>`. The interfaces are nearly identical. In addition to the normal `vector` constructors, you can also provide a string to construct your bitvector:
+ Right now, the only container I have implemented is the bitvector. `bit::bit_vector<WordType>` is essentially a wrapper around `std::vector<WordType>`. The interfaces are nearly identical. In addition to the normal `vector` constructors, you can also provide a string to construct your bitvector:
 ```cpp
 using WordType = uint64_t;
 bit::bit_vector<WordType> bvec1 {"011111010010"};
@@ -116,9 +116,23 @@ bit::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end());
 std::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end()); // Also works, but much slower as it works bit-by-bit
 ```
 
+For algorithms which take a function (i.e. `bit::transform`), the function should have `WordType` as the input types as well as the return type. For example, to compute the intersection of two bitvectors:
+```cpp
+using WordType = uint64_t;
+auto binary_op = std::bit_and<WordType>();
+
+// Store the AND of bitvec1 and bitvec2 in bitvec3
+auto bitret = bit::transform(
+        bitvec1.begin(),
+        bitvec1.end(),
+        bitvec2.begin(),
+        bitvec3.begin()
+        binary_op); 
+```
+
 ### Iterators
 The bit-iterators are the foundation of the library. In most cases, users will only need to work w/ the `bit::bit_vector::begin()` and `bit::bit_vector::end()` methods to obtain iterators. However, constructing a bit iterator from any address is also straightforward:
-```
+```cpp
 using WordType = uint64_t;
 std::vector<WordType> wordVec = {1,2,3,4};
 bit::bit_iterator<WordType>(&(wordVec[0])); // Constructs a bit iterator starting from the first bit from the first word of the vector
@@ -152,7 +166,7 @@ I used Google's [benchmark](https://github.com/google/benchmark) library for com
 * (size) denotes the size of the container in bits. `small = 1 << 4`, `large = 1 << 16`
 * (alignment-tags) refers to the memory alignment of the bit-iterators. `U` means the iterator does not fall on a word boundary, `R` means the iterator is placed at random, and `A` means the iterator is aligned with a word boundary.
 
-For example, `bit::rotate (large) (ARA)` refers to our library's implementation of the `rotate` algorithm operating on a container of 32768 bits, where `first` and `last` are aligned but `n_first` is selected at random.
+For example, `bit::rotate (large) (ARA)` refers to our library's implementation of the `rotate` algorithm operating on a container of 65536 bits, where `first` and `last` are aligned but `n_first` is selected at random.
 
 ```
 2022-05-04T16:54:22-05:00
