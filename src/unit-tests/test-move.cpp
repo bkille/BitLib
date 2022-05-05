@@ -20,20 +20,55 @@
 // ========================================================================== //
 
 TYPED_TEST(DoubleRangeTest, Move) {
-    for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
-        bit::bit_vector<typename TestFixture::base_type> bitvec1 = this->random_bitvecs1[idx];
-        bit::bit_vector<typename TestFixture::base_type> bitvec2 = this->random_bitvecs2[idx];
-        std::vector<bool> boolvec1 = this->random_boolvecs1[idx];
-        std::vector<bool> boolvec2 = this->random_boolvecs2[idx];
-        unsigned long long start1 = generate_random_number(0, std::min<unsigned long long>(bitvec1.size() - 1, 16));
-        unsigned long long start2 = generate_random_number(0, std::min<unsigned long long>(bitvec2.size() - 1, 16));
-        long long end1 = generate_random_number(std::max<long long>(0, start2 - start1), bitvec1.size() - start1);
-        auto bitret = bit::move(bitvec1.begin() + start1, bitvec1.end() - end1, bitvec2.begin() + start2); 
-        auto boolret = std::move(boolvec1.begin() + start1, boolvec1.end() - end1, boolvec2.begin() + start2); 
-        EXPECT_EQ(bit::distance(bitvec2.begin(), bitret), std::distance(boolvec2.begin(), boolret));
+    for (size_t idx = 0; idx < this->bit_size; ++idx) {
+        using WordType = typename TestFixture::base_type;
+        bit::bit_vector<WordType>& bitvec1 = this->random_bitvecs1[idx];
+        bit::bit_vector<WordType>& bitvec2 = this->random_bitvecs2[idx];
+        constexpr auto digits = bit::binary_digits<WordType>::value;
+        std::vector<bool>& boolvec1 = this->random_boolvecs1[idx];
+        std::vector<bool>& boolvec2 = this->random_boolvecs2[idx];
+        long long start1 = generate_random_number(
+                0, 
+                std::min<long long>(bitvec1.size() - 1, digits + 1));
+        long long start2 = generate_random_number(
+                0, 
+                std::min<long long>(bitvec2.size() - 1, digits + 1));
+        const auto min_range = (start2 > start1) ? start2 - start1 : 0;
+        const auto max_range = std::max<long long>(
+                min_range,
+                std::min<long long>(digits, bitvec1.size() - start1)); 
+        long long end1 = generate_random_number(min_range, max_range);
+
+        auto bitret = bit::move(
+                bitvec1.begin() + start1, 
+                bitvec1.end() - end1,
+                bitvec2.begin() + start2); 
+        auto boolret = std::move(
+                boolvec1.begin() + start1, 
+                boolvec1.end() - end1, 
+                boolvec2.begin() + start2); 
+        EXPECT_EQ(
+                bit::distance(bitvec2.begin(), bitret),
+                std::distance(boolvec2.begin(), boolret));
         EXPECT_TRUE(std::equal(
                     bitvec2.begin(), bitvec2.end(),
                     boolvec2.begin(), boolvec2.end(), comparator)
+        );
+        start2 = generate_random_number(0, start1);
+        bitret = bit::move(
+                bitvec1.begin() + start1, 
+                bitvec1.end() - end1,
+                bitvec1.begin() + start2); 
+        boolret = std::move(
+                boolvec1.begin() + start1, 
+                boolvec1.end() - end1, 
+                boolvec1.begin() + start2); 
+        EXPECT_EQ(
+                bit::distance(bitvec1.begin(), bitret),
+                std::distance(boolvec1.begin(), boolret));
+        EXPECT_TRUE(std::equal(
+                    bitvec1.begin(), bitvec1.end(),
+                    boolvec1.begin(), boolvec1.end(), comparator)
         );
     }
 }

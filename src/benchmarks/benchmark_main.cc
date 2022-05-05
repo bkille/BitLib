@@ -29,6 +29,7 @@
 #include "copy_backward_bench.hpp"
 #include "swap_ranges-bench.hpp"
 #include "transform_bench.hpp"
+#include "equal_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
 #include <iostream>
@@ -266,6 +267,24 @@ int main(int argc, char** argv) {
     register_bool_containers<decltype(BM_BoolCopy), std::vector>(
             BM_BoolCopy, 
             "std::copy (large)",
+            size_large);
+
+    // Equal benchmarks
+    register_word_containers<decltype(BM_BitEqual), std::vector>(
+            BM_BitEqual, 
+            "bit::equal (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolEqual), std::vector>(
+            BM_BoolEqual, 
+            "std::equal (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitEqual), std::vector>(
+            BM_BitEqual, 
+            "bit::equal (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoolEqual), std::vector>(
+            BM_BoolEqual, 
+            "std::equal (large)",
             size_large);
 
     // move benchmarks 
