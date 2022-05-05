@@ -9,7 +9,7 @@ While [bit iterators](https://github.com/vreverdy/bit) are currently being propo
 Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
 
 ## Installation
-BitLib is a header-only libarary. In order to use BitLib, just make sure the `include/` folder is added compiler's search path. Currently, the BitLib library requires at least `-std=c++17`. 
+BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. In order to use BitLib, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. Currently, the BitLib library requires at least `-std=c++17`. 
 
 
 ## Example
