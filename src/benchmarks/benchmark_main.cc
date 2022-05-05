@@ -23,6 +23,7 @@
 #include "count_bench.hpp"
 #include "rotate_bench.hpp"
 #include "reverse_bench.hpp"
+#include "fill_bench.hpp"
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
 #include "move_bench.hpp"
@@ -97,7 +98,7 @@ int main(int argc, char** argv) {
     unsigned int size_small = 1 << 4;
     unsigned int size_medium = 1 << 8;
     unsigned int size_large = 1 << 16;
-    unsigned int size_huge = 1 << 30;
+    unsigned int size_huge = 1 << 22;
     
     // Shift benchmarks
     register_word_containers<decltype(BM_BitShiftLeft_UU), std::vector>(
@@ -322,6 +323,24 @@ int main(int argc, char** argv) {
             BM_BoolCopyBackward, 
             "std::copy_backward (large)",
             size_large);
+
+    // fill benchmarks
+    register_word_containers<decltype(BM_BitFill), std::vector>(
+            BM_BitFill, 
+            "bit::fill (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolFill), std::vector>(
+            BM_BoolFill, 
+            "std::fill (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitFill), std::vector>(
+            BM_BitFill, 
+            "bit::fill (huge) (UU)",
+            size_huge);
+    register_bool_containers<decltype(BM_BoolFill), std::vector>(
+            BM_BoolFill, 
+            "std::fill (huge)",
+            size_huge);
 
     //// Search benchmarks
     //register_word_containers<decltype(BM_BitSearch), std::vector>(
