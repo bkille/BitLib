@@ -1,6 +1,6 @@
-// ============================= COPY  TESTS =============================== //
+// ============================= EQUAL  TESTS =============================== //
 // Project:         The Experimental Bit Algorithms Library
-// Description:     Tests for copy algorithms 
+// Description:     Tests for equal algorithms 
 // Contributor(s):  Bryce Kille
 // License:         BSD 3-Clause License
 // ========================================================================== //
@@ -19,7 +19,7 @@
 // Miscellaneous
 // ========================================================================== //
 
-TYPED_TEST(DoubleRangeTest, Copy) {
+TYPED_TEST(DoubleRangeTest, Equal) {
     for (size_t idx = 0; idx < this->bit_size; ++idx) {
         using WordType = typename TestFixture::base_type;
         bit::bit_vector<WordType>& bitvec1 = this->random_bitvecs1[idx];
@@ -39,33 +39,36 @@ TYPED_TEST(DoubleRangeTest, Copy) {
                 std::min<long long>(digits, bitvec1.size() - start1)); 
         long long end1 = generate_random_number(min_range, max_range);
 
-        auto bitret = bit::copy(
+        auto bitret = bit::equal(
                 bitvec1.begin() + start1, 
                 bitvec1.end() - end1,
                 bitvec2.begin() + start2); 
-        auto boolret = std::copy(
+        auto boolret = std::equal(
                 boolvec1.begin() + start1, 
                 boolvec1.end() - end1, 
                 boolvec2.begin() + start2); 
-        EXPECT_EQ(
-                bit::distance(bitvec2.begin(), bitret),
-                std::distance(boolvec2.begin(), boolret));
+        EXPECT_EQ(boolret, bitret);
         EXPECT_TRUE(std::equal(
                     bitvec2.begin(), bitvec2.end(),
                     boolvec2.begin(), boolvec2.end(), comparator)
         );
-        start2 = generate_random_number(0, start1);
-        bitret = bit::copy(
+        bit::copy(
                 bitvec1.begin() + start1, 
                 bitvec1.end() - end1,
-                bitvec1.begin() + start2); 
-        boolret = std::copy(
+                bitvec2.begin() + start2); 
+        std::copy(
                 boolvec1.begin() + start1, 
                 boolvec1.end() - end1, 
-                boolvec1.begin() + start2); 
-        EXPECT_EQ(
-                bit::distance(bitvec1.begin(), bitret),
-                std::distance(boolvec1.begin(), boolret));
+                boolvec2.begin() + start2); 
+        bitret = bit::equal(
+                bitvec1.begin() + start1, 
+                bitvec1.end() - end1,
+                bitvec2.begin() + start2); 
+        boolret = std::equal(
+                boolvec1.begin() + start1, 
+                boolvec1.end() - end1, 
+                boolvec2.begin() + start2); 
+        EXPECT_EQ(boolret, bitret);
         EXPECT_TRUE(std::equal(
                     bitvec1.begin(), bitvec1.end(),
                     boolvec1.begin(), boolvec1.end(), comparator)

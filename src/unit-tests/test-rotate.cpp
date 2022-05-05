@@ -22,8 +22,9 @@
 // ========================================================================== //
 
 TYPED_TEST(SingleRangeTest, Rotate) {
+    using WordType = typename TestFixture::base_type;
     for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
-        bit::bit_vector<typename TestFixture::base_type> bitvec = this->random_bitvecs[idx];
+        bit::bit_vector<WordType>& bitvec = this->random_bitvecs[idx];
         std::vector<bool> boolvec = this->random_boolvecs[idx];
         size_t start_count = 16;
         while (start_count--) {

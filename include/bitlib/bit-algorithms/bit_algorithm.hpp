@@ -45,6 +45,7 @@
 #include "copy.hpp"
 #include "count.hpp"
 #include "debug_utils.hpp"
+#include "equal.hpp"
 #include "fill.hpp"
 #include "find.hpp"
 #include "move.hpp"
