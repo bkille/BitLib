@@ -76,7 +76,7 @@ jobs:
     - name: Run lcov 
       shell: bash -l {0}
       run: |
-        lcov --directory CMakeFiles/tests.dir/src/unit-tests/ --gcov-tool /usr/bin/gcov-11 --output-file lcov.out --include "*bitlib*" -c
+        lcov --directory CMakeFiles/bitlib-tests.dir/src/unit-tests/ --gcov-tool /usr/bin/gcov-11 --output-file lcov.out --include "*bitlib*" -c
         lcov -r lcov.out "*/usr/*" -r lcov.out "*_deps/*" -r lcov.out "*unit-tests*" -r lcov.out "*ext/*" -o lcov_filtered.out
 
     #- name: Code Coverage Report
