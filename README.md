@@ -8,29 +8,6 @@ While [bit iterators](https://github.com/vreverdy/bit) are currently being propo
 
 Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
 
-## Installation
-BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
-
-
-### Cmake
-You can automatically fetch the library using Cmake's `FetchContent`. 
-
-```cmake
-include(FetchContent)
-FetchContent_Declare(
-    bitlib
-    GIT_REPOSITORY https://github.com/bkille/bitlib.git
-    GIT_TAG origin/master
-)
-FetchContent_MakeAvailable(bitlib)
-
-add_executable(example example.cpp)
-target_link_libraries(example bitlib::bitlib)
-```
-
-### Manual include
-Alternatively, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. 
-
 ## Example
 The code below is from `example/print.cpp`. While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
 ```cpp
@@ -61,6 +38,50 @@ int main() {
     return 0;
 }
 ```
+
+## Speedy highlights
+
+Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline was `std::vector<bool>`. For more benchmarks, including some against the [BitArray C library](https://github.com/noporpoise/BitArray), see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
+
+| Function | Speedup |
+|--|--|
+|shift_left |  552.37x|
+|shift_right |  558.85x|
+|reverse |  264.48x|
+|transform(UnaryOp) |  43.35x|
+|transform(BinaryOp) |  73.39x|
+|rotate |  64.16x|
+|count |  70.97x|
+|swap_ranges |  99.73x|
+|copy |  40.03x|
+|equal |  103.96x|
+|move |  35.55x|
+|copy_backward |  72.77x|
+
+## Installation
+BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
+
+
+### Cmake
+You can automatically fetch the library using Cmake's `FetchContent`. 
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    bitlib
+    GIT_REPOSITORY https://github.com/bkille/bitlib.git
+    GIT_TAG origin/master
+)
+FetchContent_MakeAvailable(bitlib)
+
+add_executable(example example.cpp)
+target_link_libraries(example bitlib::bitlib)
+```
+
+### Manual include
+Alternatively, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. 
+
+
 
 ## Usage
 The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. Instead of the values being `bool`, we have `bit::bit_value`, which can take on either `bit::bit0` or `bit::bit1`. 
@@ -128,7 +149,7 @@ Given that the majority of the library is focused on having the same interface a
 
 
 ## Performance Benchmarks
-I used Google's [benchmark](https://github.com/google/benchmark) library for computing benchmarks. Each benchmark is formatted as `{bit, BitArray, std}::function` (size) [(alignment-tags)]. It should be noted that SIMD instructions were turned off for these benchmarks.
+I used Google's [benchmark](https://github.com/google/benchmark) library for computing benchmarks. Each benchmark is formatted as `{bit, BitArray, std}::function` (size) [(alignment-tags)]. 
 
 * `bit` is for this library, `BitArray` is for the popular C-based [BitArray library](https://github.com/noporpoise/BitArray), and`std` is the standard library operating on the infamous `vector<bool>`. 
 * (size) denotes the size of the container in bits. `small = 1 << 4`, `large = 1 << 16`
@@ -202,29 +223,35 @@ bit::copy_backward (large) (UU)             4350 ns         4350 ns       222897
 std::copy_backward (large)                161108 ns       161102 ns         4778
 ```
 
-| Benchmark | Size  | Speedup |
+| Function | Size  | Speedup |
 |-----------|-------|---------|
-|shift_left (UU) | small | 9.04x|
-|shift_left (UU) | large | 556.84x|
-|shift_right (UU) | small | 9.08x|
-|shift_right (AA) | large | 534.04x|
-|reverse (UU) | small | 4.70x|
-|reverse (AA) | large | 335.55x|
-|reverse (UU) | large | 223.67x|
-|transform(UnaryOp) (UU) | small | 0.52x|
-|transform(UnaryOp) (UU) | large | 47.38x|
-|transform(BinaryOp) (UU) | small | 0.92x|
-|transform(BinaryOp) (UU) | large | 129.64x|
-|rotate (ARA) | small | 9.23x|
-|rotate (ARA) | large | 73.98x|
-|count (AA) | small | 11.23x|
-|count (AA) | large | 75.51x|
-|swap_ranges (UU) | small | 2.07x|
-|swap_ranges (UU) | large | 142.06x|
-|copy (UU) | small | 0.36x|
-|copy (UU) | large | 3.29x|
-|move (UU) | small | 2.70x|
-|move (UU) | large | 21.48x|
-|copy_backward (UU) | small | 0.83x|
-|copy_backward (UU) | large | 51.39x|
+|shift_left (UU) | small | 9.03x|
+|shift_left (AA) | small | 8.61x|
+|shift_left (UU) | large | 552.37x|
+|shift_left (AA) | large | 548.56x|
+|shift_right (UU) | small | 9.07x|
+|shift_right (AA) | large | 558.85x|
+|reverse (UU) | small | 5.42x|
+|reverse (AA) | large | 264.48x|
+|reverse (UU) | large | 181.98x|
+|transform(UnaryOp) (UU) | small | 0.93x|
+|transform(UnaryOp) (UU) | large | 43.35x|
+|transform(BinaryOp) (UU) | small | 0.50x|
+|transform(BinaryOp) (UU) | large | 73.39x|
+|rotate (ARA) | small | 9.72x|
+|rotate (ARA) | large | 64.16x|
+|count (AA) | small | 7.56x|
+|count (AA) | large | 70.97x|
+|swap_ranges (UU) | small | 4.29x|
+|swap_ranges (UU) | large | 99.73x|
+|copy (UU) | small | 4.44x|
+|copy (UU) | large | 40.03x|
+|equal (UU) | small | 7.88x|
+|equal (UU) | large | 103.96x|
+|move (UU) | small | 4.69x|
+|move (UU) | large | 35.55x|
+|copy_backward (UU) | small | 2.30x|
+|copy_backward (UU) | large | 72.77x|
+|fill (UU) | small | 0.52x|
+|fill (UU) | huge | 1.21x|
 
