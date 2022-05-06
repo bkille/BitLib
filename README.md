@@ -9,8 +9,27 @@ While [bit iterators](https://github.com/vreverdy/bit) are currently being propo
 Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
 
 ## Installation
-BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. In order to use BitLib, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. Currently, the BitLib library requires at least `-std=c++17`. 
+BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
 
+
+### Cmake
+You can automatically fetch the library using Cmake's `FetchContent`. 
+
+```
+include(FetchContent)
+FetchContent_Declare(
+    bitlib
+    GIT_REPOSITORY https://github.com/bkille/bitlib.git
+    GIT_TAG origin/master
+)
+FetchContent_MakeAvailable(bitlib)
+
+add_executable(example example.cpp)
+target_link_libraries(example bitlib::bitlib)
+```
+
+### Manual include
+Alternatively, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. 
 
 ## Example
 The code below is from `example/print.cpp`. While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
