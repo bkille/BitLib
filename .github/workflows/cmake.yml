@@ -52,8 +52,8 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: make bit-tests
+      run: make bitlib-tests
 
     - name: Test
-      run: ./bin/bit-tests --gtest_repeat=10 --gtest_break_on_failure --gtest_brief=1
+      run: ./bin/bitlib-tests --gtest_repeat=10 --gtest_break_on_failure --gtest_brief=1
       

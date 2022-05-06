@@ -15,7 +15,7 @@ BitLib is a header-only libarary, however it does rely on the simdpp library in 
 ### Cmake
 You can automatically fetch the library using Cmake's `FetchContent`. 
 
-```
+```cmake
 include(FetchContent)
 FetchContent_Declare(
     bitlib
