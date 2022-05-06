@@ -35,14 +35,14 @@ FetchContent_MakeAvailable(fmt)
 # Add targets
 file(GLOB_RECURSE BITLIB_HEADERS "include/bitlib/" "*.hpp")
 file(GLOB TEST_SOURCES "src/unit-tests/*.cpp")
-add_executable(tests ${TEST_SOURCES})
+add_executable(bitlib-tests ${TEST_SOURCES})
 file(GLOB BENCH_SOURCES "src/benchmarks/*.cc")
-add_executable(bench ${BENCH_SOURCES})
+add_executable(bitlib-bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
-add_executable(example_print ${EXAMPLE1_SOURCES})
+add_executable(bitlib-example-print ${EXAMPLE1_SOURCES})
 file(GLOB EXAMPLE2_SOURCES "example/vectorbool.cpp")
-add_executable(example_vectorbool ${EXAMPLE2_SOURCES})
+add_executable(bitlib-example-vectorbool ${EXAMPLE2_SOURCES})
 add_library(bitlib INTERFACE)
 add_library(bitlib::bitlib ALIAS bitlib)
 
@@ -55,8 +55,10 @@ target_sources(bitlib INTERFACE ${BITLIB_HEADERS})
 ############
 # Examples #
 ############
-target_compile_options(example_print PUBLIC ${DEBUG_FLAGS})
-install(TARGETS example_print DESTINATION .)
+target_compile_options(bitlib-example-print PUBLIC ${DEBUG_FLAGS})
+install(TARGETS bitlib-example-print DESTINATION .)
+target_compile_options(bitlib-example-vectorbool PUBLIC ${DEBUG_FLAGS})
+install(TARGETS bitlib-example-vectorbool DESTINATION .)
 
 ################
 # Benchmarking #
@@ -71,17 +73,17 @@ FetchContent_MakeAvailable(googlebench)
 
 # specify benchmark-specific libraries
 include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils)
-target_link_libraries(bench PRIVATE benchmark::benchmark -pthread fmt::fmt-header-only)
+target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark -pthread fmt::fmt-header-only)
 
-target_compile_options(bench PUBLIC -O3 -DNDEBUG -mtune=native)
-install(TARGETS bench DESTINATION .)
+target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -mtune=native)
+install(TARGETS bitlib-bench DESTINATION .)
 
 
 ###########
 # Testing #
 ###########
 # specify test-specific flags
-target_compile_options(tests PUBLIC ${DEBUG_FLAGS})
+target_compile_options(bitlib-tests PUBLIC ${DEBUG_FLAGS})
 
 include(FetchContent)
 FetchContent_Declare(
@@ -93,14 +95,13 @@ FetchContent_MakeAvailable(googletest)
 
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(tests PRIVATE gtest gtest_main -pthread -lgcov --coverage -fsanitize=address fmt::fmt-header-only)
+target_link_libraries(bitlib-tests PRIVATE gtest gtest_main -pthread -lgcov --coverage -fsanitize=address fmt::fmt-header-only)
 
-install(TARGETS tests DESTINATION .)
+install(TARGETS bitlib-tests DESTINATION .)
 
 enable_testing()
-add_test(NAME VectorTests COMMAND tests)
-add_custom_target(check
-    COMMAND env CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
-    DEPENDS tests)
+add_custom_target(bitlib-check
+    COMMAND env CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bitlib-tests
+    DEPENDS bitlib-tests)
 
 
