@@ -3,7 +3,7 @@ set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverag
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
-project(Bit-Vector VERSION 0.1)
+project(Bit-Vector VERSION 0.1.1)
 
 # set output directory of builds
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -41,8 +41,6 @@ add_executable(bitlib-bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
 add_executable(bitlib-example-print ${EXAMPLE1_SOURCES})
-file(GLOB EXAMPLE2_SOURCES "example/vectorbool.cpp")
-add_executable(bitlib-example-vectorbool ${EXAMPLE2_SOURCES})
 add_library(bitlib INTERFACE)
 add_library(bitlib::bitlib ALIAS bitlib)
 
@@ -57,8 +55,6 @@ target_sources(bitlib INTERFACE ${BITLIB_HEADERS})
 ############
 target_compile_options(bitlib-example-print PUBLIC ${DEBUG_FLAGS})
 install(TARGETS bitlib-example-print DESTINATION .)
-target_compile_options(bitlib-example-vectorbool PUBLIC ${DEBUG_FLAGS})
-install(TARGETS bitlib-example-vectorbool DESTINATION .)
 
 ################
 # Benchmarking #

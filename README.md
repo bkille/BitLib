@@ -62,59 +62,6 @@ int main() {
 }
 ```
 
-Another example can be seen which showcases some of the capabilities of the `bitlib/bit_iterators` library:
-
-```cpp
-#include <iostream>
-#include <cstdint>
-#include "bitlib/bitlib.hpp"
-
-// Here are a couple examples of what BitLib can accomplish that std::vector<bool> can not. While 
-// we still have to explicitly define the type as either reference or pointer, they at least compile
-// and behave as expected. There is definitely some work to be done still to make bit::vector behave 
-// like a regular STL vector. Need to address the comments made here (and likely elsewhere).
-// https://www.reddit.com/r/cpp/comments/ue911x/comment/i6nql6j/?utm_source=share&utm_medium=web2x&context=3
-//
-// It should be noted that I am not responsible for the creation of this aspect of the library, 
-// the bit_iterator/ is thanks to Dr. Vincent Reverdy.
-
-template<typename WordType>
-void flip_bits(bit::bit_vector<WordType>& bvec) {
-    // Unable to take references to bool, but it works for bits!
-    // for (auto bval :  bvec) actually iterates over bit-references, which is misleading since
-    // this syntax typically implies that bval would be a copy.
-    for (bit::bit_reference<WordType> bval :  bvec) {
-        bval = ~bval;
-    }
-    return;
-}
-
-template<typename WordType>
-void bit_pointers(bit::bit_vector<WordType>& bvec) {
-    // Unable to take pointers to bool, but it works for bits!
-    auto p = &bvec[0];
-    // bit::bit_pointer<WordType> p = &bvec[0]; also works
-    *p = bit::bit1;
-    return;
-}
-
-int main() {
-    bit::bit_vector<unsigned char> bvec("111000110010");
-    std::cout << bvec.debug_string() << std::endl;
-    // Outputs 11100011 0010
-
-    flip_bits(bvec);
-    std::cout << bvec.debug_string() << std::endl;
-    // Outputs 00011100 1101
-
-    bit_pointers(bvec);
-    std::cout << bvec.debug_string() << std::endl;
-    // Outputs 10011100 1101
-
-    return 0;
-}
-```
-
 ## Usage
 The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. Instead of the values being `bool`, we have `bit::bit_value`, which can take on either `bit::bit0` or `bit::bit1`. 
 
