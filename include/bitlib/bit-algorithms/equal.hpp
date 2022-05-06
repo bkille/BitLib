@@ -18,7 +18,6 @@
 // Project sources
 #include "bitlib/bitlib.hpp"
 // Third-party libraries
-#include "fmt/core.h"
 // Miscellaneous
 namespace bit {
 // ========================================================================== //
