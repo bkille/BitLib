@@ -134,13 +134,13 @@ It is worth noting that the "position" of a bit always increases from LSB to MSB
 ```
        MSB|<-----|LSB
 Position: 76543210
-Value:    01010001
-Sequence: 10001010
-// Shift right 2
+Value:    01010001 --> Sequence: 10001010
+
+
+// bit::shift_right by 2
        MSB|<-----|LSB
 Position: 76543210
-Value:    00010100
-Sequence: 00101000
+Value:    01000100 --> Sequence: 00100010
 ```
 
 # Documentation
