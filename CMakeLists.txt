@@ -44,6 +44,7 @@ add_executable(example_print ${EXAMPLE1_SOURCES})
 file(GLOB EXAMPLE2_SOURCES "example/vectorbool.cpp")
 add_executable(example_vectorbool ${EXAMPLE2_SOURCES})
 add_library(bitlib INTERFACE)
+add_library(bitlib::bitlib ALIAS bitlib)
 
 ###########
 # Library #
