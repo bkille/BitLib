@@ -13,13 +13,23 @@
 
 // ================================ PREAMBLE ================================ //
 // C++ standard library
+#include <algorithm>
+#include <iterator>
 // Project sources
 // Third-party libraries
-#include <iterator>
-#define is_aligned(POINTER, BYTE_COUNT) \
-    (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 #include <simdpp/simd.h>
 // Miscellaneous
+#define is_aligned(POINTER, BYTE_COUNT) \
+    (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
+
+#if __cplusplus >= 202002L
+#define STD_SHIFT_RIGHT(FIRST, LAST, N) std::shift_right(FIRST, LAST, N) 
+#define STD_SHIFT_LEFT(FIRST, LAST, N) std::shift_left(FIRST, LAST, N) 
+#else
+#define STD_SHIFT_RIGHT(FIRST, LAST, N) word_shift_right(FIRST, LAST, N) 
+#define STD_SHIFT_LEFT(FIRST, LAST, N) word_shift_left(FIRST, LAST, N) 
+#endif 
+
 namespace bit {
 // ========================================================================== //
 
@@ -82,7 +92,7 @@ bit_iterator<ForwardIt> shift_right_dispatch(
         ) << first.position();
     *first.base() = *first.base() & mask;
     // Shift words to the right
-    ForwardIt it = word_shift_right(first.base(), 
+    ForwardIt it = STD_SHIFT_RIGHT(first.base(), 
                                std::next(last.base(), 
                                          !is_last_aligned
                                          ),
@@ -150,7 +160,7 @@ bit_iterator<ForwardIt> shift_left_dispatch(
     word_type last_value = !is_last_aligned ? *last.base() : 0;
 
     // Shift words to the left using std::shift 
-    ForwardIt new_last_base = word_shift_left(first.base(), 
+    ForwardIt new_last_base = STD_SHIFT_LEFT(first.base(), 
                                     last.base(),
                                     word_shifts
     );
@@ -225,7 +235,7 @@ bit_iterator<RandomAccessIt> shift_right_dispatch(
         ) << first.position();
     *first.base() = *first.base() & mask;
     // Shift words to the right
-    RandomAccessIt new_first_base = word_shift_right(
+    RandomAccessIt new_first_base = STD_SHIFT_RIGHT(
         first.base(), 
         std::next(
             last.base(), 
@@ -303,7 +313,7 @@ bit_iterator<RandomAccessIt> shift_left_dispatch(
     word_type last_value = !is_last_aligned ? *last.base() : 0;
 
     // Shift words to the left using std::shift 
-    RandomAccessIt new_last_base = word_shift_left(first.base(), 
+    RandomAccessIt new_last_base = STD_SHIFT_LEFT(first.base(), 
                                     last.base(),
                                     word_shifts
     );
