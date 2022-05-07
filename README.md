@@ -39,7 +39,7 @@ int main() {
 
 # Speedy highlights
 
-Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline here was `std::vector<bool>`. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterators do not fall on a word boundary and `A` means the iterators are aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. 
+Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterators do not fall on a word boundary and `A` means the iterators are aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. 
 
 ## Compared to `std::vector<bool>`
 | Function | Alignment | Speedup |
