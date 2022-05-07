@@ -1,6 +1,7 @@
 #include <functional>
 #include <benchmark/benchmark.h>
 #include "test_utils.hpp"
+#include "bit_array.h"
 #include "bitlib/bitlib.hpp"
 
 auto BM_BitTransformUnaryAA = [](benchmark::State& state, auto input) {
@@ -45,6 +46,16 @@ auto BM_BitTransformUnaryUU = [](benchmark::State& state, auto input) {
         );
 };
 
+auto BM_CBitArrTransformUnary = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+
+    BIT_ARRAY* bitarr1 = bit_array_create(total_bits);
+    BIT_ARRAY* bitarr2 = bit_array_create(total_bits);
+
+    for (auto _ : state)
+         bit_array_not(bitarr1, bitarr2);
+};
 
 auto BM_BoolTransformUnary = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
@@ -139,5 +150,16 @@ auto BM_BoolTransformBinary = [](benchmark::State& state, auto input) {
 };
 
 
+auto BM_CBitArrTransformBinary = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+
+    BIT_ARRAY* bitarr1 = bit_array_create(total_bits);
+    BIT_ARRAY* bitarr2 = bit_array_create(total_bits);
+    BIT_ARRAY* bitarr3 = bit_array_create(total_bits);
+
+    for (auto _ : state)
+         bit_array_and(bitarr1, bitarr2, bitarr3);
+};
 
 

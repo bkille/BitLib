@@ -1,5 +1,6 @@
 #include <benchmark/benchmark.h>
 #include <math.h>
+#include "bit_array.h"
 #include "bitlib/bit-algorithms/reverse.hpp"
 
 auto BM_BitReverse = [](benchmark::State& state, auto input) {
@@ -13,7 +14,6 @@ auto BM_BitReverse = [](benchmark::State& state, auto input) {
     auto last = bit::bit_iterator<decltype(std::end(bitcont))>(std::end(bitcont));
     for (auto _ : state) {
         bit::reverse(first, last);
-        benchmark::ClobberMemory();
     }
 };
 
@@ -28,7 +28,16 @@ auto BM_BitReverse_UU = [](benchmark::State& state, auto input) {
     auto last = bit::bit_iterator<decltype(std::end(bitcont))>(std::end(bitcont));
     for (auto _ : state) {
         bit::reverse(first + 2, last - 3);
-        benchmark::ClobberMemory();
+    }
+};
+
+auto BM_CBitArrReverse_AA = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    BIT_ARRAY* bitarr = bit_array_create(total_bits);
+    for (auto _ : state) {
+        bit_array_reverse(bitarr);
     }
 };
 
@@ -41,6 +50,5 @@ auto BM_BoolReverse = [](benchmark::State& state, auto input) {
     auto last = cont.end();
     for (auto _ : state) {
         std::reverse(first, last);
-        benchmark::ClobberMemory();
     }
 };

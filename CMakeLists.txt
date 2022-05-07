@@ -72,9 +72,10 @@ FetchContent_Declare(
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 FetchContent_MakeAvailable(googlebench)
 
+add_library(bitarr STATIC "ext/BitArray/bit_array.c")
 # specify benchmark-specific libraries
-include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils)
-target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark -pthread fmt::fmt-header-only)
+include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils "ext/BitArray/")
+target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark -pthread bitarr)
 
 target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -mtune=native)
 install(TARGETS bitlib-bench DESTINATION .)

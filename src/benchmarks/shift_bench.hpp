@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <random>
 #include <math.h>
+#include "bit_array.h"
 #include "bitlib/bitlib.hpp"
 
 
@@ -16,6 +17,18 @@ auto BM_BitShiftLeft = [](benchmark::State& state, auto input) {
     auto n = bit::distance(first, last) / 2;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::shift_left(first, last, n));
+        benchmark::ClobberMemory();
+    }
+};
+
+auto BM_CBitArrShiftLeft = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    BIT_ARRAY* bitarr = bit_array_create(total_bits);
+
+    for (auto _ : state) {
+        bit_array_shift_left(bitarr, total_bits/2, '0');
         benchmark::ClobberMemory();
     }
 };

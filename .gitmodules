@@ -1,3 +1,6 @@
 [submodule "ext/libsimdpp"]
 	path = ext/simdpp
 	url = git@github.com:p12tic/libsimdpp.git
+[submodule "ext/BitArray"]
+	path = ext/BitArray
+	url = git@github.com:noporpoise/BitArray.git

@@ -121,6 +121,10 @@ int main(int argc, char** argv) {
             BM_BitShiftLeft_UU, 
             "bit::shift_left (large) (UU)",
             size_large);
+    register_word_containers<decltype(BM_CBitArrShiftLeft), std::vector>(
+            BM_CBitArrShiftLeft, 
+            "BitArray::shift_left (large) (AA)",
+            size_large);
     register_bool_containers<decltype(BM_BoolShiftLeft), std::vector>(
             BM_BoolShiftLeft, 
             "std::shift_left (large)",
@@ -159,6 +163,10 @@ int main(int argc, char** argv) {
             BM_BitReverse_UU, 
             "bit::reverse (large) (UU)",
             size_large);
+    register_word_containers<decltype(BM_CBitArrReverse_AA), std::vector>(
+            BM_CBitArrReverse_AA, 
+            "BitArray::reverse (large) (AA)",
+            size_large);
     register_bool_containers<decltype(BM_BoolReverse), std::vector>(
             BM_BoolReverse, 
             "std::reverse (large)",
@@ -180,6 +188,10 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitTransformUnaryAA), std::vector>(
             BM_BitTransformUnaryAA, 
             "bit::transform(UnaryOp) (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_CBitArrTransformUnary), std::vector>(
+            BM_CBitArrTransformUnary, 
+            "BitArray::transform(UnaryOp) (large) (AA)",
             size_large);
     register_word_containers<decltype(BM_BitTransformUnaryUU), std::vector>(
             BM_BitTransformUnaryUU, 
@@ -205,6 +217,10 @@ int main(int argc, char** argv) {
             BM_BitTransformBinaryAA, 
             "bit::transform(BinaryOp) (large) (AA)",
             size_large);
+    register_word_containers<decltype(BM_CBitArrTransformBinary), std::vector>(
+            BM_CBitArrTransformBinary, 
+            "BitArray::transform(BinaryOp) (large) (AA)",
+            size_large);
     register_word_containers<decltype(BM_BitTransformBinaryUU), std::vector>(
             BM_BitTransformBinaryUU, 
             "bit::transform(BinaryOp) (large) (UU)",
@@ -215,17 +231,21 @@ int main(int argc, char** argv) {
             size_large);
 
     // Rotate benchmarks 
-    register_word_containers<decltype(BM_BitRotate), std::vector>(
-            BM_BitRotate, 
-            "bit::rotate (small) (ARA)",
+    register_word_containers<decltype(BM_BitRotateAUA), std::vector>(
+            BM_BitRotateAUA, 
+            "bit::rotate (small) (AUA)",
             size_small);
     register_bool_containers<decltype(BM_BoolRotate), std::vector>(
             BM_BoolRotate, 
             "std::rotate (small)",
             size_small);
-    register_word_containers<decltype(BM_BitRotate), std::vector>(
-            BM_BitRotate, 
-            "bit::rotate (large) (ARA)",
+    register_word_containers<decltype(BM_BitRotateAUA), std::vector>(
+            BM_BitRotateAUA, 
+            "bit::rotate (large) (AUA)",
+            size_large);
+    register_word_containers<decltype(BM_CBitArrRotate), std::vector>(
+            BM_CBitArrRotate, 
+            "BitArray::rotate (large) (AUA)",
             size_large);
     register_bool_containers<decltype(BM_BoolRotate), std::vector>(
             BM_BoolRotate, 
@@ -244,6 +264,10 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitCount), std::vector>(
             BM_BitCount, 
             "bit::count (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_CBitArrCount), std::vector>(
+            BM_CBitArrCount, 
+            "BitArray::count (large) (AA)",
             size_large);
     register_bool_containers<decltype(BM_BoolCount), std::vector>(
             BM_BoolCount, 
