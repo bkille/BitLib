@@ -1,5 +1,6 @@
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
 set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address)
+# specify the C++ standard
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
@@ -8,9 +9,13 @@ project(Bit-Vector VERSION 0.1.1)
 # set output directory of builds
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# specify the C++ standard
-set_property(GLOBAL PROPERTY CXX_STANDARD 17)
-set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED true)
+# set build type
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
+# set CXX standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # set up linters/checkers
 #set(CMAKE_CXX_CPPCHECK cppcheck;--std=c++17;--file-filter=*bitlib*)
