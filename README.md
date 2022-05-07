@@ -39,27 +39,27 @@ int main() {
 
 # Speedy highlights
 
-Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline was `std::vector<bool>`. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterator does not fall on a word boundary and `A` means the iterator is aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. For more benchmarks, including some against the [BitArray C library](https://github.com/noporpoise/BitArray), see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
+Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline was `std::vector<bool>`. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterators do not fall on a word boundary and `A` means the iterators are aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. For more benchmarks, including some against the [BitArray C library](https://github.com/noporpoise/BitArray), see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
 
 | Function | Alignment | Speedup |
 |--|--|--|
-|shift_left |UU | 734.24x|
-|shift_left |AA | 1970.49x|
-|shift_right |AA | 1933.49x|
-|reverse |UU | 228.25x|
-|reverse |AA | 309.60x|
-|transformUnaryOp |UU | 105.86x|
-|transformUnaryOp |AA | 1209.39x|
-|transformBinaryOp |UU | 55.50x|
-|transformBinaryOp |AA | 2436.48x|
-|rotate |AUA | 171.43x|
-|count |AA | 79.89x|
-|swap_ranges |UU | 99.64x|
-|swap_ranges |AA | 1462.80x|
-|copy |UU | 39.85x|
-|equal |UU | 111.15x|
-|move |UU | 31.73x|
-|copy_backward |UU | 77.21x|
+|shift_left | U | 734.24x|
+|shift_left | A | 1970.49x|
+|shift_right |A | 1933.49x|
+|reverse |U | 228.25x|
+|reverse |A | 309.60x|
+|transformUnaryOp |U | 105.86x|
+|transformUnaryOp |A | 1209.39x|
+|transformBinaryOp |U | 55.50x|
+|transformBinaryOp |A | 2436.48x|
+|rotate | AUA | 171.43x|
+|count |A | 79.89x|
+|swap_ranges | U | 99.64x|
+|swap_ranges | A | 1462.80x|
+|copy | U | 39.85x|
+|equal |U | 111.15x|
+|move | U | 31.73x|
+|copy_backward | U | 77.21x|
 
 
 # Installation
