@@ -65,7 +65,7 @@ constexpr bit_iterator<RandomAccessIt2> move(bit_iterator<RandomAccessIt1> first
                 static_cast<word_type>(partial_bits_to_move)
                 );
         remaining_bits_to_move -= partial_bits_to_move;
-        std::advance(first, partial_bits_to_move);
+        advance(first, partial_bits_to_move);
         it++;
     }
 
@@ -84,7 +84,7 @@ constexpr bit_iterator<RandomAccessIt2> move(bit_iterator<RandomAccessIt1> first
                 *it = get_word<word_type>(first, digits);
                 remaining_bits_to_move -= digits;
                 it++; 
-                std::advance(first, digits);
+                advance(first, digits);
             }
         }
         if (remaining_bits_to_move > 0) {

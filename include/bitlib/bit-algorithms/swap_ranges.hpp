@@ -138,7 +138,7 @@ constexpr bit_iterator<ForwardIt2> swap_ranges(
                         digits_to_copy - partial_digits_to_copy
                 );
             }
-            std::advance(first2, digits_to_copy);
+            advance(first2, digits_to_copy);
             digits_to_copy = digits2 - first2.position();
             // 2. Exchange full words
             while (it1 != last1.base()) {

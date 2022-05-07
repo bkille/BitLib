@@ -70,7 +70,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
                 static_cast<word_type>(partial_bits_to_copy)
                 );
         remaining_bits_to_copy -= partial_bits_to_copy;
-        ::std::advance(first, partial_bits_to_copy);
+        advance(first, partial_bits_to_copy);
         it++;
     }
 

@@ -65,7 +65,7 @@ constexpr bool equal(
                 << d_first.position());
         if ((mask & *it) != (mask & comp)) { return false; }
         remaining_bits_to_check -= partial_bits_to_check;
-        ::std::advance(first, partial_bits_to_check);
+        advance(first, partial_bits_to_check);
         it++;
     }
 

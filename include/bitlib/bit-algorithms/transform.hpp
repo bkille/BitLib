@@ -70,7 +70,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
                 static_cast<word_type>(d_first.position()),
                 static_cast<word_type>(partial_bits_to_op));
         remaining_bits_to_op -= partial_bits_to_op;
-        ::std::advance(first, partial_bits_to_op);
+        advance(first, partial_bits_to_op);
         it++;
     }
     if (remaining_bits_to_op > 0) { 
@@ -87,7 +87,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
                 *it = unary_op(get_word<word_type>(first, digits));
                 remaining_bits_to_op -= digits;
                 it++; 
-                ::std::advance(first, digits);
+                advance(first, digits);
             }
         }
         if (remaining_bits_to_op > 0) {
@@ -145,8 +145,8 @@ constexpr bit_iterator<RandomAccessIt> transform(
                 static_cast<word_type>(d_first.position()),
                 static_cast<word_type>(partial_bits_to_op));
         remaining_bits_to_op -= partial_bits_to_op;
-        ::std::advance(first1, partial_bits_to_op);
-        ::std::advance(first2, partial_bits_to_op);
+        advance(first1, partial_bits_to_op);
+        advance(first2, partial_bits_to_op);
         it++;
     }
     if (remaining_bits_to_op > 0) { 
@@ -167,8 +167,8 @@ constexpr bit_iterator<RandomAccessIt> transform(
                         get_word<word_type>(first2, digits));
                 remaining_bits_to_op -= digits;
                 it++; 
-                ::std::advance(first1, digits);
-                ::std::advance(first2, digits);
+                advance(first1, digits);
+                advance(first2, digits);
             }
         }
         if (remaining_bits_to_op > 0) {

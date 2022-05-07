@@ -121,7 +121,7 @@ bit_iterator<ForwardIt> shift_right_dispatch(
                 digits - last.position()
         );
     }
-    std::advance(d_first, remaining_bitshifts);
+    advance(d_first, remaining_bitshifts);
     return d_first;
 }
 
@@ -275,7 +275,7 @@ bit_iterator<RandomAccessIt> shift_right_dispatch(
                 digits - last.position()
         );
     }
-    std::advance(d_first, remaining_bitshifts);
+    advance(d_first, remaining_bitshifts);
     return d_first;
 }
 
