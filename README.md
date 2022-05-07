@@ -43,23 +43,24 @@ Here are some of the highlighted benchmarking results. Algorithms were ran on co
 
 | Function | Alignment | Speedup |
 |--|--|--|
-|shift_left |(UU) | 734.24x|
-|shift_left |(AA) | 1970.49x|
-|shift_right |(AA) | 1933.49x|
-|reverse |(UU) | 228.25x|
-|reverse |(AA) | 309.60x|
-|transform(UnaryOp) |(UU) | 105.86x|
-|transform(UnaryOp) |(AA) | 1209.39x|
-|transform(BinaryOp) |(UU) | 55.50x|
-|transform(BinaryOp) |(AA) | 2436.48x|
-|rotate |(AUA) | 171.43x|
-|count |(AA) | 79.89x|
-|swap_ranges |(UU) | 99.64x|
-|swap_ranges |(AA) | 1462.80x|
-|copy |(UU) | 39.85x|
-|equal |(UU) | 111.15x|
-|move |(UU) | 31.73x|
-|copy_backward |(UU) | 77.21x|
+|shift_left |UU | 734.24x|
+|shift_left |AA | 1970.49x|
+|shift_right |AA | 1933.49x|
+|reverse |UU | 228.25x|
+|reverse |AA | 309.60x|
+|transformUnaryOp |UU | 105.86x|
+|transformUnaryOp |AA | 1209.39x|
+|transformBinaryOp |UU | 55.50x|
+|transformBinaryOp |AA | 2436.48x|
+|rotate |AUA | 171.43x|
+|count |AA | 79.89x|
+|swap_ranges |UU | 99.64x|
+|swap_ranges |AA | 1462.80x|
+|copy |UU | 39.85x|
+|equal |UU | 111.15x|
+|move |UU | 31.73x|
+|copy_backward |UU | 77.21x|
+
 
 # Installation
 BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
@@ -256,39 +257,40 @@ std::fill (huge)                                 7415 ns         7415 ns        
 
 | Function | Size  | Alignment | Speedup |
 |-----------|-------|----|-----|
-|shift_left | small | (AA) | 8.68x|
-|shift_left | small | (UU) | 9.02x|
-|shift_left | large | (UU) | 734.24x|
-|shift_left | large | (AA) | 1970.49x|
-|shift_right | small | (UU) | 8.98x|
-|shift_right | large | (AA) | 1933.49x|
-|reverse | small | (UU) | 4.56x|
-|reverse | large | (UU) | 228.25x|
-|reverse | large | (AA) | 309.60x|
-|transform(UnaryOp) | small | (UU) | 6.82x|
-|transform(UnaryOp) | small | (AA) | 9.47x|
-|transform(UnaryOp) | large | (UU) | 105.86x|
-|transform(UnaryOp) | large | (AA) | 1209.39x|
-|transform(BinaryOp) | small | (AA) | 4.09x|
-|transform(BinaryOp) | small | (UU) | 4.28x|
-|transform(BinaryOp) | large | (UU) | 55.50x|
-|transform(BinaryOp) | large | (AA) | 2436.48x|
-|rotate | small | (AUA) | 9.72x|
-|rotate | large | (AUA) | 171.43x|
-|count | small | (AA) | 7.06x|
-|count | large | (AA) | 79.89x|
-|swap_ranges | small | (AA) | 4.42x|
-|swap_ranges | small | (UU) | 5.30x|
-|swap_ranges | large | (UU) | 99.64x|
-|swap_ranges | large | (AA) | 1462.80x|
-|copy | small | (UU) | 4.22x|
-|copy | large | (UU) | 39.85x|
-|equal | small | (UU) | 6.71x|
-|equal | large | (UU) | 111.15x|
-|move | small | (UU) | 4.22x|
-|move | large | (UU) | 31.73x|
-|copy_backward | small | (UU) | 1.98x|
-|copy_backward | large | (UU) | 77.21x|
-|fill | small | (UU) | 0.49x|
-|fill | huge | (UU) | 0.99x|
+|shift_left | small | AA | 8.68x|
+|shift_left | small | UU | 9.02x|
+|shift_left | large | UU | 734.24x|
+|shift_left | large | AA | 1970.49x|
+|shift_right | small | UU | 8.98x|
+|shift_right | large | AA | 1933.49x|
+|reverse | small | UU | 4.56x|
+|reverse | large | UU | 228.25x|
+|reverse | large | AA | 309.60x|
+|transformUnaryOp | small | UU | 6.82x|
+|transformUnaryOp | small | AA | 9.47x|
+|transformUnaryOp | large | UU | 105.86x|
+|transformUnaryOp | large | AA | 1209.39x|
+|transformBinaryOp | small | AA | 4.09x|
+|transformBinaryOp | small | UU | 4.28x|
+|transformBinaryOp | large | UU | 55.50x|
+|transformBinaryOp | large | AA | 2436.48x|
+|rotate | small | AUA | 9.72x|
+|rotate | large | AUA | 171.43x|
+|count | small | AA | 7.06x|
+|count | large | AA | 79.89x|
+|swap_ranges | small | AA | 4.42x|
+|swap_ranges | small | UU | 5.30x|
+|swap_ranges | large | UU | 99.64x|
+|swap_ranges | large | AA | 1462.80x|
+|copy | small | UU | 4.22x|
+|copy | large | UU | 39.85x|
+|equal | small | UU | 6.71x|
+|equal | large | UU | 111.15x|
+|move | small | UU | 4.22x|
+|move | large | UU | 31.73x|
+|copy_backward | small | UU | 1.98x|
+|copy_backward | large | UU | 77.21x|
+|fill | small | UU | 0.49x|
+|fill | huge | UU | 0.99x|
+
 
