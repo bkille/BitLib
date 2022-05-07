@@ -2,7 +2,29 @@
 #include "test_utils.hpp"
 #include "bitlib/bitlib.hpp"
 
-auto BM_BitSwapRanges = [](benchmark::State& state, auto input) {
+auto BM_BitSwapRangesAA = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using WordType = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    auto digits = bit::binary_digits<WordType>::value;
+    auto container_size = total_bits / digits + 1;
+    auto bitvec1 = get_random_vec<WordType>(container_size);
+    auto first1 = bit::bit_iterator<decltype(std::begin(bitvec1))>(std::begin(bitvec1));
+    auto bitvec2 = get_random_vec<WordType>(container_size);
+    auto first2 = bit::bit_iterator<decltype(std::begin(bitvec2))>(std::begin(bitvec2));
+    auto start1 = 0;
+    auto start2 = 0;
+    auto end1 = 0;
+
+    for (auto _ : state)
+        bit::swap_ranges(
+            first1 + start1,
+            first1 + total_bits - end1,
+            first2 + start2
+        );
+};
+
+auto BM_BitSwapRangesUU = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
     using WordType = typename std::tuple_element<1, decltype(input)>::type;
     unsigned int total_bits = std::get<2>(input);

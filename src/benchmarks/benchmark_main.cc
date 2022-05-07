@@ -101,25 +101,25 @@ int main(int argc, char** argv) {
     unsigned int size_huge = 1 << 22;
     
     // Shift benchmarks
-    register_word_containers<decltype(BM_BitShiftLeft_UU), std::vector>(
-            BM_BitShiftLeft_UU, 
-            "bit::shift_left (small) (UU)",
-            size_small);
     register_word_containers<decltype(BM_BitShiftLeft), std::vector>(
             BM_BitShiftLeft, 
             "bit::shift_left (small) (AA)",
+            size_small);
+    register_word_containers<decltype(BM_BitShiftLeft_UU), std::vector>(
+            BM_BitShiftLeft_UU, 
+            "bit::shift_left (small) (UU)",
             size_small);
     register_bool_containers<decltype(BM_BoolShiftLeft), std::vector>(
             BM_BoolShiftLeft, 
             "std::shift_left (small)",
             size_small);
-    register_word_containers<decltype(BM_BitShiftLeft_UU), std::vector>(
-            BM_BitShiftLeft_UU, 
-            "bit::shift_left (large) (UU)",
-            size_large);
     register_word_containers<decltype(BM_BitShiftLeft), std::vector>(
             BM_BitShiftLeft, 
             "bit::shift_left (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_BitShiftLeft_UU), std::vector>(
+            BM_BitShiftLeft_UU, 
+            "bit::shift_left (large) (UU)",
             size_large);
     register_bool_containers<decltype(BM_BoolShiftLeft), std::vector>(
             BM_BoolShiftLeft, 
@@ -165,32 +165,48 @@ int main(int argc, char** argv) {
             size_large);
 
     // transform benchmarks
-    register_word_containers<decltype(BM_BitTransformUnary), std::vector>(
-            BM_BitTransformUnary, 
+    register_word_containers<decltype(BM_BitTransformUnaryAA), std::vector>(
+            BM_BitTransformUnaryAA, 
+            "bit::transform(UnaryOp) (small) (AA)",
+            size_small);
+    register_word_containers<decltype(BM_BitTransformUnaryUU), std::vector>(
+            BM_BitTransformUnaryUU, 
             "bit::transform(UnaryOp) (small) (UU)",
             size_small);
     register_bool_containers<decltype(BM_BoolTransformUnary), std::vector>(
             BM_BoolTransformUnary, 
             "std::transform(UnaryOp) (small)",
             size_small);
-    register_word_containers<decltype(BM_BitTransformUnary), std::vector>(
-            BM_BitTransformUnary, 
+    register_word_containers<decltype(BM_BitTransformUnaryAA), std::vector>(
+            BM_BitTransformUnaryAA, 
+            "bit::transform(UnaryOp) (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_BitTransformUnaryUU), std::vector>(
+            BM_BitTransformUnaryUU, 
             "bit::transform(UnaryOp) (large) (UU)",
             size_large);
     register_bool_containers<decltype(BM_BoolTransformUnary), std::vector>(
             BM_BoolTransformUnary, 
             "std::transform(UnaryOp) (large)",
             size_large);
-    register_word_containers<decltype(BM_BitTransformBinary), std::vector>(
-            BM_BitTransformBinary, 
+    register_word_containers<decltype(BM_BitTransformBinaryAA), std::vector>(
+            BM_BitTransformBinaryAA, 
+            "bit::transform(BinaryOp) (small) (AA)",
+            size_small);
+    register_word_containers<decltype(BM_BitTransformBinaryUU), std::vector>(
+            BM_BitTransformBinaryUU, 
             "bit::transform(BinaryOp) (small) (UU)",
             size_small);
     register_bool_containers<decltype(BM_BoolTransformBinary), std::vector>(
             BM_BoolTransformBinary, 
             "std::transform(BinaryOp) (small)",
             size_small);
-    register_word_containers<decltype(BM_BitTransformBinary), std::vector>(
-            BM_BitTransformBinary, 
+    register_word_containers<decltype(BM_BitTransformBinaryAA), std::vector>(
+            BM_BitTransformBinaryAA, 
+            "bit::transform(BinaryOp) (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_BitTransformBinaryUU), std::vector>(
+            BM_BitTransformBinaryUU, 
             "bit::transform(BinaryOp) (large) (UU)",
             size_large);
     register_bool_containers<decltype(BM_BoolTransformBinary), std::vector>(
@@ -235,16 +251,24 @@ int main(int argc, char** argv) {
             size_large);
 
     // swap_ranges benchmarks
-    register_word_containers<decltype(BM_BitSwapRanges), std::vector>(
-            BM_BitSwapRanges, 
+    register_word_containers<decltype(BM_BitSwapRangesAA), std::vector>(
+            BM_BitSwapRangesAA, 
+            "bit::swap_ranges (small) (AA)",
+            size_small);
+    register_word_containers<decltype(BM_BitSwapRangesUU), std::vector>(
+            BM_BitSwapRangesUU, 
             "bit::swap_ranges (small) (UU)",
             size_small);
     register_bool_containers<decltype(BM_BoolSwapRanges), std::vector>(
             BM_BoolSwapRanges, 
             "std::swap_ranges (small)",
             size_small);
-    register_word_containers<decltype(BM_BitSwapRanges), std::vector>(
-            BM_BitSwapRanges, 
+    register_word_containers<decltype(BM_BitSwapRangesAA), std::vector>(
+            BM_BitSwapRangesAA, 
+            "bit::swap_ranges (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_BitSwapRangesUU), std::vector>(
+            BM_BitSwapRangesUU, 
             "bit::swap_ranges (large) (UU)",
             size_large);
     register_bool_containers<decltype(BM_BoolSwapRanges), std::vector>(
