@@ -39,7 +39,7 @@ int main() {
 
 # Speedy highlights
 
-Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline was `std::vector<bool>`. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterators do not fall on a word boundary and `A` means the iterators are aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. For more benchmarks, including some against the [BitArray C library](https://github.com/noporpoise/BitArray), see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
+Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline here was `std::vector<bool>`. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterators do not fall on a word boundary and `A` means the iterators are aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. 
 
 | Function | Alignment | Speedup |
 |--|--|--|
@@ -61,6 +61,19 @@ Here are some of the highlighted benchmarking results. Algorithms were ran on co
 |move | U | 31.73x|
 |copy_backward | U | 77.21x|
 
+I also benchmarked against the [BitArray C library](https://github.com/noporpoise/BitArray). In most cases, the C BitArray library only supports operating on the entire array, so the baseline here is the analagous operation performed on aligned pointers in the BitArray library.
+
+| Function | Alignment | Speedup |
+|shift_left | (AA) | 34.16x|
+|shift_left | (UU) | 12.73x|
+|reverse | (AA) | 20.04x|
+|reverse | (UU) | 14.78x|
+|transform(UnaryOp) | (AA) | 5.76x|
+|transform(BinaryOp) | (AA) | 2.68x|
+|rotate | (AUA) | 8.11x|
+|count | (AA) | 1.45x|
+
+For more details, see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
 
 # Installation
 BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
