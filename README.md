@@ -2,36 +2,11 @@
 
 ![Actions](https://github.com/bkille/BitLib/actions/workflows/cmake.yml/badge.svg?branch=master)[![Coverage Status](https://coveralls.io/repos/github/bkille/BitLib/badge.svg?branch=master)](https://coveralls.io/github/bkille/BitLib?branch=master)
 
+**This repository acts as an efficient replacement of `std::vector<bool>`. It provides implementations of many of the functions in [`<algorithms>`](https://en.cppreference.com/w/cpp/algorithm) optimized for containers of bits, in addition to providing a `bit_vector` class which has roughly the same interface as `std::vector<bool>`**.
 
-## Description
-While [bit iterators](https://github.com/vreverdy/bit) are currently being proposed and reviewed by the ISO C++ Standards Committee, this repository is intended for practical use of bit containers and algorithms based on bit iterators. Primarily, this repository acts as an efficient replacement of `std::vector<bool>`. It provides implementations of many of the functions in `<algorithms>` optimized for containers of bits, in addition to providing a `bit_vector` class which has roughly the same interface as `std::vector<bool>`.
+This project is built on "[bit iterators](https://github.com/vreverdy/bit)" developed by Vincent Reverdy and many of the implementations in `include/bit-algorithms` come from some of my previous work with Vincent [here](https://github.com/vreverdy/bit-algorithms).
 
-Many of the implementations in `include/bit-algorithms` come from some of my previous work [here](https://github.com/vreverdy/bit-algorithms), however that repository is also somewhat frozen, as it is tied to the ISO C++ Standards Committee proposal as well. In addition, it contains many overloads that are likely less practical (like forward lists of bits). 
-
-## Installation
-BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
-
-
-### Cmake
-You can automatically fetch the library using Cmake's `FetchContent`. 
-
-```cmake
-include(FetchContent)
-FetchContent_Declare(
-    bitlib
-    GIT_REPOSITORY https://github.com/bkille/bitlib.git
-    GIT_TAG origin/master
-)
-FetchContent_MakeAvailable(bitlib)
-
-add_executable(example example.cpp)
-target_link_libraries(example bitlib::bitlib)
-```
-
-### Manual include
-Alternatively, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. 
-
-## Example
+# Example
 The code below is from `example/print.cpp`. While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
 ```cpp
 #include <iostream>
@@ -62,10 +37,55 @@ int main() {
 }
 ```
 
-## Usage
+# Speedy highlights
+
+Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The baseline was `std::vector<bool>`. For more benchmarks, including some against the [BitArray C library](https://github.com/noporpoise/BitArray), see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
+
+| Function | Speedup |
+|--|--|
+|shift_left  | 642.85x|
+|shift_right  | 590.97x|
+|reverse  | 301.20x|
+|equal  | 110.96x|
+|swap_ranges  | 101.19x|
+|transform(BinaryOp)  | 82.22x|
+|count  | 79.64x|
+|rotate  | 68.36x|
+|copy_backward  | 61.95x|
+|move  | 39.78x|
+|copy  | 31.58x|
+|transform(UnaryOp)  | 29.78x|
+
+
+# Installation
+BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
+
+
+## Cmake
+You can automatically fetch the library using Cmake's `FetchContent`. 
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    bitlib
+    GIT_REPOSITORY https://github.com/bkille/bitlib.git
+    GIT_TAG origin/master
+)
+FetchContent_MakeAvailable(bitlib)
+
+add_executable(example example.cpp)
+target_link_libraries(example bitlib::bitlib)
+```
+
+## Manual include
+Alternatively, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. 
+
+
+
+# Usage
 The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. Instead of the values being `bool`, we have `bit::bit_value`, which can take on either `bit::bit0` or `bit::bit1`. 
 
-### Containers
+## Containers
  Right now, the only container I have implemented is the bitvector. `bit::bit_vector<WordType>` is essentially a wrapper around `std::vector<WordType>`. The interfaces are nearly identical. In addition to the normal `vector` constructors, you can also provide a string to construct your bitvector:
 ```cpp
 using WordType = uint64_t;
@@ -74,7 +94,7 @@ bit::bit_vector<WordType> bvec1 {"011111010010"};
 
 While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
 
-### Algorithms
+## Algorithms
 The algorithms again work in the same manner as the STL. The functions provided here have the same interface as those in the STL, however under the hood, they take advantage of bit-parallelism. It should be noted that if there is an STL algorithm that is not supported yet by BitLib, you can still use the STL implementation. For example:
 ```cpp
 using WordType = uint64_t;
@@ -98,7 +118,7 @@ auto bitret = bit::transform(
         binary_op); 
 ```
 
-### Iterators
+## Iterators
 The bit-iterators are the foundation of the library. In most cases, users will only need to work w/ the `bit::bit_vector::begin()` and `bit::bit_vector::end()` methods to obtain iterators. However, constructing a bit iterator from any address is also straightforward:
 ```cpp
 using WordType = uint64_t;
@@ -114,21 +134,21 @@ It is worth noting that the "position" of a bit always increases from LSB to MSB
 ```
        MSB|<-----|LSB
 Position: 76543210
-Value:    01010001
-Sequence: 10001010
-// Shift right 2
+Value:    01010001 --> Sequence: 10001010
+
+
+// bit::shift_right by 2
        MSB|<-----|LSB
 Position: 76543210
-Value:    00010100
-Sequence: 00101000
+Value:    01000100 --> Sequence: 00100010
 ```
 
-## Documentation
+# Documentation
 Given that the majority of the library is focused on having the same interface as the C++ STL iterators, containers, and algorithms, users should use the official [STL documentation website](https://en.cppreference.com/). We do plan on adding our own documentation in the future, however. 
 
 
-## Performance Benchmarks
-I used Google's [benchmark](https://github.com/google/benchmark) library for computing benchmarks. Each benchmark is formatted as `{bit, BitArray, std}::function` (size) [(alignment-tags)]. It should be noted that SIMD instructions were turned off for these benchmarks.
+# Performance Benchmarks
+I used Google's [benchmark](https://github.com/google/benchmark) library for computing benchmarks. Each benchmark is formatted as `{bit, BitArray, std}::function` (size) [(alignment-tags)]. 
 
 * `bit` is for this library, `BitArray` is for the popular C-based [BitArray library](https://github.com/noporpoise/BitArray), and`std` is the standard library operating on the infamous `vector<bool>`. 
 * (size) denotes the size of the container in bits. `small = 1 << 4`, `large = 1 << 16`
@@ -202,29 +222,35 @@ bit::copy_backward (large) (UU)             4350 ns         4350 ns       222897
 std::copy_backward (large)                161108 ns       161102 ns         4778
 ```
 
-| Benchmark | Size  | Speedup |
+| Function | Size  | Speedup |
 |-----------|-------|---------|
-|shift_left (UU) | small | 9.04x|
-|shift_left (UU) | large | 556.84x|
-|shift_right (UU) | small | 9.08x|
-|shift_right (AA) | large | 534.04x|
-|reverse (UU) | small | 4.70x|
-|reverse (AA) | large | 335.55x|
-|reverse (UU) | large | 223.67x|
-|transform(UnaryOp) (UU) | small | 0.52x|
-|transform(UnaryOp) (UU) | large | 47.38x|
-|transform(BinaryOp) (UU) | small | 0.92x|
-|transform(BinaryOp) (UU) | large | 129.64x|
-|rotate (ARA) | small | 9.23x|
-|rotate (ARA) | large | 73.98x|
-|count (AA) | small | 11.23x|
-|count (AA) | large | 75.51x|
-|swap_ranges (UU) | small | 2.07x|
-|swap_ranges (UU) | large | 142.06x|
-|copy (UU) | small | 0.36x|
-|copy (UU) | large | 3.29x|
-|move (UU) | small | 2.70x|
-|move (UU) | large | 21.48x|
-|copy_backward (UU) | small | 0.83x|
-|copy_backward (UU) | large | 51.39x|
+|shift_left (UU) | small | 9.25x|
+|shift_left (AA) | small | 8.86x|
+|shift_left (UU) | large | 642.85x|
+|shift_left (AA) | large | 641.83x|
+|shift_right (UU) | small | 9.10x|
+|shift_right (AA) | large | 590.97x|
+|reverse (UU) | small | 4.65x|
+|reverse (AA) | large | 301.20x|
+|reverse (UU) | large | 230.88x|
+|transform(UnaryOp) (UU) | small | 0.98x|
+|transform(UnaryOp) (UU) | large | 29.78x|
+|transform(BinaryOp) (UU) | small | 0.74x|
+|transform(BinaryOp) (UU) | large | 82.22x|
+|rotate (ARA) | small | 7.45x|
+|rotate (ARA) | large | 68.36x|
+|count (AA) | small | 6.71x|
+|count (AA) | large | 79.64x|
+|swap_ranges (UU) | small | 5.23x|
+|swap_ranges (UU) | large | 101.19x|
+|copy (UU) | small | 4.11x|
+|copy (UU) | large | 31.58x|
+|equal (UU) | small | 9.04x|
+|equal (UU) | large | 110.96x|
+|move (UU) | small | 4.51x|
+|move (UU) | large | 39.78x|
+|copy_backward (UU) | small | 1.98x|
+|copy_backward (UU) | large | 61.95x|
+|fill (UU) | small | 0.52x|
+|fill (UU) | huge | 0.99x|
 
