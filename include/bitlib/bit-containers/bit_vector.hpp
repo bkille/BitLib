@@ -1,15 +1,37 @@
+// ================================= BIT_VECTOR =================================== //
+// Project:     The Experimental Bit Algorithms Library
+// \file        bit_vector.hpp
+// Description: Implementation of bit_vector
+// Creator:     Vincent Reverdy
+// Contributor: Bryce Kille [2019]
+// License:     BSD 3-Clause License
+// ========================================================================== //
+#ifndef _BIT_VECTOR_HPP_INCLUDED
+#define _BIT_VECTOR_HPP_INCLUDED
+// ========================================================================== //
+
+
+
+// ================================ PREAMBLE ================================ //
+// C++ standard library
 #include <vector>
 #include <cmath>
 #include <string>
 #include <iostream>
 #include <algorithm>
 #include <vector>
-
+// Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 #include "bitlib/bit-algorithms/bit_algorithm.hpp"
-
+// Third-party libraries
+// Miscellaneous
 namespace bit {
+// ========================================================================== //
 
+
+
+// -------------------------------------------------------------------------- //
+//! A bit-vector with a similar interface to std::vector<bool>
 template<class WordType, class Allocator = std::allocator<WordType>>
 class bit_vector {
     private:
@@ -255,7 +277,11 @@ class bit_vector {
             //return os << bv.debug_string(bv.cbegin(), bv.cend());;
         //};
 };
+// -------------------------------------------------------------------------- //
 
 
-}
 
+// ========================================================================== //
+} // namespace bit
+#endif // _BIT_VECTOR_HPP_INCLUDED
+// ========================================================================== //
