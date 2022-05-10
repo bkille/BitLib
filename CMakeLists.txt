@@ -46,7 +46,9 @@ file(GLOB BENCH_SOURCES "src/benchmarks/*.cc")
 add_executable(bitlib-bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
+file(GLOB EXAMPLE2_SOURCES "example/timing.cpp")
 add_executable(bitlib-example-print ${EXAMPLE1_SOURCES})
+add_executable(bitlib-example-timing ${EXAMPLE2_SOURCES})
 add_library(bitlib INTERFACE)
 add_library(bitlib::bitlib ALIAS bitlib)
 
@@ -59,7 +61,7 @@ target_sources(bitlib INTERFACE ${BITLIB_HEADERS})
 ############
 # Examples #
 ############
-target_compile_options(bitlib-example-print PUBLIC ${DEBUG_FLAGS})
+target_compile_options(bitlib-example-print PUBLIC)
 install(TARGETS bitlib-example-print DESTINATION .)
 
 ################
