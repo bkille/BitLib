@@ -58,8 +58,8 @@ auto BM_BoostEqual = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
     using WordType = typename std::tuple_element<1, decltype(input)>::type;
     unsigned int total_bits = std::get<2>(input);
-    boost::dynamic_bitset<> x(total_bits);
-    boost::dynamic_bitset<> y(total_bits);
+    boost::dynamic_bitset<uint64_t> x(total_bits);
+    boost::dynamic_bitset<uint64_t> y(total_bits);
     container_type boolvec1 = make_random_container<container_type> (total_bits); 
     for (auto i = 0; i < total_bits; ++i) {
         x[i] = boolvec1[i];

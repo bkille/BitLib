@@ -26,7 +26,7 @@ auto BM_BoostShiftLeft = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
     using word_type = typename std::tuple_element<1, decltype(input)>::type;
     unsigned int total_bits = std::get<2>(input);
-    boost::dynamic_bitset<> x(total_bits);
+    boost::dynamic_bitset<uint64_t> x(total_bits);
     for (auto i = 0; i < total_bits; ++i) {
         if (i % 3 == 0) {
             x[i] = 1;

@@ -170,9 +170,9 @@ auto BM_BoostTransformBinaryAA = [](benchmark::State& state, auto input) {
     unsigned int total_bits = std::get<2>(input);
     auto digits = bit::binary_digits<WordType>::value;
     auto unary_op = std::bit_not<WordType>();
-    boost::dynamic_bitset<> x(total_bits);
-    boost::dynamic_bitset<> y(total_bits);
-    boost::dynamic_bitset<> z;
+    boost::dynamic_bitset<uint64_t> x(total_bits);
+    boost::dynamic_bitset<uint64_t> y(total_bits);
+    boost::dynamic_bitset<uint64_t> z;
     container_type boolvec1 = make_random_container<container_type> (total_bits); 
     container_type boolvec2 = make_random_container<container_type> (total_bits); 
     for (auto i = 0; i < total_bits; ++i) {
