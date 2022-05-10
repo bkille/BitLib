@@ -25,6 +25,8 @@
 #include "bitlib/bit-algorithms/bit_algorithm.hpp"
 // Third-party libraries
 // Miscellaneous
+#define WORDS(bits, digits) \
+    ((bits + digits - 1) / digits)
 namespace bit {
 // ========================================================================== //
 
@@ -35,7 +37,7 @@ namespace bit {
 template<class WordType, class Allocator = std::allocator<WordType>>
 class bit_vector {
     private:
-        size_t digits = binary_digits<WordType>::value;
+        static constexpr size_t digits = binary_digits<WordType>::value;
         std::vector<WordType, Allocator> word_vector;
         size_t length_;
 
@@ -57,28 +59,74 @@ class bit_vector {
         /*
          * Constructors, copies and moves...
          */
-        constexpr bit_vector() : word_vector{}, length_(0) {};
+        constexpr bit_vector() noexcept(noexcept(Allocator())) : word_vector{}, length_(0) {};
+        constexpr explicit bit_vector(const Allocator& alloc) noexcept : word_vector(alloc), length_(0) {};
+        constexpr bit_vector(size_type count, const_reference bit_ref, const Allocator& alloc=Allocator()) 
+            : word_vector(WORDS(count, digits), static_cast<WordType>(bit_ref == bit1 ? -1 : 0), alloc),
+              length_(count)
+              {};
+              
+        constexpr explicit bit_vector(size_type count, const Allocator& alloc=Allocator()) 
+            : word_vector(WORDS(count,digits), alloc), length_(count) {};
+
+        //TODO needs to work for input iterators
+        template<class RandomAccessIt>
+        constexpr bit_vector(RandomAccessIt first, RandomAccessIt last, const Allocator& alloc=Allocator()) 
+                : word_vector(WORDS(distance(first, last), digits), alloc), length_(distance(first, last)) {
+            copy(first, last, this->begin());
+        }
+
         constexpr bit_vector(const bit_vector<WordType>& other)
-            : word_vector{other.word_vector.begin(), other.word_vector.end()}, length_(other.length_) {};
-        constexpr bit_vector(size_t N) : word_vector(std::ceil(float(N) / digits)), length_(N) {};
-        constexpr bit_vector(std::string_view s) : word_vector(std::ceil(float(s.length()) / digits)), length_(s.length()) {
-            for (size_t i = 0; i < s.length(); ++i) {
-                begin()[i] = bit_value(static_cast<WordType>(s[i] & static_cast<WordType>(1)));
+                : word_vector{other.word_vector.begin(), other.word_vector.end()}, length_(other.length_) {};
+
+        constexpr bit_vector(const bit_vector<WordType>&& other)
+                : word_vector(std::move(other.word_vector)), length_(other.length_) {
+            other.length = 0;     
+        }
+
+        constexpr bit_vector(const bit_vector<WordType>&& other, const Allocator& alloc)
+                : word_vector(std::move(other.word_vector), alloc), length_(other.length_) {
+            other.length = 0;     
+        }
+
+        // TODO maybe make template, or allow bool to be cast as bit
+        constexpr bit_vector(std::initializer_list<bit_value> init, const Allocator& alloc=Allocator()) 
+                : word_vector(alloc), length_(0) {
+            for (const_reference b : init) {
+                this->push_back(b);
             }
-        }; 
+        }
+
+        constexpr bit_vector(std::initializer_list<WordType> init, const Allocator& alloc=Allocator()) 
+                : word_vector(init, alloc) {
+            // Not sure if this would work as a member initializer
+            length_ = this->word_vector.size() * digits;
+        }
+
+        // Skip all characters that are not 0/1. This allows punctuation/spacing for byte/word boundaries
+        constexpr bit_vector(std::string_view s) {
+            this->length_ = std::count(s.begin(), s.end(), '0') + std::count(s.begin(), s.end(), '1');
+            this->word_vector = std::vector<WordType, Allocator>(this->length_);
+            size_type i = 0;
+            for (char c : s) {
+                if (c == '0') {
+                    begin()[i++] = bit0;
+                } else if (c == '1') {
+                    begin()[i++] = bit1;
+                }
+            }
+        } 
 
         ~bit_vector() {};
 
         bit_vector& operator=(bit_vector& other) {
             length_ = other.length_;
-            digits = other.digits;
             word_vector = other.word_vector;
             return *this;
         };
 
         bit_vector& operator=(bit_vector&& other) {
             length_ = other.length_;
-            digits = other.digits;
             word_vector = std::move(other.word_vector);
             return *this;
         };
