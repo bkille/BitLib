@@ -17,11 +17,11 @@ auto BM_BitSwapRangesAA = [](benchmark::State& state, auto input) {
     auto end1 = 0;
 
     for (auto _ : state)
-        bit::swap_ranges(
+        benchmark::DoNotOptimize(bit::swap_ranges(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 
 auto BM_BitSwapRangesUU = [](benchmark::State& state, auto input) {
@@ -39,11 +39,11 @@ auto BM_BitSwapRangesUU = [](benchmark::State& state, auto input) {
     auto end1 = 4;
 
     for (auto _ : state)
-        bit::swap_ranges(
+        benchmark::DoNotOptimize(bit::swap_ranges(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 
 
@@ -61,10 +61,10 @@ auto BM_BoolSwapRanges = [](benchmark::State& state, auto input) {
     auto end1 = 4;
 
     for (auto _ : state)
-        std::swap_ranges(
+        benchmark::DoNotOptimize(std::swap_ranges(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 

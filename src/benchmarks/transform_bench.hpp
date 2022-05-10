@@ -2,6 +2,7 @@
 #include <benchmark/benchmark.h>
 #include "test_utils.hpp"
 #include "bit_array.h"
+#include <boost/dynamic_bitset.hpp>
 #include "bitlib/bitlib.hpp"
 
 auto BM_BitTransformUnaryAA = [](benchmark::State& state, auto input) {
@@ -17,13 +18,14 @@ auto BM_BitTransformUnaryAA = [](benchmark::State& state, auto input) {
 
     auto unary_op = std::bit_not<WordType>();
     for (auto _ : state)
-        bit::transform(
+        benchmark::DoNotOptimize(bit::transform(
             first1,
             first1 + total_bits,
             first2,
             unary_op
-        );
+        ));
 };
+
 
 auto BM_BitTransformUnaryUU = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
@@ -38,12 +40,12 @@ auto BM_BitTransformUnaryUU = [](benchmark::State& state, auto input) {
 
     auto unary_op = std::bit_not<WordType>();
     for (auto _ : state)
-        bit::transform(
+        benchmark::DoNotOptimize(bit::transform(
             first1 + 2,
             first1 + total_bits - 4,
             first2 + 3,
             unary_op
-        );
+        ));
 };
 
 auto BM_CBitArrTransformUnary = [](benchmark::State& state, auto input) {
@@ -69,12 +71,12 @@ auto BM_BoolTransformUnary = [](benchmark::State& state, auto input) {
 
     auto unary_op = [](bool b) {return !b;};
     for (auto _ : state)
-        std::transform(
+        benchmark::DoNotOptimize(std::transform(
             first1,
             first1 + total_bits,
             first2,
             unary_op
-        );
+        ));
 };
 
 
@@ -93,13 +95,13 @@ auto BM_BitTransformBinaryAA = [](benchmark::State& state, auto input) {
 
     auto binary_op = std::bit_and<WordType>();
     for (auto _ : state)
-        bit::transform(
+        benchmark::DoNotOptimize(bit::transform(
             first1,
             first1 + total_bits,
             first2,
             first3,
             binary_op
-        );
+        ));
 };
 
 auto BM_BitTransformBinaryUU = [](benchmark::State& state, auto input) {
@@ -117,13 +119,13 @@ auto BM_BitTransformBinaryUU = [](benchmark::State& state, auto input) {
 
     auto binary_op = std::bit_and<WordType>();
     for (auto _ : state)
-        bit::transform(
+        benchmark::DoNotOptimize(bit::transform(
             first1 + 2,
             first1 + total_bits - 4,
             first2 + 3,
             first3 + 1,
             binary_op
-        );
+        ));
 };
 
 
@@ -140,13 +142,13 @@ auto BM_BoolTransformBinary = [](benchmark::State& state, auto input) {
 
     auto binary_op = [](bool a, bool b) {return a && b;};
     for (auto _ : state)
-        std::transform(
+        benchmark::DoNotOptimize(std::transform(
             first1,
             first1 + total_bits,
             first2,
             first3,
             binary_op
-        );
+        ));
 };
 
 
@@ -162,4 +164,22 @@ auto BM_CBitArrTransformBinary = [](benchmark::State& state, auto input) {
          bit_array_and(bitarr1, bitarr2, bitarr3);
 };
 
+auto BM_BoostTransformBinaryAA = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using WordType = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    auto digits = bit::binary_digits<WordType>::value;
+    auto unary_op = std::bit_not<WordType>();
+    boost::dynamic_bitset<> x(total_bits);
+    boost::dynamic_bitset<> y(total_bits);
+    boost::dynamic_bitset<> z;
+    container_type boolvec1 = make_random_container<container_type> (total_bits); 
+    container_type boolvec2 = make_random_container<container_type> (total_bits); 
+    for (auto i = 0; i < total_bits; ++i) {
+        x[i] = boolvec1[i];
+        y[i] = boolvec2[i];
+    }
+    for (auto _ : state)
+        benchmark::DoNotOptimize(z = x&y);
+};
 

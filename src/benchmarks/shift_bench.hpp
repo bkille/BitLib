@@ -2,6 +2,7 @@
 #include <random>
 #include <math.h>
 #include "bit_array.h"
+#include <boost/dynamic_bitset.hpp>
 #include "bitlib/bitlib.hpp"
 
 
@@ -17,6 +18,23 @@ auto BM_BitShiftLeft = [](benchmark::State& state, auto input) {
     auto n = bit::distance(first, last) / 2;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::shift_left(first, last, n));
+        benchmark::ClobberMemory();
+    }
+};
+
+auto BM_BoostShiftLeft = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    boost::dynamic_bitset<> x(total_bits);
+    for (auto i = 0; i < total_bits; ++i) {
+        if (i % 3 == 0) {
+            x[i] = 1;
+        }
+    }
+    auto n = total_bits / 2;
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(x <<= n);
         benchmark::ClobberMemory();
     }
 };
@@ -59,7 +77,7 @@ auto BM_BoolShiftLeft = [](benchmark::State& state, auto input) {
     auto last = cont.end();
     auto n = std::distance(first, last) / 2 + 3;
     for (auto _ : state) {
-        benchmark::DoNotOptimize(bit::word_shift_left(first, last, n));
+        benchmark::DoNotOptimize(std::shift_left(first, last, n));
         benchmark::ClobberMemory();
     }
 };
@@ -105,7 +123,7 @@ auto BM_BoolShiftRight = [](benchmark::State& state, auto input) {
     auto last = cont.end();
     auto n = std::distance(first, last) / 2 + 3;
     for (auto _ : state) {
-        benchmark::DoNotOptimize(bit::word_shift_right(first, last, n));
+        benchmark::DoNotOptimize(std::shift_right(first, last, n));
         benchmark::ClobberMemory();
     }
 };

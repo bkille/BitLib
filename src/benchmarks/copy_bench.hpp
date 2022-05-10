@@ -18,11 +18,11 @@ auto BM_BitCopy = [](benchmark::State& state, auto input) {
     auto end1 = 4;
 
     for (auto _ : state)
-        bit::copy(
+        benchmark::DoNotOptimize(bit::copy(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 
 
@@ -40,10 +40,10 @@ auto BM_BoolCopy = [](benchmark::State& state, auto input) {
     auto end1 = 4;
 
     for (auto _ : state)
-        std::copy(
+        benchmark::DoNotOptimize(std::copy(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 

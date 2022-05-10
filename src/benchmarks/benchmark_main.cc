@@ -24,6 +24,7 @@
 #include "rotate_bench.hpp"
 #include "reverse_bench.hpp"
 #include "fill_bench.hpp"
+#include "find_bench.hpp"
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
 #include "move_bench.hpp"
@@ -31,6 +32,7 @@
 #include "swap_ranges-bench.hpp"
 #include "transform_bench.hpp"
 #include "equal_bench.hpp"
+#include "rw_bench.hpp"
 // Third party libraries
 #include <benchmark/benchmark.h>
 #include <iostream>
@@ -109,6 +111,10 @@ int main(int argc, char** argv) {
             BM_BitShiftLeft_UU, 
             "bit::shift_left (small) (UU)",
             size_small);
+    register_bool_containers<decltype(BM_BoostShiftLeft), std::vector>(
+            BM_BoostShiftLeft, 
+            "boost::shift_left (small) (AA)",
+            size_small);
     register_bool_containers<decltype(BM_BoolShiftLeft), std::vector>(
             BM_BoolShiftLeft, 
             "std::shift_left (small)",
@@ -120,6 +126,10 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitShiftLeft_UU), std::vector>(
             BM_BitShiftLeft_UU, 
             "bit::shift_left (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoostShiftLeft), std::vector>(
+            BM_BoostShiftLeft, 
+            "boost::shift_left (large) (AA)",
             size_large);
     register_word_containers<decltype(BM_CBitArrShiftLeft), std::vector>(
             BM_CBitArrShiftLeft, 
@@ -205,6 +215,10 @@ int main(int argc, char** argv) {
             BM_BitTransformBinaryAA, 
             "bit::transform(BinaryOp) (small) (AA)",
             size_small);
+    register_word_containers<decltype(BM_BoostTransformBinaryAA), std::vector>(
+            BM_BoostTransformBinaryAA, 
+            "boost::transform(BinaryOp) (small) (AA)",
+            size_small);
     register_word_containers<decltype(BM_BitTransformBinaryUU), std::vector>(
             BM_BitTransformBinaryUU, 
             "bit::transform(BinaryOp) (small) (UU)",
@@ -216,6 +230,10 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitTransformBinaryAA), std::vector>(
             BM_BitTransformBinaryAA, 
             "bit::transform(BinaryOp) (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_BoostTransformBinaryAA), std::vector>(
+            BM_BoostTransformBinaryAA, 
+            "boost::transform(BinaryOp) (large) (AA)",
             size_large);
     register_word_containers<decltype(BM_CBitArrTransformBinary), std::vector>(
             BM_CBitArrTransformBinary, 
@@ -257,6 +275,10 @@ int main(int argc, char** argv) {
             BM_BitCount, 
             "bit::count (small) (AA)",
             size_small);
+    register_bool_containers<decltype(BM_BoostCount), std::vector>(
+            BM_BoostCount, 
+            "boost::count (small) (AA)",
+            size_small);
     register_bool_containers<decltype(BM_BoolCount), std::vector>(
             BM_BoolCount, 
             "std::count (small)",
@@ -264,6 +286,10 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitCount), std::vector>(
             BM_BitCount, 
             "bit::count (large) (AA)",
+            size_large);
+    register_bool_containers<decltype(BM_BoostCount), std::vector>(
+            BM_BoostCount, 
+            "boost::count (large) (AA)",
             size_large);
     register_word_containers<decltype(BM_CBitArrCount), std::vector>(
             BM_CBitArrCount, 
@@ -321,7 +347,15 @@ int main(int argc, char** argv) {
     // Equal benchmarks
     register_word_containers<decltype(BM_BitEqual), std::vector>(
             BM_BitEqual, 
+            "bit::equal (small) (AA)",
+            size_small);
+    register_word_containers<decltype(BM_BitEqualUU), std::vector>(
+            BM_BitEqualUU, 
             "bit::equal (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoostEqual), std::vector>(
+            BM_BoostEqual, 
+            "boost::equal (small)",
             size_small);
     register_bool_containers<decltype(BM_BoolEqual), std::vector>(
             BM_BoolEqual, 
@@ -329,7 +363,15 @@ int main(int argc, char** argv) {
             size_small);
     register_word_containers<decltype(BM_BitEqual), std::vector>(
             BM_BitEqual, 
+            "bit::equal (large) (AA)",
+            size_large);
+    register_word_containers<decltype(BM_BitEqualUU), std::vector>(
+            BM_BitEqualUU, 
             "bit::equal (large) (UU)",
+            size_large);
+    register_bool_containers<decltype(BM_BoostEqual), std::vector>(
+            BM_BoostEqual, 
+            "boost::equal (large)",
             size_large);
     register_bool_containers<decltype(BM_BoolEqual), std::vector>(
             BM_BoolEqual, 
@@ -389,6 +431,59 @@ int main(int argc, char** argv) {
             BM_BoolFill, 
             "std::fill (huge)",
             size_huge);
+
+    register_word_containers<decltype(BM_BitFind), std::vector>(
+            BM_BitFind, 
+            "bit::find (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolFind), std::vector>(
+            BM_BoolFind, 
+            "std::find (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitFind), std::vector>(
+            BM_BitFind, 
+            "bit::find (huge) (UU)",
+            size_huge);
+    register_bool_containers<decltype(BM_BoolFind), std::vector>(
+            BM_BoolFind, 
+            "std::find (huge)",
+            size_huge);
+
+
+    // read/write benchmarks
+    register_word_containers<decltype(BM_BitSet), std::vector>(
+            BM_BitSet, 
+            "bit::set",
+            size_small);
+    register_word_containers<decltype(BM_CBitArrSet), std::vector>(
+            BM_CBitArrSet, 
+            "BitArray::set",
+            size_small);
+    register_bool_containers<decltype(BM_BoostSet), std::vector>(
+            BM_BoostSet, 
+            "boost::set",
+            size_small);
+    register_bool_containers<decltype(BM_BoolSet), std::vector>(
+            BM_BoolSet, 
+            "std::set",
+            size_small);
+    register_word_containers<decltype(BM_BitGet), std::vector>(
+            BM_BitGet, 
+            "bit::get",
+            size_small);
+    register_word_containers<decltype(BM_CBitArrGet), std::vector>(
+            BM_CBitArrGet, 
+            "BitArray::get",
+            size_small);
+    register_bool_containers<decltype(BM_BoostGet), std::vector>(
+            BM_BoostGet, 
+            "boost::get",
+            size_small);
+    register_bool_containers<decltype(BM_BoolGet), std::vector>(
+            BM_BoolGet, 
+            "std::get",
+            size_small);
+
 
     //// Search benchmarks
     //register_word_containers<decltype(BM_BitSearch), std::vector>(

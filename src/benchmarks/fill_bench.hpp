@@ -12,7 +12,7 @@ auto BM_BitFill = [](benchmark::State& state, auto input) {
     auto first = bit::bit_iterator<decltype(std::begin(bitcont))>(std::begin(bitcont));
     auto last = bit::bit_iterator<decltype(std::end(bitcont))>(std::end(bitcont));
     for (auto _ : state) {
-        bit::fill(first + 2, last - 3, bit::bit1);
+        (bit::fill(first + 2, last - 3, bit::bit1));
         benchmark::ClobberMemory();
     }
 };
@@ -25,7 +25,7 @@ auto BM_BoolFill = [](benchmark::State& state, auto input) {
     auto first = cont.begin();
     auto last = cont.end();
     for (auto _ : state) {
-        std::fill(first + 2, last - 3, true);
+        (std::fill(first + 2, last - 3, true));
         benchmark::ClobberMemory();
     }
 };

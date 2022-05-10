@@ -17,11 +17,11 @@ auto BM_BitMove = [](benchmark::State& state, auto input) {
     auto end1 = 4;
 
     for (auto _ : state)
-        bit::move(
+        benchmark::DoNotOptimize(bit::move(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 
 
@@ -39,10 +39,10 @@ auto BM_BoolMove = [](benchmark::State& state, auto input) {
     auto end1 = 4;
 
     for (auto _ : state)
-        std::move(
+        benchmark::DoNotOptimize(std::move(
             first1 + start1,
             first1 + total_bits - end1,
             first2 + start2
-        );
+        ));
 };
 
