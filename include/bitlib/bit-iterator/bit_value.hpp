@@ -41,6 +41,7 @@ class bit_value
     constexpr bit_value(bit_reference<T> ref) noexcept;
     template <class WordType> 
     explicit constexpr bit_value(WordType val) noexcept;
+    explicit constexpr bit_value(bool val) noexcept;
     template <class WordType> 
     constexpr bit_value(WordType val, size_type pos);
     
@@ -157,6 +158,14 @@ constexpr bit_value::bit_value(
     bit_reference<T> ref
 ) noexcept
 : _value(static_cast<bool>(ref))
+{
+}
+
+// Explicitly constructs a bit from a bool
+constexpr bit_value::bit_value(
+    bool b
+) noexcept
+: _value(b)
 {
 }
     

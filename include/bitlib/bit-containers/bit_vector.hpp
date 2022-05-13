@@ -26,8 +26,6 @@
 #include "bitlib/bit-algorithms/bit_algorithm.hpp"
 // Third-party libraries
 // Miscellaneous
-#define WORDS(bits, digits) \
-    ((bits + digits - 1) / digits)
 namespace bit {
 // ========================================================================== //
 
@@ -40,20 +38,30 @@ class bit_vector {
     private:
         static constexpr size_t digits = binary_digits<WordType>::value;
         std::vector<WordType, Allocator> word_vector;
-        size_t length_;
+        size_t length_ = 0;
 
+        // TODO are privates always inlined?
+        // @brief Get the number of words needed to represet num_bits bits
+        unsigned int word_count(unsigned int num_bits) {
+            return ((num_bits + digits - 1) / digits);
+        }
 
         // Iterator pair constructor specializations
-        // Passing in iterator over anything but WordType
-        //TODO I think compilation should fail if we are iterating over anything but bool or WordType
+        // Passing in iterator over bool
         // tried to do some SFINAE stuff but was unable to get it working so far... ): 
         template<class RandomAccessIt>
-        constexpr void bit_vector_from_any(
+        constexpr void bit_vector_from_bool(
                 RandomAccessIt first,
                 RandomAccessIt last,
                 const Allocator& alloc) {
-            word_vector = std::vector<WordType, Allocator>(WORDS(distance(first, last), digits), alloc);
-            std::transform(first, last, std::back_inserter(*this), [](auto b) {return b ? bit1 : bit0;}); 
+            word_vector = std::vector<WordType, Allocator>(std::distance(first, last), alloc);
+            length_ = std::distance(first, last);
+            std::transform(
+                    first,
+                    last,
+                    begin(), 
+                    [](bool b) {return static_cast<bit_value>(b);}
+            ); 
         }
 
         // Passing in iterator over WordType constructs via whole words
@@ -62,8 +70,8 @@ class bit_vector {
                 RandomAccessIt first, 
                 RandomAccessIt last,
                 const Allocator& alloc=Allocator()) {
-            length_ = digits * std::distance(first, last);
             word_vector = std::vector<WordType, Allocator>(first, last, alloc);
+            length_ = digits * std::distance(first, last);
         }
 
     public:
@@ -90,12 +98,12 @@ class bit_vector {
         // TODO this should take a bit_reference, not a bit_value. The issue is that passing bit::bit1 
         // does not currenlty work if you try to pass it as reference
         constexpr bit_vector(size_type count, value_type bit_val, const Allocator& alloc=Allocator()) 
-            : word_vector(WORDS(count, digits), static_cast<WordType>(bit_val == bit1 ? -1 : 0), alloc),
+            : word_vector(word_count(count), static_cast<WordType>(bit_val == bit1 ? -1 : 0), alloc),
               length_(count)
               {}
               
         constexpr explicit bit_vector(size_type count, const Allocator& alloc=Allocator()) 
-            : word_vector(WORDS(count,digits), alloc), length_(count) {}
+            : word_vector(word_count(count), alloc), length_(count) {}
 
         //TODO needs to work for input iterators
         template<class RandomAccessIt>
@@ -110,7 +118,10 @@ class bit_vector {
 
         //TODO please don't look at this yet ): 
         template<class RandomAccessIt>
-        constexpr bit_vector(RandomAccessIt first, RandomAccessIt last, const Allocator& alloc=Allocator()) {
+        constexpr bit_vector(
+                RandomAccessIt first, 
+                RandomAccessIt last, 
+                const Allocator& alloc=Allocator()) {
             if constexpr (std::is_same<typename std::iterator_traits<RandomAccessIt>::value_type, WordType>::value) {
                 bit_vector_from_wordtype(
                     first,
@@ -118,7 +129,7 @@ class bit_vector {
                     alloc
                 );
             } else {
-                bit_vector_from_any(
+                bit_vector_from_bool(
                     first,
                     last,
                     alloc
@@ -143,18 +154,17 @@ class bit_vector {
             }
         }
 
+        // TODO use length of init to set vector length, then add at each index.
         constexpr bit_vector(std::initializer_list<bool> init, const Allocator& alloc=Allocator()) 
             : word_vector(alloc), length_(0) {
             for (const bool& b : init) {
-                this->push_back(b ? bit1 : bit0);
+                this->push_back(static_cast<bit_value>(b));
             }
         }
 
+        // TODO are these constructors executed in order?
         constexpr bit_vector(std::initializer_list<WordType> init, const Allocator& alloc=Allocator()) 
-            : word_vector(init, alloc) {
-            // Not sure if this would work as a member initializer
-            length_ = this->word_vector.size() * digits;
-        }
+            : word_vector(init, alloc), length_(this->word_vector.size() * digits) {}
 
         // Skip all characters that are not 0/1. This allows punctuation/spacing for byte/word boundaries
         constexpr bit_vector(std::string_view s) {
@@ -180,7 +190,7 @@ class bit_vector {
             return *this;
         }
 
-        bit_vector& operator=(bit_vector<WordType>&& other) noexcept {
+        constexpr bit_vector& operator=(bit_vector<WordType>&& other) noexcept {
             length_ = other.length_;
             word_vector = std::move(other.word_vector);
             other.length_ = 0;
@@ -192,6 +202,7 @@ class bit_vector {
          * Element Access
          */
         constexpr reference operator[](size_type pos) {return begin()[pos];}
+        // TODO is this supposed to be const_reference?
         constexpr reference operator[](size_type pos) const {return begin()[pos];}
        
         constexpr reference at(size_type pos) {
@@ -235,7 +246,7 @@ class bit_vector {
         constexpr bool empty() const noexcept {return length_ == 0;}
         constexpr size_type size() const noexcept {return length_;} 
         constexpr size_type max_size() const noexcept {return word_vector.max_size() * digits;}
-        constexpr void reserve(size_type new_cap) {word_vector.reserve(std::ceil(float(new_cap) / digits));}
+        constexpr void reserve(size_type new_cap) {word_vector.reserve(word_count(new_cap));}
         constexpr size_type capacity() const noexcept {return word_vector.capacity() * digits;}
         constexpr void shrink_to_fit() {word_vector.shrink_to_fit();}
 
@@ -261,7 +272,7 @@ class bit_vector {
             const float bits_available = word_vector.size()*digits;
             const auto need_to_add = length_ + count > bits_available;
             if (need_to_add) {
-                const auto words_to_add = std::ceil((length_ + count - bits_available) / digits);
+                const auto words_to_add = word_count(length_ + count - bits_available);
                 word_vector.resize(word_vector.size() + words_to_add);
             }
             length_ += count;
@@ -295,7 +306,6 @@ class bit_vector {
             return pos;
         }
         constexpr iterator erase(iterator first, iterator last) {
-            // TODO return correct iterator
             const auto d = distance(begin(), first);
             auto count = distance(first, last);    
             if (count == 0) {
