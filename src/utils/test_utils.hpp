@@ -30,6 +30,19 @@
 
 // ================================ TESTING ================================- //
 
+template<class Container>
+Container make_random_binary_container(uint64_t num_bits, float p=0.5) {
+    auto gen = std::bind(
+            std::uniform_real_distribution<>(0, 1),
+            std::default_random_engine());
+    Container cont(num_bits);
+    for (uint64_t i = 0; i < num_bits; ++i) {
+        cont[i] = (gen() <= p);
+    }
+    return cont;
+}
+
+
 // Comparator for bit_iterator to other iterators
 constexpr auto comparator = [](auto b1, auto b2){
     return static_cast<bool>(b1) == static_cast<bool>(b2);
