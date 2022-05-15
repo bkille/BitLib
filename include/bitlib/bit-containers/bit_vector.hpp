@@ -88,6 +88,7 @@ class bit_vector {
         using iterator = bit_iterator<typename std::vector<WordType>::iterator>;
         using const_iterator = bit_iterator<const typename std::vector<WordType>::const_iterator>;
         
+
         /*
          * Constructors, copies and moves...
          */
@@ -100,42 +101,31 @@ class bit_vector {
         constexpr explicit bit_vector(
                 size_type count,
                 const Allocator& alloc=Allocator());
-
-        //TODO needs to work for input iterators
         template<class RandomAccessIt>
         constexpr bit_vector(
                 bit_iterator<RandomAccessIt> first, 
                 bit_iterator<RandomAccessIt> last, 
                 const Allocator& alloc=Allocator());
-
-
-        //TODO please don't look at this yet ): 
         template<class RandomAccessIt>
         constexpr bit_vector(
                 RandomAccessIt first, 
                 RandomAccessIt last, 
                 const Allocator& alloc=Allocator());
-
         constexpr bit_vector(const bit_vector<WordType>& other);
         constexpr bit_vector(const bit_vector<WordType>& other, const Allocator& alloc);
         constexpr bit_vector(const bit_vector<WordType>&& other) noexcept;
-
         constexpr bit_vector(const bit_vector<WordType>&& other, const Allocator& alloc);
-
-        // TODO maybe make template, or allow bool to be cast as bit
         constexpr bit_vector(std::initializer_list<bit_value> init, const Allocator& alloc=Allocator());
-
-        // TODO use length of init to set vector length, then add at each index.
         constexpr bit_vector(std::initializer_list<bool> init, const Allocator& alloc=Allocator());
-
-        // TODO are these constructors executed in order?
         constexpr bit_vector(std::initializer_list<WordType> init, const Allocator& alloc=Allocator());
-
-        // Skip all characters that are not 0/1. This allows punctuation/spacing for byte/word boundaries
         constexpr bit_vector(std::string_view s);
 
         constexpr ~bit_vector();
 
+
+        /* 
+         * Assignment
+         */
         constexpr bit_vector& operator=(const bit_vector<WordType>& other);
         constexpr bit_vector& operator=(bit_vector<WordType>&& other) noexcept;
 
@@ -175,6 +165,7 @@ class bit_vector {
         constexpr size_type capacity() const noexcept;
         constexpr void shrink_to_fit();
 
+
         /*
          * Modifiers
          */
@@ -193,41 +184,8 @@ class bit_vector {
         /*
          * Helper functions
          */
-
-        std::string debug_string(const_iterator first, const_iterator last) {
-            std::string ret = "";
-            iterator mem = first;
-            auto position = 0;
-            for (iterator it = first; it != last; ++it) {
-                if (position % digits == 0 && position != 0) {
-                    ret += " ";
-                } else if (position % 8 == 0 && position != 0) {
-                    ret += '.';
-                }
-                ret += *it == bit1 ? '1' : '0';
-                mem = it;
-                ++position;
-            }
-            return ret;
-        }
-        std::string debug_string() {
-            auto first = begin();
-            auto last = end();
-            std::string ret = "";
-            iterator mem = first;
-            auto position = 0;
-            for (iterator it = first; it != last; ++it) {
-                if (position % digits == 0 && position != 0) {
-                    ret += " ";
-                } else if (position % 8 == 0 && position != 0) {
-                    ret += '.';
-                }
-                ret += *it == bit1 ? '1' : '0';
-                mem = it;
-                ++position;
-            }
-            return ret;
-        }
+        std::string debug_string(const_iterator first, const_iterator last);
+        std::string debug_string();
 
         // TODO Make constexpr
         //friend std::ostream& operator<<(std::ostream& os, bit_vector bv) {
@@ -681,6 +639,47 @@ constexpr void bit_vector<WordType, Allocator>::resize(size_type count, const va
 }
 // -------------------------------------------------------------------------- //
 
+
+
+// ------------------------ BIT VECTOR: DEBUGGING -------------------------- //
+template<class WordType, class Allocator>
+std::string bit_vector<WordType, Allocator>::debug_string(const_iterator first, const_iterator last) {
+    std::string ret = "";
+    iterator mem = first;
+    auto position = 0;
+    for (iterator it = first; it != last; ++it) {
+        if (position % digits == 0 && position != 0) {
+            ret += " ";
+        } else if (position % 8 == 0 && position != 0) {
+            ret += '.';
+        }
+        ret += *it == bit1 ? '1' : '0';
+        mem = it;
+        ++position;
+    }
+    return ret;
+}
+
+template<class WordType, class Allocator>
+std::string bit_vector<WordType, Allocator>::debug_string() {
+    auto first = begin();
+    auto last = end();
+    std::string ret = "";
+    iterator mem = first;
+    auto position = 0;
+    for (iterator it = first; it != last; ++it) {
+        if (position % digits == 0 && position != 0) {
+            ret += " ";
+        } else if (position % 8 == 0 && position != 0) {
+            ret += '.';
+        }
+        ret += *it == bit1 ? '1' : '0';
+        mem = it;
+        ++position;
+    }
+    return ret;
+}
+// -------------------------------------------------------------------------- //
 
 
 // ========================================================================== //
