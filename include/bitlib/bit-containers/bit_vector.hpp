@@ -203,8 +203,6 @@ constexpr bit_vector<WordType, Allocator>::bit_vector() noexcept(noexcept(Alloca
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::bit_vector(const Allocator& alloc) noexcept : word_vector(alloc), length_(0) {}
 
-// TODO this should take a bit_reference, not a bit_value. The issue is that passing bit::bit1 
-// does not currenlty work if you try to pass it as reference
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::bit_vector(size_type count, value_type bit_val, const Allocator& alloc) 
     : word_vector(word_count(count), static_cast<WordType>(bit_val == bit1 ? -1 : 0), alloc),
@@ -227,7 +225,6 @@ constexpr bit_vector<WordType, Allocator>::bit_vector(
 }
 
 
-//TODO please don't look at this yet ): 
 template<class WordType, class Allocator>
 template<class RandomAccessIt>
 constexpr bit_vector<WordType, Allocator>::bit_vector(
@@ -253,7 +250,6 @@ template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::bit_vector(const bit_vector<WordType>&& other, const Allocator& alloc)
     : word_vector(std::move(other.word_vector), alloc), length_(other.length_) {}
 
-// TODO maybe make template, or allow bool to be cast as bit
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::bit_vector(std::initializer_list<bit_value> init, const Allocator& alloc) 
     : word_vector(alloc), length_(0) {
@@ -262,7 +258,6 @@ constexpr bit_vector<WordType, Allocator>::bit_vector(std::initializer_list<bit_
     }
 }
 
-// TODO use length of init to set vector length, then add at each index.
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::bit_vector(std::initializer_list<bool> init, const Allocator& alloc) 
     : word_vector(alloc), length_(0) {
@@ -271,7 +266,6 @@ constexpr bit_vector<WordType, Allocator>::bit_vector(std::initializer_list<bool
     }
 }
 
-// TODO are these constructors executed in order?
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::bit_vector(
         std::initializer_list<WordType> init, 
@@ -368,7 +362,6 @@ template<class WordType, class Allocator>
 constexpr typename bit_vector<WordType, Allocator>::reference 
 bit_vector<WordType, Allocator>::operator[](size_type pos) {return begin()[pos];}
 
-// TODO is this supposed to be const_reference?
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::reference 
 bit_vector<WordType, Allocator>::operator[](size_type pos) const {return begin()[pos];}
@@ -445,7 +438,6 @@ bit_vector<WordType, Allocator>::end() noexcept {
     return begin() + length_;
 }
 
-// TODO Need bit constructors for const iterators
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::const_iterator 
 bit_vector<WordType, Allocator>::begin() const noexcept {
