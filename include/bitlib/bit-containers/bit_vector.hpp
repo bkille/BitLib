@@ -42,7 +42,7 @@ class bit_vector {
 
         // TODO are privates always inlined?
         // @brief Get the number of words needed to represet num_bits bits
-        uint64_t word_count(unsigned int num_bits) {
+        constexpr uint64_t word_count(unsigned int num_bits) {
             return ((num_bits + digits - 1) / digits);
         }
 
@@ -184,8 +184,8 @@ class bit_vector {
         /*
          * Helper functions
          */
-        std::string debug_string(const_iterator first, const_iterator last);
-        std::string debug_string();
+        constexpr std::string debug_string(const_iterator first, const_iterator last);
+        constexpr std::string debug_string();
 
         // TODO Make constexpr
         //friend std::ostream& operator<<(std::ostream& os, bit_vector bv) {
@@ -643,7 +643,7 @@ constexpr void bit_vector<WordType, Allocator>::resize(size_type count, const va
 
 // ------------------------ BIT VECTOR: DEBUGGING -------------------------- //
 template<class WordType, class Allocator>
-std::string bit_vector<WordType, Allocator>::debug_string(const_iterator first, const_iterator last) {
+constexpr std::string bit_vector<WordType, Allocator>::debug_string(const_iterator first, const_iterator last) {
     std::string ret = "";
     iterator mem = first;
     auto position = 0;
@@ -661,7 +661,7 @@ std::string bit_vector<WordType, Allocator>::debug_string(const_iterator first, 
 }
 
 template<class WordType, class Allocator>
-std::string bit_vector<WordType, Allocator>::debug_string() {
+constexpr std::string bit_vector<WordType, Allocator>::debug_string() {
     auto first = begin();
     auto last = end();
     std::string ret = "";
