@@ -111,10 +111,10 @@ class bit_vector {
                 RandomAccessIt first, 
                 RandomAccessIt last, 
                 const Allocator& alloc=Allocator());
-        constexpr bit_vector(const bit_vector<WordType>& other);
-        constexpr bit_vector(const bit_vector<WordType>& other, const Allocator& alloc);
-        constexpr bit_vector(const bit_vector<WordType>&& other) noexcept;
-        constexpr bit_vector(const bit_vector<WordType>&& other, const Allocator& alloc);
+        constexpr bit_vector(const bit_vector<WordType, Allocator>& other) = default;
+        constexpr bit_vector(const bit_vector<WordType, Allocator>& other, const Allocator& alloc);
+        constexpr bit_vector(const bit_vector<WordType, Allocator>&& other) noexcept;
+        constexpr bit_vector(const bit_vector<WordType, Allocator>&& other, const Allocator& alloc);
         constexpr bit_vector(std::initializer_list<bit_value> init, const Allocator& alloc=Allocator());
         constexpr bit_vector(std::initializer_list<bool> init, const Allocator& alloc=Allocator());
         constexpr bit_vector(std::initializer_list<WordType> init, const Allocator& alloc=Allocator());
@@ -126,8 +126,8 @@ class bit_vector {
         /* 
          * Assignment
          */
-        constexpr bit_vector& operator=(const bit_vector<WordType>& other);
-        constexpr bit_vector& operator=(bit_vector<WordType>&& other) noexcept;
+        constexpr bit_vector& operator=(const bit_vector<WordType, Allocator>& other) = default;
+        constexpr bit_vector& operator=(bit_vector<WordType, Allocator>&& other) noexcept;
 
 
         /* 
@@ -239,15 +239,11 @@ constexpr bit_vector<WordType, Allocator>::bit_vector(
 }
 
 template<class WordType, class Allocator>
-constexpr bit_vector<WordType, Allocator>::bit_vector(const bit_vector<WordType>& other) 
-    : word_vector{other.word_vector.begin(), other.word_vector.end()}, length_(other.length_) {}
-
-template<class WordType, class Allocator>
-constexpr bit_vector<WordType, Allocator>::bit_vector(const bit_vector<WordType>&& other) noexcept
+constexpr bit_vector<WordType, Allocator>::bit_vector(const bit_vector<WordType, Allocator>&& other) noexcept
     : word_vector(std::move(other.word_vector)), length_(other.length_) {}
 
 template<class WordType, class Allocator>
-constexpr bit_vector<WordType, Allocator>::bit_vector(const bit_vector<WordType>&& other, const Allocator& alloc)
+constexpr bit_vector<WordType, Allocator>::bit_vector(const bit_vector<WordType, Allocator>&& other, const Allocator& alloc)
     : word_vector(std::move(other.word_vector), alloc), length_(other.length_) {}
 
 template<class WordType, class Allocator>
@@ -339,15 +335,7 @@ constexpr bit_vector<WordType, Allocator>::~bit_vector() {
 // ------------------------ BIT VECTOR: ASSIGNMENT ------------------------ //
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>&
-bit_vector<WordType, Allocator>::operator=(const bit_vector<WordType>& other) {
-    length_ = other.length_;
-    word_vector = other.word_vector;
-    return *this;
-}
-
-template<class WordType, class Allocator>
-constexpr bit_vector<WordType, Allocator>&
-bit_vector<WordType, Allocator>::operator=(bit_vector<WordType>&& other) noexcept {
+bit_vector<WordType, Allocator>::operator=(bit_vector<WordType, Allocator>&& other) noexcept {
     length_ = other.length_;
     word_vector = std::move(other.word_vector);
     other.length_ = 0;
