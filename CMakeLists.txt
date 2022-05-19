@@ -30,19 +30,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
 include_directories("include/" "ext/simdpp")
 
-# Add fmt library (useful for printing words in binary and other debugging stuff)
-include(FetchContent)
-FetchContent_Declare(
-    fmt
-    URL https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
-)
-FetchContent_MakeAvailable(fmt)
-
 # Add targets
 file(GLOB_RECURSE BITLIB_HEADERS "include/bitlib/" "*.hpp")
 file(GLOB TEST_SOURCES "src/unit-tests/*.cpp")
 add_executable(bitlib-tests ${TEST_SOURCES})
-file(GLOB BENCH_SOURCES "src/benchmarks/*.cc")
+file(GLOB BENCH_SOURCES "src/benchmarks/*.cpp")
 add_executable(bitlib-bench ${BENCH_SOURCES})
 # Example targets
 file(GLOB EXAMPLE1_SOURCES "example/print.cpp")
@@ -76,9 +68,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googlebench)
 
 add_library(bitarr STATIC "ext/BitArray/bit_array.c")
+add_subdirectory("ext/sul_dynamic_bitset")
 # specify benchmark-specific libraries
 include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils "ext/BitArray/")
-target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark -pthread bitarr)
+target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark_main benchmark::benchmark -pthread bitarr sul::dynamic_bitset)
 
 target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -mtune=native)
 install(TARGETS bitlib-bench DESTINATION .)
@@ -100,7 +93,7 @@ FetchContent_MakeAvailable(googletest)
 
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(bitlib-tests PRIVATE gtest gtest_main -pthread -lgcov --coverage -fsanitize=address fmt::fmt-header-only)
+target_link_libraries(bitlib-tests PRIVATE gtest gtest_main -pthread -lgcov --coverage -fsanitize=address)
 
 install(TARGETS bitlib-tests DESTINATION .)
 

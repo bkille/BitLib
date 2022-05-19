@@ -10,6 +10,6 @@
 #ifndef _BIT_CONTAINERS_HPP_INCLUDED
 #define _BIT_CONTAINERS_HPP_INCLUDED
 // // ============================== PREAMBLE ================================== //
-#include "bitvector.hpp"
+#include "bit_vector.hpp"
 // // ========================================================================== //
 #endif

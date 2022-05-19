@@ -51,7 +51,6 @@ class bit_value
     constexpr bit_value& operator=(bit_reference<T> ref) noexcept;
     template <class WordType> 
     constexpr bit_value& assign(WordType val) noexcept;
-    constexpr bit_value& assign(bool val) noexcept;
     template <class WordType> 
     constexpr bit_value& assign(WordType val, size_type pos);
 
@@ -161,6 +160,14 @@ constexpr bit_value::bit_value(
 : _value(static_cast<bool>(ref))
 {
 }
+
+// Implicitly constructs a bit value from a bool
+constexpr bit_value::bit_value(
+    bool ref
+) noexcept
+: _value(ref)
+{
+}
     
 // Explicitly constructs an aligned bit value
 template <class WordType>
@@ -197,7 +204,6 @@ constexpr bit_value& bit_value::operator=(
     return *this;
 }
 
-// Assigns the aligned bit of a value to the bit value
 template <class WordType> 
 constexpr bit_value& bit_value::assign(
     WordType val

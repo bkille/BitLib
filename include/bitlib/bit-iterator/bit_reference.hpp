@@ -45,7 +45,6 @@ class bit_reference
     template <class T> 
     constexpr bit_reference(const bit_reference<T>& other) noexcept;
     constexpr bit_reference(const bit_reference& other) noexcept;
-    constexpr bit_reference(const bool other) noexcept;
     explicit constexpr bit_reference(word_type& ref) noexcept;
     constexpr bit_reference(word_type& ref, size_type pos);
 
@@ -208,6 +207,16 @@ constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
 template <class WordType>
 constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
     bit_value val
+) noexcept
+{
+    val ? set() : reset();
+    return *this;
+}
+
+// Assigns a bool value to the bit reference
+template <class WordType>
+constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
+    bool val
 ) noexcept
 {
     val ? set() : reset();
