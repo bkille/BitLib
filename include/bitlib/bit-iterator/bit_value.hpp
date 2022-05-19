@@ -41,6 +41,7 @@ class bit_value
     constexpr bit_value(bit_reference<T> ref) noexcept;
     template <class WordType> 
     explicit constexpr bit_value(WordType val) noexcept;
+    explicit constexpr bit_value(bool val) noexcept;
     template <class WordType> 
     constexpr bit_value(WordType val, size_type pos);
     
@@ -50,6 +51,7 @@ class bit_value
     constexpr bit_value& operator=(bit_reference<T> ref) noexcept;
     template <class WordType> 
     constexpr bit_value& assign(WordType val) noexcept;
+    constexpr bit_value& assign(bool val) noexcept;
     template <class WordType> 
     constexpr bit_value& assign(WordType val, size_type pos);
 
@@ -61,7 +63,7 @@ class bit_value
 
     // Conversion
     public:
-    explicit constexpr operator bool() const noexcept;
+    constexpr operator bool() const noexcept;
     
     // Swap members
     public:
@@ -253,7 +255,7 @@ constexpr bit_value& bit_value::operator^=(
 
 
 // ------------------------- BIT VALUE: CONVERSION -------------------------- //
-// Explicitly converts the bit value to a boolean value
+// Implicitly converts the bit value to a boolean value
 constexpr bit_value::operator bool(
 ) const noexcept
 {
