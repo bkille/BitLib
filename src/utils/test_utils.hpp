@@ -2,7 +2,7 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            test_utils.hpp
 // Description:     General utilities for testing
-// Creator:         Collin Gress
+// Creator:         Bryce Kille
 // Contributor(s):  Bryce Kille [2019], 
 //                  Collin Gress [2019]
 // License: BSD 3-Clause License
@@ -112,6 +112,7 @@ inline unsigned long long generate_random_number(size_t min, size_t max) {
     return dist(mersenne_engine);
 }
 
+
 template <typename WordType>
 std::vector<WordType> get_random_vec(
         unsigned long long int size,
@@ -130,6 +131,18 @@ std::vector<WordType> get_random_vec(
     std::vector<WordType> vec(size);
     generate(begin(vec), end(vec), gen);
     return vec;
+}
+
+template <typename WordType>
+bit::bit_vector<WordType> get_random_bvec(
+        unsigned long long int size
+) {
+    constexpr auto digits = bit::binary_digits<WordType>::value;
+    auto words = (size + digits - 1) / digits;
+    auto word_vec = get_random_vec(words);
+    bit::bit_vector<WordType> ret(word_vec.begin(), word_vec.end());
+    ret.resize(size);
+    return ret;
 }
 
 template <typename WordType>

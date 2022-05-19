@@ -1,5 +1,5 @@
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address)
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi)
 # specify the C++ standard
 cmake_minimum_required(VERSION 3.14)
 

@@ -43,8 +43,8 @@ class VectorTest : public testing::Test {
     using vec_type = bit::bit_vector<WordType>;
     vec_type empty_vec;
     std::vector<bool> empty_vec_bool;
-    vec_type v2_ {18};
-    vec_type v3_ {"010111111"};
+    vec_type v2_ = vec_type(18);
+    vec_type v3_ = vec_type("010111111");
 
     std::vector<vec_type> random_bitvecs;
     std::vector<std::vector<bool>> random_boolvecs;

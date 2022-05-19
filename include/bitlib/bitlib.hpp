@@ -1,4 +1,4 @@
-// ================================= ROTATE ================================= //
+// ================================= BITLIB ================================= //
 // Project:         The Bit Library 
 // License:         BSD 3-Clause License
 // ========================================================================== //
@@ -9,5 +9,9 @@
 #include "bit-algorithms/bit_algorithm.hpp"
 #include "bit-containers/bit-containers.hpp"
 
-#endif // _ROTATE_HPP_INCLUDED
+/*! \namespace bit
+ * \brief All of the classes and functions of the BitLib
+ */
+
+#endif // _BITLIB_HPP_INCLUDED
 // ========================================================================== //
