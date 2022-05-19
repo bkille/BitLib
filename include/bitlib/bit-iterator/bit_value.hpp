@@ -62,7 +62,7 @@ class bit_value
 
     // Conversion
     public:
-    explicit constexpr operator bool() const noexcept;
+    constexpr operator bool() const noexcept;
     
     // Swap members
     public:
@@ -161,11 +161,11 @@ constexpr bit_value::bit_value(
 {
 }
 
-// Explicitly constructs a bit from a bool
+// Implicitly constructs a bit value from a bool
 constexpr bit_value::bit_value(
-    bool b
+    bool ref
 ) noexcept
-: _value(b)
+: _value(ref)
 {
 }
     
@@ -204,7 +204,6 @@ constexpr bit_value& bit_value::operator=(
     return *this;
 }
 
-// Assigns the aligned bit of a value to the bit value
 template <class WordType> 
 constexpr bit_value& bit_value::assign(
     WordType val
@@ -262,7 +261,7 @@ constexpr bit_value& bit_value::operator^=(
 
 
 // ------------------------- BIT VALUE: CONVERSION -------------------------- //
-// Explicitly converts the bit value to a boolean value
+// Implicitly converts the bit value to a boolean value
 constexpr bit_value::operator bool(
 ) const noexcept
 {

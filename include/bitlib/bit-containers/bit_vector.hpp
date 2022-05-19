@@ -128,6 +128,7 @@ class bit_vector {
          */
         constexpr bit_vector& operator=(const bit_vector<WordType, Allocator>& other) = default;
         constexpr bit_vector& operator=(bit_vector<WordType, Allocator>&& other) noexcept;
+        constexpr bit_vector& operator&=(const bit_vector<WordType, Allocator>& other);
 
 
         /* 
@@ -339,6 +340,16 @@ bit_vector<WordType, Allocator>::operator=(bit_vector<WordType, Allocator>&& oth
     length_ = other.length_;
     word_vector = std::move(other.word_vector);
     other.length_ = 0;
+    return *this;
+}
+
+
+template<class WordType, class Allocator>
+constexpr bit_vector<WordType, Allocator>&
+bit_vector<WordType, Allocator>::operator&=(const bit_vector<WordType, Allocator>& other) {
+    for (int i = 0; i < word_vector.size(); i++) {
+        word_vector[i] &= other.word_vector[i];
+    }
     return *this;
 }
 // -------------------------------------------------------------------------- //

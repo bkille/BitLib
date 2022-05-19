@@ -14,20 +14,9 @@ BENCHMARK_TEMPLATE_DEFINE_F(
         BitLib_And, 
         bit::bit_vector<uint64_t>) 
 (benchmark::State& state) {
-    auto first = this->random_vec1.begin();
-    auto last = this->random_vec1.end();
-    auto first2 = this->random_vec2.begin();
-
     //TODO bit_and word_type should be templated
     for (auto _ : state) {
         benchmark::DoNotOptimize(this->random_vec1 &= this->random_vec2);
-        //benchmark::DoNotOptimize(
-                //bit::transform(
-                    //first, 
-                    //last, 
-                    //first2,
-                    //first,
-                    //std::bit_and<uint64_t>()));
         benchmark::ClobberMemory();
     }
 };

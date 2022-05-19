@@ -51,6 +51,7 @@ class bit_reference
     // Assignment
     public:
     constexpr bit_reference& operator=(const bit_reference& other) noexcept;
+    constexpr bit_reference& operator=(const bool other) noexcept;
     template <class T> 
     constexpr bit_reference& operator=(const bit_reference<T>& other) noexcept;
     constexpr bit_reference& operator=(bit_value val) noexcept;
@@ -65,7 +66,7 @@ class bit_reference
     
     // Conversion
     public:
-    explicit constexpr operator bool() const noexcept;
+    constexpr operator bool() const noexcept;
 
     // Access
     public:
@@ -212,6 +213,16 @@ constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
     return *this;
 }
 
+// Assigns a bool value to the bit reference
+template <class WordType>
+constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
+    bool val
+) noexcept
+{
+    val ? set() : reset();
+    return *this;
+}
+
 // Assigns the aligned bit of a value to the bit reference
 template <class WordType>
 constexpr bit_reference<WordType>& bit_reference<WordType>::assign(
@@ -272,7 +283,7 @@ constexpr bit_reference<WordType>& bit_reference<WordType>::operator^=(
 
 
 // ----------------------- BIT REFERENCE: CONVERSION ------------------------ //
-// Explicitly converts the bit reference to a boolean value
+// Implicitly converts the bit reference to a boolean value
 template <class WordType>
 constexpr bit_reference<WordType>::operator bool(
 ) const noexcept

@@ -4,3 +4,6 @@
 [submodule "ext/BitArray"]
 	path = ext/BitArray
 	url = git@github.com:noporpoise/BitArray.git
+[submodule "ext/sul_dynamic_bitset"]
+	path = ext/sul_dynamic_bitset
+	url = https://github.com/pinam45/dynamic_bitset.git

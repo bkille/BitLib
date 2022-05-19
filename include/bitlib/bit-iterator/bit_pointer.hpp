@@ -58,7 +58,7 @@ class bit_pointer
     
     // Conversion
     public:
-    explicit constexpr operator bool() const noexcept;
+    constexpr operator bool() const noexcept;
 
     // Access
     public:
