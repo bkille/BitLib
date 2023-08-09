@@ -1,5 +1,3 @@
-set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi)
 # specify the C++ standard
 cmake_minimum_required(VERSION 3.14)
 
@@ -7,7 +5,7 @@ cmake_minimum_required(VERSION 3.14)
 project(Bit-Vector VERSION 0.1.1)
 
 # set output directory of builds
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # set build type
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -33,33 +31,32 @@ target_include_directories(bitlib INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    # We're in the root, define additional targets for developers.
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi)
 
-    # specify global compiler flags
-    add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
-    include_directories("include/" "src/utils/" "ext/simdpp")
+# specify global compiler flags
+add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
+include_directories("include/" "utils/" "ext/simdpp")
 
-    # Add fmt library (useful for printing words in binary and other debugging stuff)
-    include(FetchContent)
-    FetchContent_Declare(
-        fmt
-        URL https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
-    )
-    FetchContent_MakeAvailable(fmt)
+# Add fmt library (useful for printing words in binary and other debugging stuff)
+include(FetchContent)
+FetchContent_Declare(
+    fmt
+    URL https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
+)
+FetchContent_MakeAvailable(fmt)
 
-    option(BITLIB_BENCHMARK "Build bitlib benchmarks" OFF)
-    option(BITLIB_EXAMPLE "Build bitlib examples" OFF)
-    option(BITLIB_TEST "Build bitlib tests" OFF)
+option(BITLIB_BENCHMARK "Build bitlib benchmarks" OFF)
+option(BITLIB_EXAMPLE "Build bitlib examples" OFF)
+option(BITLIB_TEST "Build bitlib tests" OFF)
 
-    if(BITLIB_BENCHMARK)
-        add_subdirectory(benchmark)
-    endif()
-    if(BITLIB_EXAMPLE)
-        add_subdirectory(example)
-    endif()
-    if(BITLIB_TEST)
-        add_subdirectory(test)
-    endif()
+if(BITLIB_BENCHMARK)
+    set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
+    add_subdirectory(benchmark)
+endif()
+if(BITLIB_EXAMPLE)
+    add_subdirectory(example)
+endif()
+if(BITLIB_TEST)
+    add_subdirectory(test)
 endif()
 
