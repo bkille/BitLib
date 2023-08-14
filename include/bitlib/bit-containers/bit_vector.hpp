@@ -511,6 +511,7 @@ bit_vector<WordType, Allocator>::insert(
     return begin() + d;
 }
 
+// TODO should use std::insert to maintain the constant amortized time.
 template<class WordType, class Allocator>
 constexpr bit_vector<WordType, Allocator>::iterator 
 bit_vector<WordType, Allocator>::insert(
@@ -521,13 +522,15 @@ bit_vector<WordType, Allocator>::insert(
     if (count == 0) {
         return begin() + d;
     }
-    const float bits_available = word_vector.size()*digits;
-    const auto need_to_add = length_ + count > bits_available;
+    const float bits_available = word_vector.size() * digits;
+    const bool need_to_add = length_ + count > bits_available;
     if (need_to_add) {
         const auto words_to_add = word_count(length_ + count - bits_available);
         word_vector.resize(word_vector.size() + words_to_add);
     }
     length_ += count;
+    std::cout << length_ << ", " << word_vector.size() << ", " << digits << "\n";
+    std::cout << d << ", " << count << "\n\n";
     shift_right(begin() + d, begin() + length_, count);
     fill(begin() + d, begin() + d + count, value);
     return begin() + d;

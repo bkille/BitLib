@@ -13,7 +13,9 @@
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
+#ifdef BITLIB_SIMDPP
 #include "simdpp/simd.h"
+#endif
 #define is_aligned(POINTER, BYTE_COUNT) \
     (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 // Miscellaneous
@@ -29,16 +31,17 @@ bit_iterator<RandomAccessIt> find_dispatch(
 ) {
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using size_type = typename bit_iterator<RandomAccessIt>::size_type;
-    std::size_t digits = binary_digits<word_type>::value;
 
     // Initialization
     const bool is_last_aligned = last.position() == 0;
     assert(first.position() == 0);
 
     auto it = first.base();
+
+#ifdef simdpp
+    const std::size_t digits = binary_digits<word_type>::value;
     const auto N = SIMDPP_FAST_INT64_SIZE;
     const auto N_native_words = (N*64)/digits;
-
     // Align the iterator to 64 bit boundary
     while (it != last.base() && !is_aligned(&(*it), 64)) {
         if ((bv == bit1 && (*it == 0)) || (bv == bit0 && (*it == static_cast<word_type>(-1)))) {
@@ -63,6 +66,7 @@ bit_iterator<RandomAccessIt> find_dispatch(
             return find_dispatch(bit_iterator(it), last, bv, std::input_iterator_tag());
         }
     }
+#endif
 
     // Finish out the remainder with typical for loop
     while (it != last.base()) {

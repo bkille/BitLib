@@ -17,7 +17,9 @@
 #include <iterator>
 // Project sources
 // Third-party libraries
+#ifdef SIMDPP
 #include <simdpp/simd.h>
+#endif
 // Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
     (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
@@ -246,6 +248,7 @@ bit_iterator<RandomAccessIt> shift_right_dispatch(
     // Shift bit sequence to the msb 
     if (remaining_bitshifts) {
         auto it = is_last_aligned ? last.base() - 1 : last.base();
+#ifdef SIMDPP
         // Align iterator
         const auto N = SIMDPP_FAST_INT64_SIZE;
         const auto N_native_words = (N*64)/digits;
@@ -262,6 +265,7 @@ bit_iterator<RandomAccessIt> shift_right_dispatch(
             vec_type ret = simdpp::bit_or(ls, rs);
             simdpp::store(&(*(it_rewind)), ret);
         }
+#endif
         for(; it != new_first_base; --it) {
             *it = _shld<word_type>(*it, *(it - 1), remaining_bitshifts);
         }
@@ -330,6 +334,7 @@ bit_iterator<RandomAccessIt> shift_left_dispatch(
         RandomAccessIt it = first.base();
 
         // _shrd all words except the last until we reach alignment
+#ifdef SIMDPP
         // TODO set alignment based off of instruction set used. 
         for (; std::next(it, is_last_aligned) != new_last_base && !is_aligned(&*it, 64); ++it) {
             *it = _shrd<word_type>(*it, *std::next(it), remaining_bitshifts);
@@ -345,6 +350,7 @@ bit_iterator<RandomAccessIt> shift_left_dispatch(
             vec_type ret = simdpp::bit_or(ls, rs);
             simdpp::store(&(*it), ret);
         }
+#endif
         // _shrd all words except the last
         for (; std::next(it, is_last_aligned) != new_last_base; ++it) {
             *it = _shrd<word_type>(*it, *std::next(it), remaining_bitshifts);

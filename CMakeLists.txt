@@ -41,13 +41,20 @@ include_directories("include/" "utils/" "ext/simdpp")
 include(FetchContent)
 FetchContent_Declare(
     fmt
-    URL https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
+    GIT_REPOSITORY      https://github.com/fmtlib/fmt.git
+    GIT_TAG             e57ca2e3685b160617d3d95fcd9e789c4e06ca88 #v10.1.0
 )
 FetchContent_MakeAvailable(fmt)
 
+
+option(BITLIB_SIMDPP "Build with simdpp SIMD extensions" OFF)
 option(BITLIB_BENCHMARK "Build bitlib benchmarks" OFF)
 option(BITLIB_EXAMPLE "Build bitlib examples" OFF)
 option(BITLIB_TEST "Build bitlib tests" OFF)
+
+if (BITLIB_SIMDPP)
+    add_definitions(-DBITLIB_SIMDPP)
+endif()
 
 if(BITLIB_BENCHMARK)
     set(BENCHMARK_ENABLE_GTEST_TESTS OFF)

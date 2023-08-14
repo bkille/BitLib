@@ -10,10 +10,13 @@
 // ============================== PREAMBLE ================================== //
 // C++ standard library
 #include <iterator>
+#include <numeric>
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
+#ifdef BITLIB_SIMDPP
 #include "simdpp/simd.h"
+#endif
 // Miscellaneous
 
 #define is_aligned(POINTER, BYTE_COUNT) \
@@ -37,9 +40,6 @@ count_dispatch(
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using difference_type = typename bit_iterator<RandomAccessIt>::difference_type;
     constexpr difference_type digits = binary_digits<word_type>::value;
-    const auto N = SIMDPP_FAST_INT64_SIZE;
-    const auto N_native_words = (N*64)/digits;
-    using vec_type = simdpp::uint64<N>;
 
     // Initialization
     difference_type result = 0;
@@ -53,6 +53,10 @@ count_dispatch(
     for (; it != last.base() && !is_aligned(&(*it), 64); ++it) {
         result += _popcnt(*it);
     }
+#ifdef BITLIB_SIMDPP
+    const auto N = SIMDPP_FAST_INT64_SIZE;
+    const auto N_native_words = (N*64)/digits;
+    using vec_type = simdpp::uint64<N>;
     for (; std::distance(it, last.base()) >= (unsigned int) N_native_words + 2; it += N_native_words) {
         vec_type v = simdpp::load(&(*it));
         simdpp::for_each(v, [&result](auto a) {result += _popcnt(a);});
@@ -60,6 +64,15 @@ count_dispatch(
     for (; it != last.base(); ++it) {
         result += _popcnt(*it);
     }
+#else 
+    result += std::transform_reduce(
+            it, 
+            last.base(), 
+            0, 
+            std::plus{}, 
+            [](word_type word) {return _popcnt(word); }
+    );
+#endif
     if (last.position() != 0) {
         word_type last_value = *last.base() << (digits - last.position());
         result += _popcnt(last_value);
