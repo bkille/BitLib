@@ -31,11 +31,11 @@ target_include_directories(bitlib INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi)
+set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi --coverage -fno-inline -fno-inline-small-functions -fno-default-inline)
 
 # specify global compiler flags
 add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
-include_directories("include/" "utils/" "ext/simdpp")
+include_directories("include/" "utils/" )
 
 # Add fmt library (useful for printing words in binary and other debugging stuff)
 include(FetchContent)
