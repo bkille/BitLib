@@ -47,6 +47,7 @@ jobs:
         sudo apt install build-essential manpages-dev software-properties-common
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
         sudo apt update && sudo apt install lcov ${{ matrix.compiler.CC }} ${{ matrix.compiler.CXX }}
+        sudo apt install libgtest-dev
         conda activate test
         pip install --user lcov
         conda install cppcheck cpplint
@@ -61,22 +62,25 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
         which cpplint
-        cmake -DBENCHMARK_ENABLE_GTEST_TESTS=OFF -DCMAKE_CXX_CPPCHECK="cppcheck;--std=c++17;--file-filter=*BitLib*" -DCMAKE_CXX_CPPLINT="cpplint;--linelength=100;" ./
+        cmake -Bbuild -DBITLIB_TEST=1 -DCMAKE_CXX_CPPCHECK="cppcheck;--std=c++17;--file-filter=*BitLib*" -DCMAKE_CXX_CPPLINT="cpplint;--linelength=100;" 
 
 
     - name: Build
       shell: bash -l {0}
       # Build your program with the given configuration
-      run: make bitlib-tests
+      run: |
+        cmake --build build -- -j
+      #run: make bitlib-tests
 
     - name: Test
       shell: bash -l {0}
-      run: ./bin/bitlib-tests --gtest_repeat=10 --gtest_break_on_failure --gtest_brief=1
+      run: ctest --test-dir build -j $(nproc --all)
+      #run: ./bin/bitlib-tests --gtest_repeat=10 --gtest_break_on_failure --gtest_brief=1
 
     - name: Run lcov 
       shell: bash -l {0}
       run: |
-        lcov --directory CMakeFiles/bitlib-tests.dir/src/unit-tests/ --gcov-tool /usr/bin/gcov-11 --output-file lcov.out --include "*bitlib*" -c
+        lcov --directory build/test/CMakeFiles/bitlib-tests.dir/src --gcov-tool /usr/bin/gcov-11 --output-file lcov.out --include "*bitlib*" -c
         lcov -r lcov.out "*/usr/*" -r lcov.out "*_deps/*" -r lcov.out "*unit-tests*" -r lcov.out "*ext/*" -o lcov_filtered.out
 
     #- name: Code Coverage Report

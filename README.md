@@ -23,13 +23,13 @@ int main() {
     // Reversed bitvec:  01001011 1110
 
     // Same behavior as std::rotate
-    bit::rotate(bv1.begin(), bv.begin() + 3, bv1.end());
+    bit::rotate(bv1.begin(), bv1.begin() + 3, bv1.end());
     std::cout << "Rotated bitvec:   " << bv1.debug_string() << std::endl;
     // Rotated bitvec:   01011111 0010
 
     // Same behavior as the corresponding std::vector::push_back and std::vector::insert
     bv1.push_back(bit::bit0);
-    bv1.insert(bv.end(), 10, bit::bit1);
+    bv1.insert(bv1.end(), 10, bit::bit1);
     std::cout << "Extended bitvec:  " << bv1.debug_string() << std::endl;
     // Extended bitvec:  01011111 00100111 1111111
 
@@ -37,49 +37,8 @@ int main() {
 }
 ```
 
-# Speedy highlights
-
-Here are some of the highlighted benchmarking results. Algorithms were ran on containers of `1 << 16 = 65536` bits. The "Alignment" column denotes the memory alignment of the input bit-iterators. `U` means the iterators do not fall on a word boundary and `A` means the iterators are aligned with a word boundary. More succinctly, `alignment = (iterator.position() == 0) ? 'A'  'U'`. 
-
-## Compared to `std::vector<bool>`
-| Function | Alignment | Speedup |
-|--|--|--|
-|shift_left | U | 734.24x|
-|shift_left | A | 1970.49x|
-|shift_right |A | 1933.49x|
-|reverse |U | 228.25x|
-|reverse |A | 309.60x|
-|transformUnaryOp |U | 105.86x|
-|transformUnaryOp |A | 1209.39x|
-|transformBinaryOp |U | 55.50x|
-|transformBinaryOp |A | 2436.48x|
-|rotate | AUA | 171.43x|
-|count |A | 79.89x|
-|swap_ranges | U | 99.64x|
-|swap_ranges | A | 1462.80x|
-|copy | U | 39.85x|
-|equal |U | 111.15x|
-|move | U | 31.73x|
-|copy_backward | U | 77.21x|
-
-## Compared to [noporpoise/BitArray]((https://github.com/noporpoise/BitArray))
-I also benchmarked against the [BitArray C library](https://github.com/noporpoise/BitArray). In most cases, the C BitArray library only supports operating on the entire array, so the baseline here is the analagous operation performed on aligned pointers in the BitArray library.
-
-| Function | Alignment | Speedup |
-|-|-|-|
-|shift_left | A | 34.16x|
-|shift_left | U | 12.73x|
-|reverse | A | 20.04x|
-|reverse | U | 14.78x|
-|transform(UnaryOp) | A | 5.76x|
-|transform(BinaryOp) | A | 2.68x|
-|rotate | AUA | 8.11x|
-|count | A | 1.45x|
-
-For more details, see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
-
 # Installation
-BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
+BitLib is a header-only libarary. Currently, the BitLib library requires at least `-std=c++17`. 
 
 
 ## Cmake
@@ -99,7 +58,7 @@ target_link_libraries(example bitlib::bitlib)
 ```
 
 ## Manual include
-Alternatively, just make sure the `include/` and `ext/simdpp` folders are added compiler's search path. 
+Alternatively, just make sure the `include/` and folders are added compiler's search path. 
 
 
 
@@ -187,126 +146,67 @@ CPU Caches:
   L2 Unified 1024 KiB (x40)
   L3 Unified 28160 KiB (x2)
 Load Average: 1.12, 0.98, 0.54
--------------------------------------------------------------------------------------
-Benchmark                                           Time             CPU   Iterations
--------------------------------------------------------------------------------------
-bit::shift_left (small) (AA)                     2.71 ns         2.71 ns    258211388
-bit::shift_left (small) (UU)                     2.61 ns         2.61 ns    269302138
-std::shift_left (small)                          23.5 ns         23.5 ns     29373131
-bit::shift_left (large) (AA)                     49.1 ns         49.1 ns     14221586
-bit::shift_left (large) (UU)                      132 ns          132 ns      5323746
-BitArray::shift_left (large) (AA)                1676 ns         1676 ns       417446
-std::shift_left (large)                         96668 ns        96662 ns         7238
--------------------------------------------------------------------------------------
-bit::shift_right (small) (UU)                    2.47 ns         2.47 ns    286330458
-std::shift_right (small)                         22.2 ns         22.2 ns     31524914
-bit::shift_right (large) (AA)                    42.6 ns         42.6 ns     16505937
-std::shift_right (large)                        82397 ns        82393 ns         8505
--------------------------------------------------------------------------------------
-bit::reverse (small) (UU)                        5.46 ns         5.46 ns    128243169
-std::reverse (small)                             24.9 ns         24.9 ns     28032329
-bit::reverse (large) (AA)                         515 ns          515 ns      1346635
-bit::reverse (large) (UU)                         698 ns          698 ns      1010933
-BitArray::reverse (large) (AA)                  10320 ns        10320 ns        66633
-std::reverse (large)                           159426 ns       159417 ns         4392
--------------------------------------------------------------------------------------
-bit::transform(UnaryOp) (small) (AA)             3.34 ns         3.34 ns    209550489
-bit::transform(UnaryOp) (small) (UU)             4.63 ns         4.63 ns    151344589
-std::transform(UnaryOp) (small)                  31.6 ns         31.6 ns     22120482
-bit::transform(UnaryOp) (large) (AA)             98.6 ns         98.6 ns      7071918
-BitArray::transform(UnaryOp) (large) (AA)         568 ns          568 ns      1236126
-bit::transform(UnaryOp) (large) (UU)             1126 ns         1126 ns       621683
-std::transform(UnaryOp) (large)                119215 ns       119211 ns         5863
--------------------------------------------------------------------------------------
-bit::transform(BinaryOp) (small) (AA)            5.70 ns         5.70 ns    122674050
-bit::transform(BinaryOp) (small) (UU)            5.44 ns         5.44 ns    128673649
-std::transform(BinaryOp) (small)                 23.3 ns         23.3 ns     31074047
-bit::transform(BinaryOp) (large) (AA)             159 ns          159 ns      4254743
-BitArray::transform(BinaryOp) (large) (AA)        428 ns          428 ns      1612610
-bit::transform(BinaryOp) (large) (UU)            6992 ns         6991 ns       100430
-std::transform(BinaryOp) (large)               388040 ns       388017 ns         1805
--------------------------------------------------------------------------------------
-bit::rotate (small) (AUA)                        5.43 ns         5.43 ns    128914954
-std::rotate (small)                              52.8 ns         52.8 ns     13262485
-bit::rotate (large) (AUA)                        2581 ns         2580 ns       271229
-BitArray::rotate (large) (AUA)                  20932 ns        20931 ns        33469
-std::rotate (large)                            442400 ns       442382 ns         1578
--------------------------------------------------------------------------------------
-bit::count (small) (AA)                          1.37 ns         1.37 ns    515163169
-std::count (small)                               9.68 ns         9.68 ns     73184866
-bit::count (large) (AA)                           449 ns          449 ns      1548186
-BitArray::count (large) (AA)                      651 ns          651 ns      1072912
-std::count (large)                              35865 ns        35863 ns        19501
--------------------------------------------------------------------------------------
-bit::swap_ranges (small) (AA)                    4.07 ns         4.07 ns    171889010
-bit::swap_ranges (small) (UU)                    3.39 ns         3.39 ns    206244002
-std::swap_ranges (small)                         18.0 ns         18.0 ns     38556899
-bit::swap_ranges (large) (AA)                     234 ns          234 ns      2995324
-bit::swap_ranges (large) (UU)                    3432 ns         3432 ns       203790
-std::swap_ranges (large)                       341970 ns       341957 ns         2045
--------------------------------------------------------------------------------------
-bit::copy (small) (UU)                           4.08 ns         4.08 ns    170777009
-std::copy (small)                                17.2 ns         17.2 ns     40512412
-bit::copy (large) (UU)                           2901 ns         2900 ns       241640
-std::copy (large)                              115582 ns       115577 ns         6068
--------------------------------------------------------------------------------------
-bit::equal (small) (UU)                          3.00 ns         3.00 ns    234132358
-std::equal (small)                               20.1 ns         20.1 ns     34820885
-bit::equal (large) (UU)                          1124 ns         1123 ns       623400
-std::equal (large)                             124873 ns       124866 ns         5592
--------------------------------------------------------------------------------------
-bit::move (small) (UU)                           4.09 ns         4.09 ns    169329810
-std::move (small)                                17.3 ns         17.3 ns     40541053
-bit::move (large) (UU)                           3688 ns         3688 ns       191427
-std::move (large)                              117027 ns       117018 ns         5918
--------------------------------------------------------------------------------------
-bit::copy_backward (small) (UU)                  6.33 ns         6.33 ns    112511417
-std::copy_backward (small)                       12.5 ns         12.5 ns     54679813
-bit::copy_backward (large) (UU)                  4651 ns         4650 ns       152354
-std::copy_backward (large)                     359083 ns       359059 ns         1993
--------------------------------------------------------------------------------------
-bit::fill (small) (UU)                           3.05 ns         3.05 ns    228479324
-std::fill (small)                                1.48 ns         1.48 ns    446344808
-bit::fill (huge) (UU)                            7502 ns         7502 ns        94398
-std::fill (huge)                                 7415 ns         7415 ns        91575
-```
-
-| Function | Size  | Alignment | Speedup |
-|-----------|-------|----|-----|
-|shift_left | small | AA | 8.68x|
-|shift_left | small | UU | 9.02x|
-|shift_left | large | UU | 734.24x|
-|shift_left | large | AA | 1970.49x|
-|shift_right | small | UU | 8.98x|
-|shift_right | large | AA | 1933.49x|
-|reverse | small | UU | 4.56x|
-|reverse | large | UU | 228.25x|
-|reverse | large | AA | 309.60x|
-|transformUnaryOp | small | UU | 6.82x|
-|transformUnaryOp | small | AA | 9.47x|
-|transformUnaryOp | large | UU | 105.86x|
-|transformUnaryOp | large | AA | 1209.39x|
-|transformBinaryOp | small | AA | 4.09x|
-|transformBinaryOp | small | UU | 4.28x|
-|transformBinaryOp | large | UU | 55.50x|
-|transformBinaryOp | large | AA | 2436.48x|
-|rotate | small | AUA | 9.72x|
-|rotate | large | AUA | 171.43x|
-|count | small | AA | 7.06x|
-|count | large | AA | 79.89x|
-|swap_ranges | small | AA | 4.42x|
-|swap_ranges | small | UU | 5.30x|
-|swap_ranges | large | UU | 99.64x|
-|swap_ranges | large | AA | 1462.80x|
-|copy | small | UU | 4.22x|
-|copy | large | UU | 39.85x|
-|equal | small | UU | 6.71x|
-|equal | large | UU | 111.15x|
-|move | small | UU | 4.22x|
-|move | large | UU | 31.73x|
-|copy_backward | small | UU | 1.98x|
-|copy_backward | large | UU | 77.21x|
-|fill | small | UU | 0.49x|
-|fill | huge | UU | 0.99x|
-
-
+--------------------------------------------------------------------------------
+Benchmark                                      Time             CPU   Iterations
+--------------------------------------------------------------------------------
+bit::shift_left (small) (AA)                4.79 ns         4.79 ns    146028612
+bit::shift_left (small) (UU)                3.72 ns         3.72 ns    187172020
+std::shift_left (small)                     37.8 ns         37.8 ns     18507630
+bit::shift_left (large) (AA)                78.9 ns         78.9 ns      8887302
+bit::shift_left (large) (UU)                 243 ns          243 ns      2887952
+std::shift_left (large)                   156867 ns       156869 ns         4463
+bit::shift_right (small) (UU)               3.48 ns         3.48 ns    201058677
+std::shift_right (small)                    35.7 ns         35.7 ns     19186367
+bit::shift_right (large) (AA)               68.3 ns         68.3 ns     10249245
+std::shift_right (large)                  132458 ns       132461 ns         5276
+bit::reverse (small) (UU)                   8.73 ns         8.73 ns     80176090
+std::reverse (small)                        39.9 ns         39.9 ns     17545669
+bit::reverse (large) (AA)                    842 ns          842 ns       830385
+bit::reverse (large) (UU)                   1157 ns         1157 ns       605963
+std::reverse (large)                      285799 ns       285792 ns         2456
+bit::transform(UnaryOp) (small) (AA)        5.22 ns         5.22 ns    134034538
+bit::transform(UnaryOp) (small) (UU)        6.28 ns         6.28 ns    111084155
+std::transform(UnaryOp) (small)             50.6 ns         50.6 ns     13837852
+bit::transform(UnaryOp) (large) (AA)         238 ns          238 ns      2956037
+bit::transform(UnaryOp) (large) (UU)        2005 ns         2005 ns       349160
+std::transform(UnaryOp) (large)           192498 ns       192502 ns         3637
+bit::transform(BinaryOp) (small) (AA)       7.50 ns         7.50 ns     93300797
+bit::transform(BinaryOp) (small) (UU)       7.85 ns         7.85 ns     89176138
+std::transform(BinaryOp) (small)            37.1 ns         37.1 ns     18848167
+bit::transform(BinaryOp) (large) (AA)        345 ns          345 ns      2030257
+bit::transform(BinaryOp) (large) (UU)      12924 ns        12925 ns        54165
+std::transform(BinaryOp) (large)          619243 ns       619246 ns         1134
+bit::rotate (small) (ARA)                   9.14 ns         9.14 ns    123732722
+std::rotate (small)                         79.7 ns         79.7 ns      9138769
+bit::rotate (large) (ARA)                   7617 ns         7617 ns        92147
+std::rotate (large)                       582126 ns       582135 ns         1207
+bit::count (small) (AA)                     2.29 ns         2.29 ns    299434270
+std::count (small)                          15.2 ns         15.2 ns     45934612
+bit::count (large) (AA)                      457 ns          457 ns      1533128
+std::count (large)                         57501 ns        57501 ns        12174
+bit::swap_ranges (small) (AA)               6.76 ns         6.76 ns    103735181
+bit::swap_ranges (small) (UU)               5.43 ns         5.43 ns    128688535
+std::swap_ranges (small)                    27.8 ns         27.8 ns     25309938
+bit::swap_ranges (large) (AA)                446 ns          446 ns      1570781
+bit::swap_ranges (large) (UU)               5496 ns         5496 ns       127033
+std::swap_ranges (large)                  507092 ns       507093 ns         1380
+bit::copy (small) (UU)                      6.22 ns         6.22 ns    110731355
+std::copy (small)                           27.7 ns         27.7 ns     25261667
+bit::copy (large) (UU)                      5367 ns         5367 ns       130292
+std::copy (large)                         184520 ns       184523 ns         3794
+bit::equal (small) (UU)                     3.64 ns         3.64 ns    193325012
+std::equal (small)                          32.2 ns         32.2 ns     21650629
+bit::equal (large) (UU)                     1799 ns         1799 ns       389158
+std::equal (large)                        200078 ns       200080 ns         3499
+bit::move (small) (UU)                      6.31 ns         6.31 ns    110834953
+std::move (small)                           27.7 ns         27.7 ns     25270665
+bit::move (large) (UU)                      5372 ns         5372 ns       130464
+std::move (large)                         184090 ns       184094 ns         3803
+bit::copy_backward (small) (UU)             9.60 ns         9.60 ns     72952203
+std::copy_backward (small)                  19.9 ns         19.9 ns     35227170
+bit::copy_backward (large) (UU)             7602 ns         7602 ns        92137
+std::copy_backward (large)                431622 ns       431616 ns         1619
+bit::fill (small) (UU)                      4.35 ns         4.35 ns    160834380
+std::fill (small)                           2.35 ns         2.35 ns    297524146
+bit::fill (huge) (UU)                      17138 ns        17137 ns        40748
+std::fill (huge)                           11840 ns        11839 ns        59666

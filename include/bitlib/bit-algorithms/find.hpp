@@ -13,7 +13,6 @@
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
-#include "simdpp/simd.h"
 #define is_aligned(POINTER, BYTE_COUNT) \
     (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 // Miscellaneous
@@ -29,40 +28,12 @@ bit_iterator<RandomAccessIt> find_dispatch(
 ) {
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using size_type = typename bit_iterator<RandomAccessIt>::size_type;
-    std::size_t digits = binary_digits<word_type>::value;
 
     // Initialization
     const bool is_last_aligned = last.position() == 0;
     assert(first.position() == 0);
 
     auto it = first.base();
-    const auto N = SIMDPP_FAST_INT64_SIZE;
-    const auto N_native_words = (N*64)/digits;
-
-    // Align the iterator to 64 bit boundary
-    while (it != last.base() && !is_aligned(&(*it), 64)) {
-        if ((bv == bit1 && (*it == 0)) || (bv == bit0 && (*it == static_cast<word_type>(-1)))) {
-            ++it;
-            continue;
-        }
-
-        size_type num_trailing_complementary_bits = (bv == bit0) 
-            ? _tzcnt(static_cast<word_type>(~*it))
-            : _tzcnt(static_cast<word_type>(*it));
-        return bit_iterator(it, (size_type) num_trailing_complementary_bits);
-    } 
-    
-    // Use SIMD operations on large chunks
-    for (; std::distance(it, last.base()) >= (unsigned int) N_native_words + 2; it += N_native_words ) {
-        using vec_type = simdpp::uint64<N>;
-        vec_type v = simdpp::load(&(*it));
-        if (bv == bit0) {
-            simdpp::for_each(v, [](auto a) {return ~a;});
-        }
-        if (simdpp::test_bits_any(v)) {
-            return find_dispatch(bit_iterator(it), last, bv, std::input_iterator_tag());
-        }
-    }
 
     // Finish out the remainder with typical for loop
     while (it != last.base()) {
