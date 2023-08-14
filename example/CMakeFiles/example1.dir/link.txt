@@ -1,1 +1,0 @@
-/usr/bin/g++-11 -rdynamic CMakeFiles/example1.dir/src/example1.o -o example1  -lYourLib 

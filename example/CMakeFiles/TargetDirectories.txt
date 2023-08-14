@@ -1,3 +1,0 @@
-/home/Users/blk6/Projects/Bit/BitLib/example/CMakeFiles/example1.dir
-/home/Users/blk6/Projects/Bit/BitLib/example/CMakeFiles/edit_cache.dir
-/home/Users/blk6/Projects/Bit/BitLib/example/CMakeFiles/rebuild_cache.dir
