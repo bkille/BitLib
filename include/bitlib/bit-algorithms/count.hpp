@@ -14,9 +14,6 @@
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
-#ifdef BITLIB_SIMDPP
-#include "simdpp/simd.h"
-#endif
 // Miscellaneous
 
 #define is_aligned(POINTER, BYTE_COUNT) \
@@ -53,18 +50,6 @@ count_dispatch(
     for (; it != last.base() && !is_aligned(&(*it), 64); ++it) {
         result += _popcnt(*it);
     }
-#ifdef BITLIB_SIMDPP
-    const auto N = SIMDPP_FAST_INT64_SIZE;
-    const auto N_native_words = (N*64)/digits;
-    using vec_type = simdpp::uint64<N>;
-    for (; std::distance(it, last.base()) >= (unsigned int) N_native_words + 2; it += N_native_words) {
-        vec_type v = simdpp::load(&(*it));
-        simdpp::for_each(v, [&result](auto a) {result += _popcnt(a);});
-    }
-    for (; it != last.base(); ++it) {
-        result += _popcnt(*it);
-    }
-#else 
     result += std::transform_reduce(
             it, 
             last.base(), 
@@ -72,7 +57,6 @@ count_dispatch(
             std::plus{}, 
             [](word_type word) {return _popcnt(word); }
     );
-#endif
     if (last.position() != 0) {
         word_type last_value = *last.base() << (digits - last.position());
         result += _popcnt(last_value);

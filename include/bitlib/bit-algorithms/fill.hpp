@@ -18,9 +18,6 @@
 // Project sources
 #include "bit_algorithm_details.hpp"
 // Third-party libraries
-#ifdef BITLIB_SIMDPP
-#include <simdpp/simd.h>
-#endif
 // Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
         (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
@@ -54,19 +51,6 @@ void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last,
             write_word<word_type>(fill_word, first, digits - first.position());
             ++it;
         }
-#ifdef BITLIB_SIMDPP
-        for (; it != last.base() && !is_aligned(&*it, 64); it++) {
-            *it = fill_word;
-        }
-        const long long N = SIMDPP_FAST_INT64_SIZE;
-        const long long N_native_words = (N*64)/digits;
-        const uint64_t fill_word_64 = bv == bit0 ? 0 : -1;
-        for (; std::distance(it, last.base()) >= N_native_words + 2; it += N_native_words) {
-            using vec_type = simdpp::uint64<N>;
-            vec_type v = simdpp::load_splat(&fill_word_64);
-            simdpp::store(&(*it), v);
-        }
-#endif
         std::fill(it, last.base(), fill_word);
         if (last.position() != 0) {
             it = last.base();

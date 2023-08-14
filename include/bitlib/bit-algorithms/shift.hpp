@@ -17,9 +17,6 @@
 #include <iterator>
 // Project sources
 // Third-party libraries
-#ifdef SIMDPP
-#include <simdpp/simd.h>
-#endif
 // Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
     (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
@@ -248,24 +245,6 @@ bit_iterator<RandomAccessIt> shift_right_dispatch(
     // Shift bit sequence to the msb 
     if (remaining_bitshifts) {
         auto it = is_last_aligned ? last.base() - 1 : last.base();
-#ifdef SIMDPP
-        // Align iterator
-        const auto N = SIMDPP_FAST_INT64_SIZE;
-        const auto N_native_words = (N*64)/digits;
-        for (; std::distance(new_first_base, it)*digits >= N_native_words + 2 && !is_aligned(&(*(it - N_native_words + 1)), 64); --it) {
-            *it = _shld<word_type>(*it, *(it - 1), remaining_bitshifts);
-        }
-        for (; std::distance(new_first_base, it) >= (unsigned int) N_native_words + 2; it -= N_native_words ) {
-            using vec_type = simdpp::uint64<N>;
-            auto it_rewind = it - N_native_words + 1;
-            vec_type v = simdpp::load(&(*it_rewind));
-            vec_type v_minus1 = simdpp::load_u(&(*(it_rewind-1)));
-            vec_type ls = simdpp::shift_l(v, remaining_bitshifts);
-            vec_type rs = simdpp::shift_r(v_minus1, digits - remaining_bitshifts);
-            vec_type ret = simdpp::bit_or(ls, rs);
-            simdpp::store(&(*(it_rewind)), ret);
-        }
-#endif
         for(; it != new_first_base; --it) {
             *it = _shld<word_type>(*it, *(it - 1), remaining_bitshifts);
         }
@@ -333,24 +312,6 @@ bit_iterator<RandomAccessIt> shift_left_dispatch(
     if (remaining_bitshifts) {
         RandomAccessIt it = first.base();
 
-        // _shrd all words except the last until we reach alignment
-#ifdef SIMDPP
-        // TODO set alignment based off of instruction set used. 
-        for (; std::next(it, is_last_aligned) != new_last_base && !is_aligned(&*it, 64); ++it) {
-            *it = _shrd<word_type>(*it, *std::next(it), remaining_bitshifts);
-        }
-        // For the last word simply right shift
-        const auto N = SIMDPP_FAST_INT64_SIZE;
-        for (; std::distance(it, new_last_base)*digits >= (N+2)*64 ; it += N*(64/digits)) {
-            using vec_type = simdpp::uint64<N>;
-            vec_type v = simdpp::load(&(*(it)));
-            vec_type v_plus1 = simdpp::load_u(&(*(it+1)));
-            vec_type rs = simdpp::shift_r(v, remaining_bitshifts);
-            vec_type ls = simdpp::shift_l(v_plus1, digits - remaining_bitshifts);
-            vec_type ret = simdpp::bit_or(ls, rs);
-            simdpp::store(&(*it), ret);
-        }
-#endif
         // _shrd all words except the last
         for (; std::next(it, is_last_aligned) != new_last_base; ++it) {
             *it = _shrd<word_type>(*it, *std::next(it), remaining_bitshifts);
