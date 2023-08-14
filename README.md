@@ -41,7 +41,7 @@ int main() {
 BitLib is a header-only libarary. Currently, the BitLib library requires at least `-std=c++17`. 
 
 
-## Cmake
+## CMake
 You can automatically fetch the library using Cmake's `FetchContent`. 
 
 ```cmake
