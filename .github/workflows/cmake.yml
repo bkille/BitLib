@@ -60,4 +60,4 @@ jobs:
       #run: ./bin/bitlib-tests --gtest_repeat=10 --gtest_break_on_failure --gtest_brief=1
       
     - name: Run Example
-      run: ./build/test/example1
+      run: ./build/example/example1

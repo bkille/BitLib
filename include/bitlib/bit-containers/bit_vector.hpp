@@ -529,8 +529,6 @@ bit_vector<WordType, Allocator>::insert(
         word_vector.resize(word_vector.size() + words_to_add);
     }
     length_ += count;
-    std::cout << length_ << ", " << word_vector.size() << ", " << digits << "\n";
-    std::cout << d << ", " << count << "\n\n";
     shift_right(begin() + d, begin() + length_, count);
     fill(begin() + d, begin() + d + count, value);
     return begin() + d;
