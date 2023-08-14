@@ -48,7 +48,7 @@ jobs:
         CXX: ${{ matrix.compiler.CXX }}
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -Bbuild -DBITLIB_TEST=1 -DBITLIB_GTEST_REPEAT=10
+      run: cmake -Bbuild -DBITLIB_TEST=1 -DBITLIB_GTEST_REPEAT=10 -DBITLIB_EXAMPLE=1
 
 
     - name: Build
@@ -59,3 +59,5 @@ jobs:
       run: ctest --test-dir build -j $(nproc --all)
       #run: ./bin/bitlib-tests --gtest_repeat=10 --gtest_break_on_failure --gtest_brief=1
       
+    - name: Run Example
+      run: ./build/test/example1
