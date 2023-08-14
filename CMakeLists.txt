@@ -13,8 +13,8 @@ set(CMAKE_BUILD_TYPE RelWithDebInfo)
 # set CXX standard
 # Things seem to be faster in cxx 20, and there is also std::shift_* 
 # Should fall back on 17 if 20 is not supported
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard to be used")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # set up linters/checkers
 #set(CMAKE_CXX_CPPCHECK cppcheck;--std=c++17;--file-filter=*bitlib*)
@@ -31,20 +31,19 @@ target_include_directories(bitlib INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi --coverage -fno-inline -fno-inline-small-functions -fno-default-inline)
 
 # specify global compiler flags
 add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
 include_directories("include/" "utils/" )
 
 # Add fmt library (useful for printing words in binary and other debugging stuff)
-include(FetchContent)
-FetchContent_Declare(
-    fmt
-    GIT_REPOSITORY      https://github.com/fmtlib/fmt.git
-    GIT_TAG             e57ca2e3685b160617d3d95fcd9e789c4e06ca88 #v10.1.0
-)
-FetchContent_MakeAvailable(fmt)
+#include(FetchContent)
+#FetchContent_Declare(
+    #fmt
+    #GIT_REPOSITORY      https://github.com/fmtlib/fmt.git
+    #GIT_TAG             e57ca2e3685b160617d3d95fcd9e789c4e06ca88 #v10.1.0
+#)
+#FetchContent_MakeAvailable(fmt)
 
 
 option(BITLIB_SIMDPP "Build with simdpp SIMD extensions" OFF)
