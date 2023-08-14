@@ -25,6 +25,7 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04]    
         compiler:
           - { compiler: GNU, CC: gcc-11, CXX: g++-11 }
+        cpp: [17, 20]
 
     steps:
     - name: Cancel Workflow Action
@@ -46,9 +47,10 @@ jobs:
       env:
         CC: ${{ matrix.compiler.CC }}
         CXX: ${{ matrix.compiler.CXX }}
+        STD: ${{ matrix.cpp }}
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -Bbuild -DBITLIB_TEST=1 -DBITLIB_GTEST_REPEAT=10 -DBITLIB_EXAMPLE=1
+      run: cmake -Bbuild -DBITLIB_TEST=1 -DBITLIB_GTEST_REPEAT=10 -DBITLIB_EXAMPLE=1 -DCMAKE_CXX_STANDARD=${STD}
 
 
     - name: Build
