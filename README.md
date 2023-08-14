@@ -58,7 +58,7 @@ target_link_libraries(example bitlib::bitlib)
 ```
 
 ## Manual include
-Alternatively, just make sure the `include/` and folders are added compiler's search path. 
+Alternatively, just copy `include/bitlib` to your include path. 
 
 
 
