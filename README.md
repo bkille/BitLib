@@ -79,7 +79,7 @@ I also benchmarked against the [BitArray C library](https://github.com/noporpois
 For more details, see the [benchmarking section](https://github.com/bkille/BitLib#performance-benchmarks).
 
 # Installation
-BitLib is a header-only libarary, however it does rely on the simdpp library in `ext/` for simd operations. Currently, the BitLib library requires at least `-std=c++17`. 
+BitLib is a header-only libarary. Currently, the BitLib library requires at least `-std=c++17`. 
 
 
 ## Cmake
