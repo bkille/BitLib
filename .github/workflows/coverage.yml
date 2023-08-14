@@ -68,8 +68,8 @@ jobs:
     - name: Build
       shell: bash -l {0}
       # Build your program with the given configuration
-      run: cmake --build build -- -j
-      run: cmake -Bbuild -DBITLIB_TEST=1 -DBITLIB_GTEST_REPEAT=10
+      run: |
+        cmake --build build -- -j
       #run: make bitlib-tests
 
     - name: Test
