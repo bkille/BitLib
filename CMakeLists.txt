@@ -64,6 +64,7 @@ if(BITLIB_EXAMPLE)
     add_subdirectory(example)
 endif()
 if(BITLIB_TEST)
+    enable_testing()
     add_subdirectory(test)
 endif()
 
