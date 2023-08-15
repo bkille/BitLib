@@ -25,18 +25,18 @@ namespace bit {
 
 // --------------------------- Reverse Algorithms --------------------------- //
 // Status: complete
-template <class BidirIt>
+template <class RandomAccessIt>
 constexpr void reverse(
-    bit_iterator<BidirIt> first,
-    bit_iterator<BidirIt> last
+    bit_iterator<RandomAccessIt> first,
+    bit_iterator<RandomAccessIt> last
 )
 {
     // Assertions
     _assert_range_viability(first, last);
 
     // Types and constants
-    using word_type = typename bit_iterator<BidirIt>::word_type;
-    using size_type = typename bit_iterator<BidirIt>::size_type;
+    using word_type = typename bit_iterator<RandomAccessIt>::word_type;
+    using size_type = typename bit_iterator<RandomAccessIt>::size_type;
     constexpr size_type digits = binary_digits<word_type>::value;
 
     // Initialization
@@ -50,9 +50,7 @@ constexpr void reverse(
     // Reverse when bit iterators are aligned
     if (is_first_aligned && is_last_aligned) {
         std::reverse(first.base(), last.base());
-        for (; it !=  last.base(); ++it) {
-            *it = _bitswap(*it);
-        }
+        std::transform(it, last.base(), it, [](word_type w) { return _bitswap(w); });
         // Reverse when bit iterators do not belong to the same underlying word
     } else if (first.base() != last.base()) {
         // Save first and last element
@@ -61,9 +59,12 @@ constexpr void reverse(
         // Reverse the underlying sequence
         std::reverse(first.base(), std::next(last.base(), !is_last_aligned));
         // Bitswap every element of the underlying sequence
-        for (it = first.base(); it != std::next(last.base(), !is_last_aligned); ++it) {
-            *it = _bitswap(*it);
-        }
+        std::transform(
+                first.base(),
+                std::next(last.base(), !is_last_aligned),
+                first.base(),
+                [](word_type w) { return _bitswap(w); }
+        );
         // Shift the underlying sequence to the left
         if (first.position() < gap) {
             gap = gap - first.position();
