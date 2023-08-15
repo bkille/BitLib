@@ -46,13 +46,13 @@ include_directories("include/" "utils/" )
 #FetchContent_MakeAvailable(fmt)
 
 
-option(BITLIB_SIMDPP "Build with simdpp SIMD extensions" OFF)
+option(BITLIB_HWY "Build with google highway SIMD extensions" OFF)
 option(BITLIB_BENCHMARK "Build bitlib benchmarks" OFF)
 option(BITLIB_EXAMPLE "Build bitlib examples" OFF)
 option(BITLIB_TEST "Build bitlib tests" OFF)
 
-if (BITLIB_SIMDPP)
-    add_definitions(-DBITLIB_SIMDPP)
+if (BITLIB_HWY)
+    add_definitions(-DBITLIB_HWY)
 endif()
 
 if(BITLIB_BENCHMARK)
