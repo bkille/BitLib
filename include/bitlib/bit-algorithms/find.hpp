@@ -13,11 +13,17 @@
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
+#ifdef BITLIB_HWY
+#include "hwy/highway.h"
+#endif
+
+// Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
     (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
-// Miscellaneous
 
 namespace bit {
+namespace hn = hwy::HWY_NAMESPACE;
+// ========================================================================== //
 
 
 template <class RandomAccessIt>
@@ -51,6 +57,36 @@ constexpr bit_iterator<RandomAccessIt> find(
 
     // Initialization
     auto it = first.base();
+
+// Waiting on github issue
+//#ifdef BITLIB_HWY
+    //// Align the iterator
+    //while (it != last.base() && !is_aligned(&(*it), 64)) {
+        //if ((bv == bit1 && (*it == 0)) || (bv == bit0 && (*it == static_cast<word_type>(-1)))) {
+            //++it;
+            //continue;
+        //}
+
+        //size_type num_trailing_complementary_bits = (bv == bit0) 
+            //? _tzcnt(static_cast<word_type>(~*it))
+            //: _tzcnt(static_cast<word_type>(*it));
+        //return bit_iterator(it, (size_type) num_trailing_complementary_bits);
+    //}
+
+    //// SIMD
+    //hwy::ScalableTag<word_type> d;
+    //for (; std::distance(it, last.base()) >= hwy::Lanes(d); it += hwy::Lanes(d))
+    //{
+        //auto v = hwy::Load(d, &*it);
+        //if (bv == bit0)
+        //{
+            //v = hwy::Not(v);
+        //}
+        //if (! hwy::AllFalse(d, hwy::MaskFromVec
+    //}
+
+
+//#endif
 
     // Finish out the remainder with typical for loop
     while (it != last.base()) {
