@@ -21,20 +21,20 @@
 namespace bit {
 // ========================================================================== //
 
-template< class ForwardIt1, class ForwardIt2 >
-constexpr bit_iterator<ForwardIt2> swap_ranges(
-        bit_iterator<ForwardIt1> first1, 
-        bit_iterator<ForwardIt1> last1,
-        bit_iterator<ForwardIt2> first2) 
+template< class RandomAccessIt1, class RandomAccessIt2 >
+constexpr bit_iterator<RandomAccessIt2> swap_ranges(
+        bit_iterator<RandomAccessIt1> first1, 
+        bit_iterator<RandomAccessIt1> last1,
+        bit_iterator<RandomAccessIt2> first2) 
 {
     // Assertions
     _assert_range_viability(first1, last1);
 
     // Types and constants
-    using word_type1 = typename bit_iterator<ForwardIt1>::word_type;
-    using word_type2 = typename bit_iterator<ForwardIt2>::word_type;
-    using size_type1 = typename bit_iterator<ForwardIt1>::size_type;
-    using size_type2 = typename bit_iterator<ForwardIt2>::size_type;
+    using word_type1 = typename bit_iterator<RandomAccessIt1>::word_type;
+    using word_type2 = typename bit_iterator<RandomAccessIt2>::word_type;
+    using size_type1 = typename bit_iterator<RandomAccessIt1>::size_type;
+    using size_type2 = typename bit_iterator<RandomAccessIt2>::size_type;
     constexpr size_type1 digits1 = binary_digits<word_type1>::value;
     constexpr size_type2 digits2 = binary_digits<word_type2>::value;
 
@@ -42,8 +42,8 @@ constexpr bit_iterator<ForwardIt2> swap_ranges(
     //const bool is_first1_aligned = first1.position() == 0;
     const bool is_last1_aligned = last1.position() == 0;
     //const bool is_first2_aligned = first2.position() == 0;
-    ForwardIt1 it1 = first1.base();
-    ForwardIt2 it2 = first2.base();
+    RandomAccessIt1 it1 = first1.base();
+    RandomAccessIt2 it2 = first2.base();
     
     if (first1 == last1)
         return first2;
@@ -107,7 +107,7 @@ constexpr bit_iterator<ForwardIt2> swap_ranges(
                         last1.position()
                 );
             }
-            return bit_iterator<ForwardIt1>(it2, last1.position());
+            return bit_iterator<RandomAccessIt1>(it2, last1.position());
 
         // first1 range spans mutliple words and is not aligned with first2
         } else {

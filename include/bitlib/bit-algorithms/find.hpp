@@ -19,20 +19,37 @@
 
 namespace bit {
 
+
 template <class RandomAccessIt>
-bit_iterator<RandomAccessIt> find_dispatch(
-        bit_iterator<RandomAccessIt> first, 
-        bit_iterator<RandomAccessIt> last,
-        bit_value bv,
-        std::random_access_iterator_tag
+constexpr bit_iterator<RandomAccessIt> find(
+        bit_iterator<RandomAccessIt> first,
+        bit_iterator<RandomAccessIt> last, bit::bit_value bv
 ) {
+
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using size_type = typename bit_iterator<RandomAccessIt>::size_type;
+    const std::size_t digits = binary_digits<word_type>::value;
 
     // Initialization
+    const bool is_first_aligned = first.position() == 0;
     const bool is_last_aligned = last.position() == 0;
-    assert(first.position() == 0);
 
+
+    if (!is_first_aligned) {
+        word_type shifted_first = *first.base() >> first.position();
+        size_type num_trailing_complementary_bits = (bv == bit0) 
+            ? _tzcnt(static_cast<word_type>(~shifted_first))
+            : _tzcnt(static_cast<word_type>(shifted_first));
+        if (std::next(first.base(), is_last_aligned) == last.base()) {
+            return first + std::min(num_trailing_complementary_bits, (size_type) distance(first, last));
+        } else if (num_trailing_complementary_bits + first.position() < digits) {
+            return first + num_trailing_complementary_bits;
+        } else {
+            first += digits - first.position();
+        }
+    }
+
+    // Initialization
     auto it = first.base();
 
     // Finish out the remainder with typical for loop
@@ -56,80 +73,6 @@ bit_iterator<RandomAccessIt> find_dispatch(
         return bit_iterator(it, (size_type) std::min(num_trailing_complementary_bits, last.position()));
     }
     return last;
-}
-
-template <class InputIt>
-bit_iterator<InputIt> find_dispatch(
-        bit_iterator<InputIt> first, 
-        bit_iterator<InputIt> last,
-        bit_value bv,
-        std::input_iterator_tag
-) {
-    using word_type = typename bit_iterator<InputIt>::word_type;
-    using size_type = typename bit_iterator<InputIt>::size_type;
-
-    // Initialization
-    const bool is_last_aligned = last.position() == 0;
-    assert(first.position() == 0);
-
-    auto it = first.base();
-    while (it != last.base()) {
-        if ((bv == bit1 && (*it == 0)) || (bv == bit0 && (*it ==static_cast<word_type>(-1)))) {
-            ++it;
-            continue;
-        }
-
-        size_type num_trailing_complementary_bits = (bv == bit0) 
-            ? _tzcnt(static_cast<word_type>(~*it))
-            : _tzcnt(static_cast<word_type>(*it));
-        return bit_iterator(it, (size_type) num_trailing_complementary_bits);
-    } 
-    if (!is_last_aligned) {
-        size_type num_trailing_complementary_bits = (bv == bit0) 
-            ? _tzcnt(static_cast<word_type>(~*it))
-            : _tzcnt(static_cast<word_type>(*it));
-        return bit_iterator(it, (size_type) std::min(num_trailing_complementary_bits, last.position()));
-    }
-
-    return last;
-}
-
-
-template <class InputIt>
-constexpr bit_iterator<InputIt> find(
-        bit_iterator<InputIt> first,
-        bit_iterator<InputIt> last, bit::bit_value bv
-) {
-
-    using word_type = typename bit_iterator<InputIt>::word_type;
-    using size_type = typename bit_iterator<InputIt>::size_type;
-    std::size_t digits = binary_digits<word_type>::value;
-
-    // Initialization
-    const bool is_first_aligned = first.position() == 0;
-    const bool is_last_aligned = last.position() == 0;
-
-
-    if (!is_first_aligned) {
-        word_type shifted_first = *first.base() >> first.position();
-        size_type num_trailing_complementary_bits = (bv == bit0) 
-            ? _tzcnt(static_cast<word_type>(~shifted_first))
-            : _tzcnt(static_cast<word_type>(shifted_first));
-        if (std::next(first.base(), is_last_aligned) == last.base()) {
-            return first + std::min(num_trailing_complementary_bits, (size_type) distance(first, last));
-        } else if (num_trailing_complementary_bits + first.position() < digits) {
-            return first + num_trailing_complementary_bits;
-        } else {
-            first += digits - first.position();
-        }
-    }
-
-    return find_dispatch(
-            first, 
-            last, 
-            bv, 
-            typename std::iterator_traits<InputIt>::iterator_category()
-    );
 }
 
 // ========================================================================== //

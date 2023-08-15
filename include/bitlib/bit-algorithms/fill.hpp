@@ -27,14 +27,14 @@ namespace bit {
 
 
 // Status: needs revisions
-template <class ForwardIt>
-void fill(bit_iterator<ForwardIt> first, bit_iterator<ForwardIt> last, 
+template <class RandomAccessIt>
+void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last, 
     bit::bit_value bv) {
     // Assertions
     _assert_range_viability(first, last);
 
     // Types and constants
-    using word_type = typename bit_iterator<ForwardIt>::word_type;
+    using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     constexpr word_type digits = binary_digits<word_type>::value;
 
     // Initializations

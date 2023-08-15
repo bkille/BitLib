@@ -27,7 +27,7 @@ namespace bit {
 //
 // Note: distance(first, n_first) <= 3*digits
 template <class ForwardIt, int BufferSize>
-bit_iterator<ForwardIt> rotate_via_copy_begin(
+bit_iterator<ForwardIt> _rotate_via_copy_begin(
    bit_iterator<ForwardIt> first, 
    bit_iterator<ForwardIt> n_first,
    bit_iterator<ForwardIt> last
@@ -65,7 +65,7 @@ bit_iterator<ForwardIt> rotate_via_copy_begin(
 //
 // Note: distance(n_first, last) <= 3*digits
 template <class ForwardIt, int BufferSize>
-bit_iterator<ForwardIt> rotate_via_copy_end(
+bit_iterator<ForwardIt> _rotate_via_copy_end(
    bit_iterator<ForwardIt> first, 
    bit_iterator<ForwardIt> n_first,
    bit_iterator<ForwardIt> last
@@ -101,7 +101,7 @@ bit_iterator<ForwardIt> rotate_via_copy_end(
 // Rotates a range using random-access iterators. Algorithm logic from the GCC
 // implementation
 template <class RandomAccessIt>
-bit_iterator<RandomAccessIt> rotate_via_raw(
+bit_iterator<RandomAccessIt> _rotate_via_raw(
    bit_iterator<RandomAccessIt> first, 
    bit_iterator<RandomAccessIt> n_first,
    bit_iterator<RandomAccessIt> last,
@@ -129,7 +129,7 @@ bit_iterator<RandomAccessIt> rotate_via_raw(
         if (k < n - k) {
             if (k <= digits) {
                 // BENCHMARK NOTE: may be better to do k <= 3*digits and use
-                // the rotate_via_copy method.
+                // the _rotate_via_copy method.
                 word_type temp_word = get_word<word_type>(p, k);
                 bit_iterator<RandomAccessIt> temp_it = shift_left(p, p + n, k);
                 write_word<word_type>(temp_word, temp_it, k);
@@ -250,7 +250,7 @@ bit_iterator<ForwardIt> rotate(
         write_word(temp, first, static_cast<word_type>(p));
         return new_last;
     }
-    return rotate_via_raw(
+    return _rotate_via_raw(
             first, 
             n_first, 
             last,

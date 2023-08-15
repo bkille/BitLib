@@ -35,116 +35,18 @@ namespace bit {
 
 
 // --------------------------- Shift Algorithms ----------------------------- //
-template <class ForwardIt>
-bit_iterator<ForwardIt> shift_right_dispatch(
-        bit_iterator<ForwardIt> first,
-        bit_iterator<ForwardIt> last,
-        typename bit_iterator<ForwardIt>::difference_type n,
-        std::forward_iterator_tag
-)
-{
-    // Assertions
-     _assert_range_viability(first, last); 
 
-    // Types and constants
-    using word_type = typename bit_iterator<ForwardIt>::word_type;
-    using size_type = typename bit_iterator<ForwardIt>::size_type;
-    constexpr size_type digits = binary_digits<word_type>::value;
-
-    // Initialization
-    size_type word_shifts = n / digits; 
-    size_type remaining_bitshifts = n - digits*(word_shifts);
-    const bool is_first_aligned = first.position() == 0;
-    const bool is_last_aligned = last.position() == 0;
-    auto d = distance(first, last);
-
-    // Out of range cases
-    if (n <= 0) return first;
-    else if (n >= d) return last;
-
-    // Single word case
-    if (first.base() == last.base()) {
-        *first.base() = _bitblend<word_type>(
-                *first.base(),
-                (
-                    *first.base() & (
-                        static_cast<word_type>(-1) << first.position()
-                    )
-                ) << n,
-                first.position(),
-                last.position() - first.position()
-        );
-        return bit_iterator<ForwardIt>(
-                first.base(), 
-                first.position() +  n
-        );
-    }
-
-    // Multiple word case
-    word_type first_value = *first.base();
-    word_type last_value = !is_last_aligned ? *last.base() : 0;
-    word_type mask = is_first_aligned ? 
-        static_cast<word_type>(-1)
-        : 
-        static_cast<word_type>(
-                (static_cast<word_type>(1) << (digits - first.position())) - 1
-        ) << first.position();
-    *first.base() = *first.base() & mask;
-    // Shift words to the right
-    ForwardIt it = STD_SHIFT_RIGHT(first.base(), 
-                               std::next(last.base(), 
-                                         !is_last_aligned
-                                         ),
-                               word_shifts
-    );
-    bit_iterator<ForwardIt> d_first(it, first.position());
-    // Shift bit sequence to the msb 
-    if (remaining_bitshifts) {
-        word_type temp_1 = *it;
-        word_type temp_2;
-        *it = *it << remaining_bitshifts;
-        it++;
-        //TODO probably a way to do this with 1 temp or
-        // at least no value swapping
-        for (; it != std::next(last.base(), !is_last_aligned); ++it) {
-            temp_2 = *it;
-            *it = _shld<word_type>(*it, temp_1, remaining_bitshifts);
-            temp_1 = temp_2; 
-        }
-    }
-    // Blend bits of the first element
-    if (!is_first_aligned) {
-        *first.base() = _bitblend<word_type>(
-                first_value,
-                *first.base(),
-                first.position(),
-                digits - first.position()
-        );
-    }
-    // Blend bits of the last element
-    if (!is_last_aligned) {
-        *last.base() = _bitblend<word_type>(
-                *last.base(),
-                last_value,
-                last.position(),
-                digits - last.position()
-        );
-    }
-    advance(d_first, remaining_bitshifts);
-    return d_first;
-}
-
-template <class ForwardIt>
-bit_iterator<ForwardIt> shift_left_dispatch(
-        bit_iterator<ForwardIt> first,
-        bit_iterator<ForwardIt> last,
-        typename bit_iterator<ForwardIt>::difference_type n,
+template <class RandomAccessIt>
+bit_iterator<RandomAccessIt> shift_left_dispatch(
+        bit_iterator<RandomAccessIt> first,
+        bit_iterator<RandomAccessIt> last,
+        typename bit_iterator<RandomAccessIt>::difference_type n,
         std::forward_iterator_tag
 )
 {
     // Types and constants
-    using word_type = typename bit_iterator<ForwardIt>::word_type;
-    using size_type = typename bit_iterator<ForwardIt>::size_type;
+    using word_type = typename bit_iterator<RandomAccessIt>::word_type;
+    using size_type = typename bit_iterator<RandomAccessIt>::size_type;
     constexpr size_type digits = binary_digits<word_type>::value;
 
     // Initialization
@@ -159,7 +61,7 @@ bit_iterator<ForwardIt> shift_left_dispatch(
     word_type last_value = !is_last_aligned ? *last.base() : 0;
 
     // Shift words to the left using std::shift 
-    ForwardIt new_last_base = STD_SHIFT_LEFT(first.base(), 
+    RandomAccessIt new_last_base = STD_SHIFT_LEFT(first.base(), 
                                     last.base(),
                                     word_shifts
     );
@@ -173,7 +75,7 @@ bit_iterator<ForwardIt> shift_left_dispatch(
     }
     // Shift bit sequence to the lsb 
     if (remaining_bitshifts) {
-        ForwardIt it = first.base();
+        RandomAccessIt it = first.base();
         // _shrd all words except the last
         for (; std::next(it, is_last_aligned) != new_last_base; ++it) {
             *it = _shrd<word_type>(*it, *std::next(it), remaining_bitshifts);
@@ -201,7 +103,7 @@ bit_iterator<ForwardIt> shift_left_dispatch(
         );
     }
     //TODO is this more or less inefficient than having a latent iterator?
-    bit_iterator<ForwardIt> d_last = next(first, d-n);
+    bit_iterator<RandomAccessIt> d_last = next(first, d-n);
     return d_last;
 }
 
@@ -272,24 +174,54 @@ bit_iterator<RandomAccessIt> shift_right_dispatch(
     return d_first;
 }
 
+
 template <class RandomAccessIt>
-bit_iterator<RandomAccessIt> shift_left_dispatch(
+bit_iterator<RandomAccessIt> shift_left(
         bit_iterator<RandomAccessIt> first,
         bit_iterator<RandomAccessIt> last,
-        typename bit_iterator<RandomAccessIt>::difference_type n,
-        std::random_access_iterator_tag
+        typename bit_iterator<RandomAccessIt>::difference_type n
 ) {
+    // Assertions
+     _assert_range_viability(first, last); 
+
     // Types and constants
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using size_type = typename bit_iterator<RandomAccessIt>::size_type;
     constexpr size_type digits = binary_digits<word_type>::value;
 
     // Initialization
-    size_type word_shifts = n / digits; 
-    size_type remaining_bitshifts = n - digits*(word_shifts);
+    auto d = distance(first, last);
     const bool is_first_aligned = first.position() == 0;
     const bool is_last_aligned = last.position() == 0;
-    auto d = distance(first, last);
+
+    // Out of range cases
+    if (n <= 0) return last;
+    if (n >= d) return first;
+
+
+    // Single word case
+    if (std::next(first.base(), is_last_aligned) == last.base()) {
+        *first.base() = _bitblend<word_type>(
+                *first.base(),
+                ((
+                    *first.base() & (
+                        static_cast<word_type>(-1) >> (
+                            digits - (is_last_aligned ? digits : last.position())
+                        )
+                    )
+                )) >> n,
+                first.position(),
+                (is_last_aligned ? digits : last.position()) - first.position()
+        );
+        return bit_iterator<RandomAccessIt>(
+                first.base(), 
+                first.position() + d - n
+        );
+    }
+
+    // More initialization
+    size_type word_shifts = n / digits; 
+    size_type remaining_bitshifts = n - digits*(word_shifts);
 
     // Multiple word case
     word_type first_value = *first.base();
@@ -342,69 +274,18 @@ bit_iterator<RandomAccessIt> shift_left_dispatch(
     return d_last;
 }
 
-
-template <class ForwardIt>
-bit_iterator<ForwardIt> shift_left(
-        bit_iterator<ForwardIt> first,
-        bit_iterator<ForwardIt> last,
-        typename bit_iterator<ForwardIt>::difference_type n
-) {
-    // Assertions
-     _assert_range_viability(first, last); 
-
-    // Types and constants
-    using word_type = typename bit_iterator<ForwardIt>::word_type;
-    using size_type = typename bit_iterator<ForwardIt>::size_type;
-    constexpr size_type digits = binary_digits<word_type>::value;
-
-    // Initialization
-    auto d = distance(first, last);
-    const bool is_last_aligned = last.position() == 0;
-
-    // Out of range cases
-    if (n <= 0) return last;
-    if (n >= d) return first;
-
-
-    // Single word case
-    if (std::next(first.base(), is_last_aligned) == last.base()) {
-        *first.base() = _bitblend<word_type>(
-                *first.base(),
-                ((
-                    *first.base() & (
-                        static_cast<word_type>(-1) >> (
-                            digits - (is_last_aligned ? digits : last.position())
-                        )
-                    )
-                )) >> n,
-                first.position(),
-                (is_last_aligned ? digits : last.position()) - first.position()
-        );
-        return bit_iterator<ForwardIt>(
-                first.base(), 
-                first.position() + d - n
-        );
-    }
-    else {
-        return shift_left_dispatch(
-                first, 
-                last,
-                n,
-                typename std::iterator_traits<ForwardIt>::iterator_category()
-        );
-    }
-}
-
-template <class ForwardIt>
-bit_iterator<ForwardIt> shift_right(
-        bit_iterator<ForwardIt> first,
-        bit_iterator<ForwardIt> last,
-        typename bit_iterator<ForwardIt>::difference_type n
+template <class RandomAccessIt>
+bit_iterator<RandomAccessIt> shift_right(
+        bit_iterator<RandomAccessIt> first,
+        bit_iterator<RandomAccessIt> last,
+        typename bit_iterator<RandomAccessIt>::difference_type n
 ) {
     // Types and constants
-    using word_type = typename bit_iterator<ForwardIt>::word_type;
+    using word_type = typename bit_iterator<RandomAccessIt>::word_type;
+    using size_type = typename bit_iterator<RandomAccessIt>::size_type;
 
     // Initialization
+    const bool is_first_aligned = first.position() == 0;
     const bool is_last_aligned = last.position() == 0;
     constexpr auto digits = binary_digits<word_type>::value;
     auto d = distance(first, last);
@@ -425,18 +306,63 @@ bit_iterator<ForwardIt> shift_right(
                 first.position(),
                 (is_last_aligned ? digits : last.position()) - first.position()
         );
-        return bit_iterator<ForwardIt>(
+        return bit_iterator<RandomAccessIt>(
                 first.base(), 
                 first.position() +  n
         );
     }
 
-    return shift_right_dispatch(
-            first, 
-            last,
-            n,
-            typename std::iterator_traits<ForwardIt>::iterator_category()
+    // More initialization
+    size_type word_shifts = n / digits; 
+    size_type remaining_bitshifts = n - digits*(word_shifts);
+
+    // Multiple word case
+    word_type first_value = *first.base();
+    word_type last_value = !is_last_aligned ? *last.base() : 0;
+    word_type mask = is_first_aligned ? 
+        static_cast<word_type>(-1)
+        : 
+        static_cast<word_type>(
+                (static_cast<word_type>(1) << (digits - first.position())) - 1
+        ) << first.position();
+    *first.base() = *first.base() & mask;
+    // Shift words to the right
+    RandomAccessIt new_first_base = STD_SHIFT_RIGHT(
+        first.base(), 
+        std::next(
+            last.base(), 
+            !is_last_aligned),
+        word_shifts
     );
+    bit_iterator<RandomAccessIt> d_first(new_first_base, first.position());
+    // Shift bit sequence to the msb 
+    if (remaining_bitshifts) {
+        auto it = is_last_aligned ? last.base() - 1 : last.base();
+        for(; it != new_first_base; --it) {
+            *it = _shld<word_type>(*it, *(it - 1), remaining_bitshifts);
+        }
+        *it <<= remaining_bitshifts;
+    }
+    // Blend bits of the first element
+    if (!is_first_aligned) {
+        *first.base() = _bitblend<word_type>(
+                first_value,
+                *first.base(),
+                first.position(),
+                digits - first.position()
+        );
+    }
+    // Blend bits of the last element
+    if (!is_last_aligned) {
+        *last.base() = _bitblend<word_type>(
+                *last.base(),
+                last_value,
+                last.position(),
+                digits - last.position()
+        );
+    }
+    advance(d_first, remaining_bitshifts);
+    return d_first;
 }
 // -------------------------------------------------------------------------- //
 
