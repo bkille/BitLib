@@ -18,6 +18,7 @@
 #include <random>
 #include <limits>
 #include <cstring>
+#include <cstdint>
 // Project sources
 #include "bitlib/bit-iterator/bit_iterator.hpp"
 #include "bitlib/bit-containers/bit-containers.hpp"
@@ -31,8 +32,7 @@
 //TODO tests need a lot of cleanup. We should only copy what we need from random_vec
 //and also refactor the vec generation to reduce duplication
 
-using BaseTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long long>;
-//using BaseTypes = ::testing::Types<unsigned char>;
+using BaseTypes = ::testing::Types<uint8_t, uint16_t, uint32_t, uint64_t>;
 
 
 template<typename WordType>
