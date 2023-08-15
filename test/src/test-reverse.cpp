@@ -20,7 +20,7 @@
 // ========================================================================== //
 
 TYPED_TEST(SingleRangeTest, Reverse) {
-    for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
+    for (size_t idx = 0; idx < this->random_bitvecs.size(); ++idx) {
         bit::bit_vector<typename TestFixture::base_type> bitvec = this->random_bitvecs[idx];
         std::vector<bool> boolvec = this->random_boolvecs[idx];
         size_t start_count = 16;
