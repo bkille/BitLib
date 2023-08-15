@@ -13,7 +13,7 @@ The code below is from `example/src/example1.cpp`. While the type of word that t
 #include "bitlib/bitlib.hpp"
 
 int main() {
-    bit::bit_vector<unsigned char> bv1 {"011111010010"};
+    bit::bit_vector<unsigned char> bv1 ("011111010010");
     std::cout << "Original bitvec:  " << bv1.debug_string() << std::endl;
     // Original bitvec:  01111101 0010
 
@@ -69,7 +69,7 @@ The goal of BitLib is to be as similar to the C++ STL as possible. The interface
  Right now, the only container I have implemented is the bitvector. `bit::bit_vector<WordType>` is essentially a wrapper around `std::vector<WordType>`. The interfaces are nearly identical. In addition to the normal `vector` constructors, you can also provide a string to construct your bitvector:
 ```cpp
 using WordType = uint64_t;
-bit::bit_vector<WordType> bvec1 {"011111010010"};
+bit::bit_vector<WordType> bvec1 ("011111010010");
 ```
 
 While the type of word that the bitvector is built off of is templated and you can use any unsigned type, it is likely that you'll want to use `uint64_t` or another 64 bit unsigned type, as that will leverage the most bit-parallelism.
@@ -78,7 +78,7 @@ While the type of word that the bitvector is built off of is templated and you c
 The algorithms again work in the same manner as the STL. The functions provided here have the same interface as those in the STL, however under the hood, they take advantage of bit-parallelism. It should be noted that if there is an STL algorithm that is not supported yet by BitLib, you can still use the STL implementation. For example:
 ```cpp
 using WordType = uint64_t;
-bit::bit_vector<WordType> bvec1 {"011111010010"};
+bit::bit_vector<WordType> bvec1 ("011111010010");
 bit::bit_vector<WordType> bvec2 = bvec1;
 bit::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end());
 std::equal(bvec1.begin(), bvec1.end(), bvec2.begin(), bvec1.end()); // Also works, but much slower as it works bit-by-bit
