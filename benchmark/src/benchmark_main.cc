@@ -24,6 +24,7 @@
 #include "rotate_bench.hpp"
 #include "reverse_bench.hpp"
 #include "fill_bench.hpp"
+#include "find_bench.hpp"
 #include "shift_bench.hpp"
 #include "copy_bench.hpp"
 #include "move_bench.hpp"
@@ -364,6 +365,24 @@ int main(int argc, char** argv) {
     register_bool_containers<decltype(BM_BoolFill), std::vector>(
             BM_BoolFill, 
             "std::fill (huge)",
+            size_huge);
+
+    // find benchmarks
+    register_word_containers<decltype(BM_BitFind), std::vector>(
+            BM_BitFind, 
+            "bit::find (small) (UU)",
+            size_small);
+    register_bool_containers<decltype(BM_BoolFind), std::vector>(
+            BM_BoolFind, 
+            "std::find (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitFind), std::vector>(
+            BM_BitFind, 
+            "bit::find (huge) (UU)",
+            size_huge);
+    register_bool_containers<decltype(BM_BoolFind), std::vector>(
+            BM_BoolFind, 
+            "std::find (huge)",
             size_huge);
 
     //// Search benchmarks
