@@ -116,6 +116,18 @@ class SingleRangeTest : public testing::Test {
             random_bitvecs.push_back(bitvec);
             random_boolvecs.push_back(boolvec);
         }
+
+        auto zeros = bit::bit_vector<WordType>(bit_size);
+        std::fill(zeros.begin(), zeros.end(), bit::bit0);
+        *(zeros.end() - 1024 - digits - 4) = bit::bit1;
+        random_bitvecs.push_back(zeros);
+        random_boolvecs.push_back(boolvec_from_bitvec(zeros));
+
+        auto ones = bit::bit_vector<WordType>(bit_size);
+        std::fill(ones.begin(), ones.end(), bit::bit1);
+        *(ones.end() - 1024 - digits - 4) = bit::bit0;
+        random_bitvecs.push_back(ones);
+        random_boolvecs.push_back(boolvec_from_bitvec(ones));
     }
 };
 TYPED_TEST_SUITE(SingleRangeTest, BaseTypes);
