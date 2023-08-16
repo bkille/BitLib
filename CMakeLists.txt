@@ -7,9 +7,6 @@ project(Bit-Vector VERSION 0.1.1)
 # set output directory of builds
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# set build type
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
-
 # set CXX standard
 # Things seem to be faster in cxx 20, and there is also std::shift_* 
 # Should fall back on 17 if 20 is not supported
@@ -33,7 +30,6 @@ target_include_directories(bitlib INTERFACE
 
 
 # specify global compiler flags
-add_compile_options(-march=native -pedantic -Wall -Wextra -Wfatal-errors)
 include_directories("include/" "utils/" )
 
 # Add fmt library (useful for printing words in binary and other debugging stuff)
@@ -50,6 +46,7 @@ option(BITLIB_HWY "Build with google highway SIMD extensions" OFF)
 option(BITLIB_BENCHMARK "Build bitlib benchmarks" OFF)
 option(BITLIB_EXAMPLE "Build bitlib examples" OFF)
 option(BITLIB_TEST "Build bitlib tests" OFF)
+option(BITLIB_COVERAGE "Compute test coverage" OFF)
 
 if (BITLIB_HWY)
     add_definitions(-DBITLIB_HWY)

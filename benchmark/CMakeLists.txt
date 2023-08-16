@@ -1,7 +1,4 @@
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -pg -fprofile-arcs -ftest-coverage -fsanitize=address -Wextra-semi)
-# specify the C++ standard
-cmake_minimum_required(VERSION 3.14)
 
 find_package(benchmark REQUIRED)
 
@@ -19,5 +16,5 @@ add_executable(bitlib-bench ${BENCH_SOURCES})
 include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils)
 target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark -pthread)
 
-target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -mtune=native)
+target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -mtune=native -Wpedantic)
 install(TARGETS bitlib-bench DESTINATION .)

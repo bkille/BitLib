@@ -9,20 +9,21 @@ include(GoogleTest)
 file(GLOB TEST_SOURCES "src/*.cpp")
 add_executable(bitlib-tests ${TEST_SOURCES})
 
-set(DEBUG_FLAGS -O0 -g -fno-omit-frame-pointer -Wextra-semi -fno-inline)
+target_compile_options(bitlib-tests PUBLIC -O0 -g -fno-omit-frame-pointer -Wpedantic -fno-inline)
 
-# specify test-specific flags
-target_compile_options(bitlib-tests PUBLIC ${DEBUG_FLAGS})
+if (BITLIB_COVERAGE)
+    target_compile_options(bitlib-tests PUBLIC --coverage -fprofile-arcs -ftest-coverage -pg)
+endif()
 
 # ASAN throws no matter what when using Google HWY, not sure why but need to fix
 if (NOT BITLIB_HWY)
-    target_compile_options(bitlib-tests PRIVATE -fsanitize=address)
-    target_link_options(bitlib-tests PRIVATE -fsanitize=address)
+    target_compile_options(bitlib-tests PUBLIC -fsanitize=address)
+    target_link_options(bitlib-tests PUBLIC -fsanitize=address)
 endif()
 
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(bitlib-tests PRIVATE gtest gtest_main -pthread -lgcov --coverage)
+target_link_libraries(bitlib-tests PUBLIC gtest gtest_main -pthread -lgcov --coverage)
 
 set(BITLIB_GTEST_REPEAT 1)
 
