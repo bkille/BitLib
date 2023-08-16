@@ -86,7 +86,7 @@ constexpr bit_iterator<RandomAccessIt> find(
         {
             v = hn::Not(v);
         }
-        const auto found = hn::Gt(hn::PopulationCount(v), z);
+        const auto found = hn::Gt(v, z);
         if (! hn::AllFalse(d, found))
         {
             it += hn::FindKnownFirstTrue(d, found);
