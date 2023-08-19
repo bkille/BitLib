@@ -16,5 +16,5 @@ add_executable(bitlib-bench ${BENCH_SOURCES})
 include_directories(${googlebench_SOURCE_DIR}/benchmark/include src/utils)
 target_link_libraries(bitlib-bench PRIVATE benchmark::benchmark -pthread)
 
-target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -mtune=native -Wpedantic)
+target_compile_options(bitlib-bench PUBLIC -O3 -DNDEBUG -march=native -Wpedantic)
 install(TARGETS bitlib-bench DESTINATION .)
