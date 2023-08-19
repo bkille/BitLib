@@ -1,7 +1,7 @@
 // ================================= FILL =================================== //
 // Project:         The Experimental Bit Algorithms Library
 // Name:            fill.hpp
-// Description:     bit_iterator overloads for std::fill 
+// Description:     bit_iterator overloads for std::fill
 // Creator:         Vincent Reverdy
 // Contributor(s):  Vincent Reverdy [2019]
 //                  Bryce Kille [2019]
@@ -18,17 +18,25 @@
 // Project sources
 #include "bit_algorithm_details.hpp"
 // Third-party libraries
+#ifdef BITLIB_HWY
+#include "hwy/highway.h"
+#endif
 // Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
         (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
+
 namespace bit {
+
+#ifdef BITLIB_HWY
+namespace hn = hwy::HWY_NAMESPACE;
+#endif
 // ========================================================================== //
 
 
 
 // Status: needs revisions
 template <class RandomAccessIt>
-void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last, 
+void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
     bit::bit_value bv) {
     // Assertions
     _assert_range_viability(first, last);
@@ -38,7 +46,8 @@ void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
     constexpr word_type digits = binary_digits<word_type>::value;
 
     // Initializations
-    const word_type fill_word = bv == bit0 ? 0 : -1;
+    constexpr word_type ones = -1;
+    const word_type fill_word = bv == bit0 ? 0 : ones;
 
     if (distance(first, last) == 0) {
         return;
@@ -51,6 +60,19 @@ void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
             write_word<word_type>(fill_word, first, digits - first.position());
             ++it;
         }
+
+#ifdef BITLIB_HWY
+        // Align to 64 bit boundary
+        for (; it != last.base() && !is_aligned(&*it, 64); it++) {
+            *it = fill_word;
+        }
+        const hn::ScalableTag<word_type> d;
+        const auto fill_vec = bv == bit0 ? hn::Set(d, 0) : hn::Set(d, ones);
+        for (; std::distance(it, last.base()) >= hn::Lanes(d); it += hn::Lanes(d))
+        {
+            hn::Store(fill_vec, d, &*it);
+        }
+#endif
         std::fill(it, last.base(), fill_word);
         if (last.position() != 0) {
             it = last.base();

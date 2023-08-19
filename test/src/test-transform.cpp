@@ -21,7 +21,7 @@
 // ========================================================================== //
 
 TYPED_TEST(DoubleRangeTest, TransformUnaryOp) {
-    for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
+    for (size_t idx = 0; idx < this->random_bitvecs1.size() - 1; ++idx) {
         using WordType = typename TestFixture::base_type;
         bit::bit_vector<WordType>& bitvec1 = this->random_bitvecs1[idx];
         bit::bit_vector<WordType>& bitvec2 = this->random_bitvecs2[idx];
@@ -63,7 +63,7 @@ TYPED_TEST(DoubleRangeTest, TransformUnaryOp) {
 }
 
 TYPED_TEST(DoubleRangeTest, TransformBinaryOp) {
-    for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
+    for (size_t idx = 0; idx < this->random_bitvecs1.size() - 1; ++idx) {
         using WordType = typename TestFixture::base_type;
         bit::bit_vector<WordType>& bitvec1 = this->random_bitvecs1[idx];
         bit::bit_vector<WordType>& bitvec2 = this->random_bitvecs2[idx];

@@ -1,7 +1,7 @@
 // ================================= COPY =================================== //
 // Project:     The Experimental Bit Algorithms Library
 // Name:        copy.hpp
-// Description: Implementation of copy, copy_if, copy_n and copy_backward 
+// Description: Implementation of copy, copy_if, copy_n and copy_backward
 // Creator:     Vincent Reverdy
 // Contributor: Bryce Kille [2019]
 // License:     BSD 3-Clause License
@@ -63,7 +63,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
         *it = _bitblend(
                 *it,
                 static_cast<word_type>(
-                  get_word<word_type>(first, partial_bits_to_copy) 
+                  get_word<word_type>(first, partial_bits_to_copy)
                     << static_cast<word_type>(d_first.position())
                 ),
                 static_cast<word_type>(d_first.position()),
@@ -74,7 +74,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
         it++;
     }
 
-    if (remaining_bits_to_copy > 0) { 
+    if (remaining_bits_to_copy > 0) {
         const bool is_first_aligned = first.position() == 0;
         //size_type words_to_copy = ::std::ceil(remaining_bits_to_copy / static_cast<float>(digits));
         // d_first will be aligned at this point
@@ -88,7 +88,7 @@ constexpr bit_iterator<RandomAccessIt2> copy(bit_iterator<RandomAccessIt1> first
             while (remaining_bits_to_copy >= digits) {
                 *it = get_word<word_type>(first, digits);
                 remaining_bits_to_copy -= digits;
-                it++; 
+                it++;
                 advance(first, digits);
             }
         }

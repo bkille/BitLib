@@ -52,7 +52,7 @@ constexpr bool equal(
     size_type remaining_bits_to_check = total_bits_to_check;
     auto it = d_first.base();
 
-    // d_first is not aligned. 
+    // d_first is not aligned.
     if (!is_d_first_aligned) {
         const size_type partial_bits_to_check = ::std::min(
                 remaining_bits_to_check,
@@ -61,7 +61,7 @@ constexpr bool equal(
                 (static_cast<word_type>(1) << partial_bits_to_check) - 1
         ) << d_first.position();
         const word_type comp = static_cast<word_type>(
-              get_word<word_type>(first, partial_bits_to_check) 
+              get_word<word_type>(first, partial_bits_to_check)
                 << d_first.position());
         if ((mask & *it) != (mask & comp)) { return false; }
         remaining_bits_to_check -= partial_bits_to_check;
@@ -69,7 +69,7 @@ constexpr bool equal(
         it++;
     }
 
-    if (remaining_bits_to_check > 0) { 
+    if (remaining_bits_to_check > 0) {
         const bool is_first_aligned = first.position() == 0;
         // d_first will be aligned at this point
         if (is_first_aligned && remaining_bits_to_check >= digits) {
@@ -84,7 +84,7 @@ constexpr bool equal(
             while (remaining_bits_to_check >= digits) {
                 if (*it != get_word<word_type>(first, digits)) {return false;}
                 remaining_bits_to_check -= digits;
-                it++; 
+                it++;
                 advance(first, digits);
             }
         }

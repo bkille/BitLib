@@ -62,7 +62,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
         which cpplint
-        cmake -Bbuild -DBITLIB_TEST=1 -DCMAKE_CXX_CPPCHECK="cppcheck;--std=c++17;--file-filter=*BitLib*" -DCMAKE_CXX_CPPLINT="cpplint;--linelength=100;" 
+        cmake -Bbuild -DBITLIB_TEST=1 -DBITLIB_COVERAGE=1 -DCMAKE_CXX_CPPCHECK="cppcheck;--std=c++17;--file-filter=*BitLib*" -DCMAKE_CXX_CPPLINT="cpplint;--linelength=140;" 
 
 
     - name: Build

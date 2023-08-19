@@ -3,7 +3,7 @@
 // Name: transform.hpp
 // Description: bit_iterator overloads for std::transform
 // Creator: Vincent Reverdy
-// Contributor(s): 
+// Contributor(s):
 // License: BSD 3-Clause License
 // ========================================================================== //
 #ifndef _TRANSFORM_HPP_INCLUDED
@@ -26,16 +26,16 @@ namespace bit {
 //template <class RandomAccessIt, class WordType>
 //constexpr bit_iterator<RandomAccessIt> transform(
         //bit_iterator<RandomAccessIt> first,
-        //bit_iterator<RandomAccessIt> last, 
+        //bit_iterator<RandomAccessIt> last,
         //bit_iterator<RandomAccessIt> d_first,
         //std::bit_or<WordType>) {
-    
+
     //return d_first;
 //}
 template <class RandomAccessIt, class UnaryOperation>
 constexpr bit_iterator<RandomAccessIt> transform(
         bit_iterator<RandomAccessIt> first,
-        bit_iterator<RandomAccessIt> last, 
+        bit_iterator<RandomAccessIt> last,
         bit_iterator<RandomAccessIt> d_first,
         UnaryOperation unary_op) {
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
@@ -52,7 +52,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
     size_type total_bits_to_op = distance(first, last);
     size_type remaining_bits_to_op = total_bits_to_op;
     auto it = d_first.base();
-    
+
     // d_first is not aligned. Copy partial word to align it
     if (!is_d_first_aligned) {
         size_type partial_bits_to_op = ::std::min(
@@ -63,7 +63,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
                 *it,
                 unary_op(
                     static_cast<word_type>(
-                      get_word<word_type>(first, partial_bits_to_op) 
+                      get_word<word_type>(first, partial_bits_to_op)
                         << static_cast<word_type>(d_first.position())
                     )
                 ),
@@ -73,7 +73,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
         advance(first, partial_bits_to_op);
         it++;
     }
-    if (remaining_bits_to_op > 0) { 
+    if (remaining_bits_to_op > 0) {
         const bool is_first_aligned = first.position() == 0;
         //size_type words_to_op = ::std::ceil(remaining_bits_to_op / static_cast<float>(digits));
         // d_first will be aligned at this point
@@ -86,7 +86,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
             while (remaining_bits_to_op >= digits) {
                 *it = unary_op(get_word<word_type>(first, digits));
                 remaining_bits_to_op -= digits;
-                it++; 
+                it++;
                 advance(first, digits);
             }
         }
@@ -105,9 +105,9 @@ constexpr bit_iterator<RandomAccessIt> transform(
 template <class RandomAccessIt, class BinaryOperation>
 constexpr bit_iterator<RandomAccessIt> transform(
         bit_iterator<RandomAccessIt> first1,
-        bit_iterator<RandomAccessIt> last1, 
+        bit_iterator<RandomAccessIt> last1,
         bit_iterator<RandomAccessIt> first2,
-        bit_iterator<RandomAccessIt> d_first, 
+        bit_iterator<RandomAccessIt> d_first,
         BinaryOperation binary_op) {
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using size_type = typename bit_iterator<RandomAccessIt>::size_type;
@@ -123,7 +123,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
     size_type total_bits_to_op = distance(first1, last1);
     size_type remaining_bits_to_op = total_bits_to_op;
     auto it = d_first.base();
-    
+
     // d_first is not aligned. Copy partial word to align it
     if (!is_d_first_aligned) {
         size_type partial_bits_to_op = ::std::min(
@@ -134,11 +134,11 @@ constexpr bit_iterator<RandomAccessIt> transform(
                 *it,
                 binary_op(
                     static_cast<word_type>(
-                      get_word<word_type>(first1, partial_bits_to_op) 
+                      get_word<word_type>(first1, partial_bits_to_op)
                         << static_cast<word_type>(d_first.position())
                     ),
                     static_cast<word_type>(
-                      get_word<word_type>(first2, partial_bits_to_op) 
+                      get_word<word_type>(first2, partial_bits_to_op)
                         << static_cast<word_type>(d_first.position())
                     )
                 ),
@@ -149,7 +149,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
         advance(first2, partial_bits_to_op);
         it++;
     }
-    if (remaining_bits_to_op > 0) { 
+    if (remaining_bits_to_op > 0) {
         const bool is_first1_aligned = first1.position() == 0;
         const bool is_first2_aligned = first2.position() == 0;
         //size_type words_to_op = ::std::ceil(remaining_bits_to_op / static_cast<float>(digits));
@@ -166,7 +166,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
                         get_word<word_type>(first1, digits),
                         get_word<word_type>(first2, digits));
                 remaining_bits_to_op -= digits;
-                it++; 
+                it++;
                 advance(first1, digits);
                 advance(first2, digits);
             }
@@ -191,7 +191,7 @@ constexpr bit_iterator<RandomAccessIt> transform(
     //bit_iterator<RandomAccessIt1> last, bit_iterator<RandomAccessIt2> first2,
     //bit_iterator<RandomAccessIt> d_first, BinaryOperation binary_op) {
     //// Assertions
-     //_assert_range_viability(first, last); 
+     //_assert_range_viability(first, last);
 
     //// Types and constants
     //using word_type1    = typename bit_iterator<RandomAccessIt1>::word_type;
@@ -207,9 +207,9 @@ constexpr bit_iterator<RandomAccessIt> transform(
     //// This is just for now. Perhaps later we can expand to different word sizes
     //assert(digits1 == digits2);
     //assert(digits2 == digits_out);
-    //using word_type = word_type1; 
-    //using size_type = size_type1; 
-    //constexpr size_type digits = digits1; 
+    //using word_type = word_type1;
+    //using size_type = size_type1;
+    //constexpr size_type digits = digits1;
 
     //if (is_within<digits>(first, last)) {
         //word_type d = distance(first, last);
@@ -218,12 +218,12 @@ constexpr bit_iterator<RandomAccessIt> transform(
                 //get_word(first, d),
                 //get_word(first2, d)
             //),
-            //d_first, 
+            //d_first,
             //d
         //);
         //return next(d_first, d);
-    //} 
-    
+    //}
+
     //RandomAccessIt1 it1    = first.base();
     //if (first.position() != 0) {
         //word_type d = digits - first.position();
@@ -235,11 +235,11 @@ constexpr bit_iterator<RandomAccessIt> transform(
             //d_first,
             //d
         //);
-        //++it1; 
+        //++it1;
         //advance(first2, d);
         //advance(d_first, d);
     //}
-    
+
     //while (it1 != last1.base()) {
         //write_word(
             //binary_op(

@@ -3,7 +3,7 @@
 // Name: move.hpp
 // Description: bit_iterator overloads for std::move
 // Creator: Vincent Reverdy
-// Contributor(s): 
+// Contributor(s):
 // License: BSD 3-Clause License
 // ========================================================================== //
 #ifndef _MOVE_HPP_INCLUDED
@@ -58,7 +58,7 @@ constexpr bit_iterator<RandomAccessIt2> move(bit_iterator<RandomAccessIt1> first
         *it = _bitblend(
                 *it,
                 static_cast<word_type>(
-                  get_word<word_type>(first, partial_bits_to_move) 
+                  get_word<word_type>(first, partial_bits_to_move)
                     << static_cast<word_type>(d_first.position())
                 ),
                 static_cast<word_type>(d_first.position()),
@@ -69,7 +69,7 @@ constexpr bit_iterator<RandomAccessIt2> move(bit_iterator<RandomAccessIt1> first
         it++;
     }
 
-    if (remaining_bits_to_move > 0) { 
+    if (remaining_bits_to_move > 0) {
         const bool is_first_aligned = first.position() == 0;
         //size_type words_to_move = std::ceil(remaining_bits_to_move / static_cast<float>(digits));
         // d_first will be aligned at this point
@@ -83,7 +83,7 @@ constexpr bit_iterator<RandomAccessIt2> move(bit_iterator<RandomAccessIt1> first
             while (remaining_bits_to_move >= digits) {
                 *it = get_word<word_type>(first, digits);
                 remaining_bits_to_move -= digits;
-                it++; 
+                it++;
                 advance(first, digits);
             }
         }

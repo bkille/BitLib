@@ -20,7 +20,7 @@
 // ========================================================================== //
 
 TYPED_TEST(SingleRangeTest, Fill) {
-    for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
+    for (size_t idx = 0; idx < this->random_bitvecs.size(); ++idx) {
         using WordType = typename TestFixture::base_type;
         bit::bit_vector<WordType>& bitvec = this->random_bitvecs[idx];
         std::vector<bool>& boolvec = this->random_boolvecs[idx];

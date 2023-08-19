@@ -3,7 +3,7 @@
 // Name: copy_backward.hpp
 // Description: bit_iterator overloads for std::copy_backward
 // Creator: Vincent Reverdy
-// Contributor(s): 
+// Contributor(s):
 // License: BSD 3-Clause License
 // ========================================================================== //
 #ifndef _COPY_BACKWARD_HPP_INCLUDED
@@ -59,7 +59,7 @@ constexpr bit_iterator<RandomAccessIt2> copy_backward(bit_iterator<RandomAccessI
         *it = _bitblend<word_type>(
                 *it,
                 static_cast<word_type>(
-                  get_word<word_type>(last - partial_bits_to_copy, partial_bits_to_copy) 
+                  get_word<word_type>(last - partial_bits_to_copy, partial_bits_to_copy)
                 ) << (d_last.position() - partial_bits_to_copy),
                 d_last.position() - partial_bits_to_copy,
                 static_cast<word_type>(partial_bits_to_copy)
@@ -68,7 +68,7 @@ constexpr bit_iterator<RandomAccessIt2> copy_backward(bit_iterator<RandomAccessI
         advance(last, -partial_bits_to_copy);
     }
 
-    if (remaining_bits_to_copy > 0) { 
+    if (remaining_bits_to_copy > 0) {
         const bool is_last_aligned = last.position() == 0;
         //size_type words_to_copy = ::std::ceil(remaining_bits_to_copy / static_cast<float>(digits));
         // d_last will be aligned at this point

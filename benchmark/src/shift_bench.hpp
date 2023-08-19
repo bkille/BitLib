@@ -30,7 +30,7 @@ auto BM_BitShiftLeft_UU = [](benchmark::State& state, auto input) {
     container_type bitcont = make_random_container<container_type>(container_size); 
     bit::bit_iterator<iterator_type> first = bit::bit_iterator<iterator_type>(bitcont.begin()) + 1;
     bit::bit_iterator<iterator_type> last = bit::bit_iterator<iterator_type>(bitcont.end()) - 1;
-    auto n = bit::distance(first, last) / 2 + 3;
+    auto n = bit::distance(first, last) / 2 + 6;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::shift_left(first, last, n));
         benchmark::ClobberMemory();
@@ -44,7 +44,7 @@ auto BM_BoolShiftLeft = [](benchmark::State& state, auto input) {
     container_type cont = make_random_container<container_type>(container_size); 
     auto first = cont.begin();
     auto last = cont.end();
-    auto n = std::distance(first, last) / 2 + 3;
+    auto n = std::distance(first, last) / 2 + 6;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::word_shift_left(first, last, n));
         benchmark::ClobberMemory();
@@ -76,7 +76,7 @@ auto BM_BitShiftRight_UU = [](benchmark::State& state, auto input) {
     container_type bitcont = make_random_container<container_type>(container_size); 
     auto first = bit::bit_iterator<decltype(std::begin(bitcont))>(std::begin(bitcont)) + 2;
     auto last = bit::bit_iterator<decltype(std::end(bitcont))>(std::end(bitcont)) - 3;
-    auto n = bit::distance(first, last) / 2 + 3;
+    auto n = bit::distance(first, last) / 2 + 6;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::shift_right(first, last, n));
         benchmark::ClobberMemory();
@@ -90,7 +90,7 @@ auto BM_BoolShiftRight = [](benchmark::State& state, auto input) {
     container_type cont = make_random_container<container_type>(container_size); 
     auto first = cont.begin();
     auto last = cont.end();
-    auto n = std::distance(first, last) / 2 + 3;
+    auto n = std::distance(first, last) / 2 + 6;
     for (auto _ : state) {
         benchmark::DoNotOptimize(bit::word_shift_right(first, last, n));
         benchmark::ClobberMemory();

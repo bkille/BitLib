@@ -33,7 +33,7 @@ class linear_overload
     // Types
     public:
     using tuple = std::tuple<F...>;
-    
+
     // Lifecycle
     public:
     template <class... G>
@@ -49,45 +49,45 @@ class linear_overload
     decltype(auto) get() noexcept;
     template <class G>
     constexpr decltype(auto) get() const noexcept;
-    
+
     // Capacity
     public:
     static constexpr bool empty() noexcept;
     static constexpr std::size_t size() noexcept;
     static constexpr std::size_t max_size() noexcept;
-    
+
     // Call
     public:
     template <
-        std::size_t N = 0, 
-        class... Args, 
+        std::size_t N = 0,
+        class... Args,
         class = typename std::enable_if<N >= size()>::type
-    > 
+    >
     void operator()(Args&&...);
     template <
-        std::size_t N = 0, 
+        std::size_t N = 0,
         class = typename std::enable_if<N < size()>::type,
         class = decltype(std::get<N>(std::declval<tuple>())())
-    > 
+    >
     decltype(auto) operator()();
     template <
-        std::size_t N = 0, 
-        class Arg, 
-        class... Args, 
-        class = typename std::enable_if<N < size()>::type, 
+        std::size_t N = 0,
+        class Arg,
+        class... Args,
+        class = typename std::enable_if<N < size()>::type,
         class = decltype(std::get<N>(std::declval<tuple>())(
-            std::declval<Arg>(), 
+            std::declval<Arg>(),
             std::declval<Args>()...
         ))
-    > 
+    >
     decltype(auto) operator()(Arg&& arg, Args&&... args);
     template <
-        std::size_t N = 0, 
-        class... Args, 
+        std::size_t N = 0,
+        class... Args,
         class = typename std::enable_if<N < size()>::type
-    > 
+    >
     decltype(auto) operator()(Args&&... args);
-    
+
     // Implementation details: data members
     private:
     tuple _f;
@@ -185,7 +185,7 @@ constexpr std::size_t linear_overload<F...>::max_size(
 // ------------------------- LINEAR OVERLOAD: CALL -------------------------- //
 // Calls the linear overload with the provided arguments: no valid overload
 template <class... F>
-template <std::size_t N, class... Args, class> 
+template <std::size_t N, class... Args, class>
 void linear_overload<F...>::operator()(
     Args&&...
 )
@@ -194,7 +194,7 @@ void linear_overload<F...>::operator()(
 
 // Calls the linear overload with the provided arguments: no argument
 template <class... F>
-template <std::size_t N, class, class> 
+template <std::size_t N, class, class>
 decltype(auto) linear_overload<F...>::operator()(
 )
 {
@@ -203,9 +203,9 @@ decltype(auto) linear_overload<F...>::operator()(
 
 // Calls the linear overload with the provided arguments: valid call
 template <class... F>
-template <std::size_t N, class Arg, class... Args, class, class> 
+template <std::size_t N, class Arg, class... Args, class, class>
 decltype(auto) linear_overload<F...>::operator()(
-    Arg&& arg, 
+    Arg&& arg,
     Args&&... args
 )
 {
@@ -214,7 +214,7 @@ decltype(auto) linear_overload<F...>::operator()(
 
 // Calls the linear overload with the provided arguments: invalid call
 template <class... F>
-template <std::size_t N, class... Args, class> 
+template <std::size_t N, class... Args, class>
 decltype(auto) linear_overload<F...>::operator()(
     Args&&... args
 )

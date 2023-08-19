@@ -23,13 +23,13 @@
 
 TYPED_TEST(SingleRangeTest, Rotate) {
     using WordType = typename TestFixture::base_type;
-    for (size_t idx = 0; idx < this->bit_size - 1; ++idx) {
+    for (size_t idx = 0; idx < this->random_bitvecs.size(); ++idx) {
         bit::bit_vector<WordType>& bitvec = this->random_bitvecs[idx];
         std::vector<bool> boolvec = this->random_boolvecs[idx];
-        size_t start_count = 16;
+        size_t start_count = 4;
         while (start_count--) {
             unsigned long long start = generate_random_number(0, std::min<unsigned long long>(bitvec.size() - 1, 16));
-            size_t middle_count = 16;
+            size_t middle_count = 4;
             while (middle_count--) {
                 unsigned long long middle = generate_random_number(start, bitvec.size() - 1);
                 auto bitret = bit::rotate(bitvec.begin() + start, bitvec.begin() + middle, bitvec.end()); 

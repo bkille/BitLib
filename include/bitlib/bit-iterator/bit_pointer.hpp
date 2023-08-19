@@ -30,10 +30,10 @@ class bit_pointer
 {
     // Assertions
     static_assert(binary_digits<WordType>::value, "");
-    
+
     // Friendship
     template <class> friend class bit_pointer;
-    
+
     // Types
     public:
     using word_type = WordType;
@@ -43,19 +43,19 @@ class bit_pointer
     // Lifecycle
     public:
     constexpr bit_pointer() noexcept;
-    template <class T> 
+    template <class T>
     constexpr bit_pointer(const bit_pointer<T>& other) noexcept;
     constexpr bit_pointer(std::nullptr_t) noexcept;
     explicit constexpr bit_pointer(word_type* ptr) noexcept;
     constexpr bit_pointer(word_type* ptr, size_type pos);
-    
+
     // Assignment
     public:
     constexpr bit_pointer& operator=(std::nullptr_t) noexcept;
     constexpr bit_pointer& operator=(const bit_pointer& other) noexcept;
-    template <class T> 
+    template <class T>
     constexpr bit_pointer& operator=(const bit_pointer<T>& other) noexcept;
-    
+
     // Conversion
     public:
     explicit constexpr operator bool() const noexcept;
@@ -65,7 +65,7 @@ class bit_pointer
     constexpr bit_reference<WordType> operator*() const noexcept;
     constexpr bit_reference<WordType>* operator->() const noexcept;
     constexpr bit_reference<WordType> operator[](difference_type n) const;
-    
+
     // Increment and decrement operators
     public:
     constexpr bit_pointer& operator++();
@@ -99,32 +99,32 @@ class bit_pointer
     // Comparison operators
     template <class T, class U>
     friend constexpr bool operator==(
-        bit_pointer<T> lhs, 
+        bit_pointer<T> lhs,
         bit_pointer<U> rhs
     ) noexcept;
     template <class T, class U>
     friend constexpr bool operator!=(
-        bit_pointer<T> lhs, 
+        bit_pointer<T> lhs,
         bit_pointer<U> rhs
     ) noexcept;
     template <class T, class U>
     friend constexpr bool operator<(
-        bit_pointer<T> lhs, 
+        bit_pointer<T> lhs,
         bit_pointer<U> rhs
     ) noexcept;
     template <class T, class U>
     friend constexpr bool operator<=(
-        bit_pointer<T> lhs, 
+        bit_pointer<T> lhs,
         bit_pointer<U> rhs
     ) noexcept;
     template <class T, class U>
     friend constexpr bool operator>(
-        bit_pointer<T> lhs, 
+        bit_pointer<T> lhs,
         bit_pointer<U> rhs
     ) noexcept;
     template <class T, class U>
     friend constexpr bool operator>=(
-        bit_pointer<T> lhs, 
+        bit_pointer<T> lhs,
         bit_pointer<U> rhs
     ) noexcept;
 };
@@ -143,7 +143,7 @@ constexpr bit_pointer<WordType>::bit_pointer(
 
 // Implicitly constructs a bit pointer from another bit pointer
 template <class WordType>
-template <class T> 
+template <class T>
 constexpr bit_pointer<WordType>::bit_pointer(
     const bit_pointer<T>& other
 ) noexcept
@@ -172,7 +172,7 @@ constexpr bit_pointer<WordType>::bit_pointer(
 // Explicitly constructs an unaligned bit pointer from a pointer
 template <class WordType>
 constexpr bit_pointer<WordType>::bit_pointer(
-    word_type* ptr, 
+    word_type* ptr,
     size_type pos
 )
 : _ref(ptr, pos)
@@ -207,7 +207,7 @@ constexpr bit_pointer<WordType>& bit_pointer<WordType>::operator=(
 
 // Assigns a bit pointer to the bit pointer
 template <class WordType>
-template <class T> 
+template <class T>
 constexpr bit_pointer<WordType>& bit_pointer<WordType>::operator=(
     const bit_pointer<T>& other
 ) noexcept
@@ -276,7 +276,7 @@ constexpr bit_pointer<WordType>& bit_pointer<WordType>::operator++(
     using type = typename std::remove_cv<word_type>::type;
     constexpr size_type digits = binary_digits<word_type>::value;
     constexpr type one = 1;
-    constexpr type mask = one; 
+    constexpr type mask = one;
     const size_type pos = _ref.position();
     if (pos + 1 < digits) {
         _ref._mask <<= 1;
@@ -295,7 +295,7 @@ constexpr bit_pointer<WordType>& bit_pointer<WordType>::operator--(
     using type = typename std::remove_cv<word_type>::type;
     constexpr size_type digits = binary_digits<word_type>::value;
     constexpr type one = 1;
-    constexpr type mask = static_cast<type>(one << (digits - 1)); 
+    constexpr type mask = static_cast<type>(one << (digits - 1));
     const size_type pos = _ref.position();
     if (pos) {
         _ref._mask >>= 1;
@@ -420,33 +420,33 @@ constexpr typename std::common_type<
 // Checks if the left hand side is equal to the right hand side
 template <class T, class U>
 constexpr bool operator==(
-    bit_pointer<T> lhs, 
+    bit_pointer<T> lhs,
     bit_pointer<U> rhs
 ) noexcept
 {
-    return lhs._ref.address() == rhs._ref.address() 
+    return lhs._ref.address() == rhs._ref.address()
         && lhs._ref.position() == rhs._ref.position();
 }
 
 // Checks if the left hand side is non equal to the right hand side
 template <class T, class U>
 constexpr bool operator!=(
-    bit_pointer<T> lhs, 
+    bit_pointer<T> lhs,
     bit_pointer<U> rhs
 ) noexcept
 {
-    return lhs._ref.address() != rhs._ref.address() 
+    return lhs._ref.address() != rhs._ref.address()
         || lhs._ref.position() != rhs._ref.position();
 }
 
 // Checks if the left hand side is less than the right hand side
 template <class T, class U>
 constexpr bool operator<(
-    bit_pointer<T> lhs, 
+    bit_pointer<T> lhs,
     bit_pointer<U> rhs
 ) noexcept
 {
-    return lhs._ref.address() < rhs._ref.address() 
+    return lhs._ref.address() < rhs._ref.address()
         || (lhs._ref.address() == rhs._ref.address()
             && lhs._ref.position() < rhs._ref.position());
 }
@@ -454,11 +454,11 @@ constexpr bool operator<(
 // Checks if the left hand side is less than or equal to the right hand side
 template <class T, class U>
 constexpr bool operator<=(
-    bit_pointer<T> lhs, 
+    bit_pointer<T> lhs,
     bit_pointer<U> rhs
 ) noexcept
 {
-    return lhs._ref.address() < rhs._ref.address() 
+    return lhs._ref.address() < rhs._ref.address()
         || (lhs._ref.address() == rhs._ref.address()
             && lhs._ref.position() <= rhs._ref.position());
 }
@@ -466,11 +466,11 @@ constexpr bool operator<=(
 // Checks if the left hand side is greater than the right hand side
 template <class T, class U>
 constexpr bool operator>(
-    bit_pointer<T> lhs, 
+    bit_pointer<T> lhs,
     bit_pointer<U> rhs
 ) noexcept
 {
-    return lhs._ref.address() > rhs._ref.address() 
+    return lhs._ref.address() > rhs._ref.address()
         || (lhs._ref.address() == rhs._ref.address()
             && lhs._ref.position() > rhs._ref.position());
 }
@@ -478,11 +478,11 @@ constexpr bool operator>(
 // Checks if the left hand side is greater than or equal to the right hand side
 template <class T, class U>
 constexpr bool operator>=(
-    bit_pointer<T> lhs, 
+    bit_pointer<T> lhs,
     bit_pointer<U> rhs
 ) noexcept
 {
-    return lhs._ref.address() > rhs._ref.address() 
+    return lhs._ref.address() > rhs._ref.address()
         || (lhs._ref.address() == rhs._ref.address()
             && lhs._ref.position() >= rhs._ref.position());
 }

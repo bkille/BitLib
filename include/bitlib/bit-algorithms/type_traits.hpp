@@ -74,7 +74,7 @@ struct is_iterator : std::false_type {};
 
 template<typename T>
 struct is_iterator<
-    T, 
+    T,
     std::void_t<typename std::iterator_traits<T>::value_type>
 > : std::true_type {};
 
@@ -90,10 +90,10 @@ struct is_forward_iterator : std::false_type {};
 
 template<typename T>
 struct is_forward_iterator<
-    T, 
+    T,
     std::enable_if_t<
         std::is_base_of_v<
-            std::forward_iterator_tag, 
+            std::forward_iterator_tag,
             typename std::iterator_traits<T>::iterator_category
         >
     >
@@ -111,17 +111,17 @@ struct is_bidirectional_iterator : std::false_type {};
 
 template<typename T>
 struct is_bidirectional_iterator<
-    T, 
+    T,
     std::enable_if_t<
         std::is_base_of_v<
-            std::bidirectional_iterator_tag, 
+            std::bidirectional_iterator_tag,
             typename std::iterator_traits<T>::iterator_category
         >
     >
 > : std::true_type {};
 
 template <class T>
-inline constexpr bool is_bidirectional_iterator_v 
+inline constexpr bool is_bidirectional_iterator_v
     = is_bidirectional_iterator<T>::value;
 /* ************************************************************************** */
 
@@ -133,21 +133,21 @@ struct is_random_access_iterator : std::false_type {};
 
 template<typename T>
 struct is_random_access_iterator<
-    T, 
+    T,
     std::enable_if_t<
         std::is_base_of_v<
-            std::random_access_iterator_tag, 
+            std::random_access_iterator_tag,
             typename std::iterator_traits<T>::iterator_category
         >
     >
 > : std::true_type {};
 
 template <class T>
-inline constexpr bool is_random_access_iterator_v = 
+inline constexpr bool is_random_access_iterator_v =
     is_random_access_iterator<T>::value;
 /* ************************************************************************** */
-    
-   
+
+
 
 /* *************************** IS INPUT ITERATOR **************************** */
 template<typename T, typename = void>
@@ -155,10 +155,10 @@ struct is_input_iterator : std::false_type {};
 
 template<typename T>
 struct is_input_iterator<
-    T, 
+    T,
     std::enable_if_t<
         std::is_base_of_v<
-            std::input_iterator_tag, 
+            std::input_iterator_tag,
             typename std::iterator_traits<T>::iterator_category
         >
     >
@@ -176,10 +176,10 @@ struct is_output_iterator : std::false_type {};
 
 template<typename T>
 struct is_output_iterator<
-    T, 
+    T,
     std::enable_if_t<
         std::is_base_of_v<
-            std::output_iterator_tag, 
+            std::output_iterator_tag,
             typename std::iterator_traits<T>::iterator_category
         >
     >

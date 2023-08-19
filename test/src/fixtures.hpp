@@ -18,6 +18,7 @@
 #include <random>
 #include <limits>
 #include <cstring>
+#include <cstdint>
 // Project sources
 #include "bitlib/bit-iterator/bit_iterator.hpp"
 #include "bitlib/bit-containers/bit-containers.hpp"
@@ -31,8 +32,7 @@
 //TODO tests need a lot of cleanup. We should only copy what we need from random_vec
 //and also refactor the vec generation to reduce duplication
 
-using BaseTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long long>;
-//using BaseTypes = ::testing::Types<unsigned char>;
+using BaseTypes = ::testing::Types<uint8_t, uint16_t, uint32_t, uint64_t>;
 
 
 template<typename WordType>
@@ -116,6 +116,18 @@ class SingleRangeTest : public testing::Test {
             random_bitvecs.push_back(bitvec);
             random_boolvecs.push_back(boolvec);
         }
+
+        auto zeros = bit::bit_vector<WordType>(bit_size);
+        std::fill(zeros.begin(), zeros.end(), bit::bit0);
+        *(zeros.end() - 1024 - digits - 4) = bit::bit1;
+        random_bitvecs.push_back(zeros);
+        random_boolvecs.push_back(boolvec_from_bitvec(zeros));
+
+        auto ones = bit::bit_vector<WordType>(bit_size);
+        std::fill(ones.begin(), ones.end(), bit::bit1);
+        *(ones.end() - 1024 - digits - 4) = bit::bit0;
+        random_bitvecs.push_back(ones);
+        random_boolvecs.push_back(boolvec_from_bitvec(ones));
     }
 };
 TYPED_TEST_SUITE(SingleRangeTest, BaseTypes);
