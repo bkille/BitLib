@@ -1,5 +1,5 @@
 // ================================= BITLIB ================================= //
-// Project:         The Bit Library 
+// Project:         The Bit Library
 // License:         BSD 3-Clause License
 // ========================================================================== //
 #ifndef _BITLIB_HPP_INCLUDED

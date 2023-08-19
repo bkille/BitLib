@@ -1,7 +1,7 @@
 // ================================ SHIFT ================================== //
 // Project:         The Experimental Bit Algorithms Library
 // Name:            shift.hpp
-// Description:     Implementation of shift_left and shift_right 
+// Description:     Implementation of shift_left and shift_right
 // Creator:         Vincent Reverdy
 // Contributor(s):  Bryce Kille [2019]
 // License:         BSD 3-Clause License
@@ -25,12 +25,12 @@
     (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 
 #if __cplusplus >= 202002L
-#define STD_SHIFT_RIGHT(FIRST, LAST, N) std::shift_right(FIRST, LAST, N) 
-#define STD_SHIFT_LEFT(FIRST, LAST, N) std::shift_left(FIRST, LAST, N) 
+#define STD_SHIFT_RIGHT(FIRST, LAST, N) std::shift_right(FIRST, LAST, N)
+#define STD_SHIFT_LEFT(FIRST, LAST, N) std::shift_left(FIRST, LAST, N)
 #else
-#define STD_SHIFT_RIGHT(FIRST, LAST, N) word_shift_right(FIRST, LAST, N) 
-#define STD_SHIFT_LEFT(FIRST, LAST, N) word_shift_left(FIRST, LAST, N) 
-#endif 
+#define STD_SHIFT_RIGHT(FIRST, LAST, N) word_shift_right(FIRST, LAST, N)
+#define STD_SHIFT_LEFT(FIRST, LAST, N) word_shift_left(FIRST, LAST, N)
+#endif
 
 namespace bit {
 
@@ -50,7 +50,7 @@ bit_iterator<RandomAccessIt> shift_left(
         typename bit_iterator<RandomAccessIt>::difference_type n
 ) {
     // Assertions
-     _assert_range_viability(first, last); 
+     _assert_range_viability(first, last);
 
     // Types and constants
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
@@ -82,33 +82,33 @@ bit_iterator<RandomAccessIt> shift_left(
                 (is_last_aligned ? digits : last.position()) - first.position()
         );
         return bit_iterator<RandomAccessIt>(
-                first.base(), 
+                first.base(),
                 first.position() + d - n
         );
     }
 
     // More initialization
-    size_type word_shifts = n / digits; 
+    size_type word_shifts = n / digits;
     size_type remaining_bitshifts = n - digits*(word_shifts);
 
     // Multiple word case
     word_type first_value = *first.base();
     word_type last_value = !is_last_aligned ? *last.base() : 0;
 
-    // Shift words to the left using std::shift 
-    RandomAccessIt new_last_base = STD_SHIFT_LEFT(first.base(), 
+    // Shift words to the left using std::shift
+    RandomAccessIt new_last_base = STD_SHIFT_LEFT(first.base(),
                                     last.base(),
                                     word_shifts
     );
     if (!is_last_aligned) {
         // Mask out-of-range bits so that we don't incorporate them
-        *last.base() &= (static_cast<word_type>(1) << last.position()) - 1; 
+        *last.base() &= (static_cast<word_type>(1) << last.position()) - 1;
         *new_last_base = *last.base();
         if (word_shifts > 0) {
             *last.base() = 0;
         }
     }
-    // Shift bit sequence to the lsb 
+    // Shift bit sequence to the lsb
     if (remaining_bitshifts) {
         RandomAccessIt it = first.base();
 
@@ -189,35 +189,35 @@ bit_iterator<RandomAccessIt> shift_right(
                 (is_last_aligned ? digits : last.position()) - first.position()
         );
         return bit_iterator<RandomAccessIt>(
-                first.base(), 
+                first.base(),
                 first.position() +  n
         );
     }
 
     // More initialization
-    size_type word_shifts = n / digits; 
+    size_type word_shifts = n / digits;
     size_type remaining_bitshifts = n - digits*(word_shifts);
 
     // Multiple word case
     word_type first_value = *first.base();
     word_type last_value = !is_last_aligned ? *last.base() : 0;
-    word_type mask = is_first_aligned ? 
+    word_type mask = is_first_aligned ?
         static_cast<word_type>(-1)
-        : 
+        :
         static_cast<word_type>(
                 (static_cast<word_type>(1) << (digits - first.position())) - 1
         ) << first.position();
     *first.base() = *first.base() & mask;
     // Shift words to the right
     RandomAccessIt new_first_base = STD_SHIFT_RIGHT(
-        first.base(), 
+        first.base(),
         std::next(
-            last.base(), 
+            last.base(),
             !is_last_aligned),
         word_shifts
     );
     bit_iterator<RandomAccessIt> d_first(new_first_base, first.position());
-    // Shift bit sequence to the msb 
+    // Shift bit sequence to the msb
     if (remaining_bitshifts) {
         auto it = is_last_aligned ? last.base() - 1 : last.base();
 
@@ -230,11 +230,11 @@ bit_iterator<RandomAccessIt> shift_right(
 
         for (; std::distance(new_first_base, it) >= hn::Lanes(d); it -= hn::Lanes(d))
         {
-            const auto v = hn::ShiftLeftSame( 
-                    hn::Load(d, &*(it - hn::Lanes(d) + 1)), 
+            const auto v = hn::ShiftLeftSame(
+                    hn::Load(d, &*(it - hn::Lanes(d) + 1)),
                     remaining_bitshifts);
             const auto v_plus1 = hn::ShiftRightSame(
-                    hn::LoadU(d, &*(it - hn::Lanes(d))), 
+                    hn::LoadU(d, &*(it - hn::Lanes(d))),
                     digits - remaining_bitshifts);
             hn::Store(v | v_plus1, d, &*(it - hn::Lanes(d) + 1));
         }

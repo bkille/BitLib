@@ -23,9 +23,9 @@ namespace bit {
 
 template< class RandomAccessIt1, class RandomAccessIt2 >
 constexpr bit_iterator<RandomAccessIt2> swap_ranges(
-        bit_iterator<RandomAccessIt1> first1, 
+        bit_iterator<RandomAccessIt1> first1,
         bit_iterator<RandomAccessIt1> last1,
-        bit_iterator<RandomAccessIt2> first2) 
+        bit_iterator<RandomAccessIt2> first2)
 {
     // Assertions
     _assert_range_viability(first1, last1);
@@ -44,19 +44,19 @@ constexpr bit_iterator<RandomAccessIt2> swap_ranges(
     //const bool is_first2_aligned = first2.position() == 0;
     RandomAccessIt1 it1 = first1.base();
     RandomAccessIt2 it2 = first2.base();
-    
+
     if (first1 == last1)
         return first2;
 
     if constexpr (digits1 == digits2) {
         // All bits in first1 range are in 1 word
         if (std::next(it1, is_last1_aligned) == last1.base()) {
-            size_type1 digits_to_copy = distance(first1, last1); 
+            size_type1 digits_to_copy = distance(first1, last1);
             if (first1.position() >= first2.position()) {
                 _bitexch<word_type1, size_type1>(
-                        *it1, 
-                        *it2, 
-                        first1.position(), 
+                        *it1,
+                        *it2,
+                        first1.position(),
                         first2.position(),
                         digits_to_copy
                 );
@@ -66,17 +66,17 @@ constexpr bit_iterator<RandomAccessIt2> swap_ranges(
                         digits2 - first2.position()
                 );
                 _bitexch<word_type1, size_type1>(
-                        *it1, 
-                        *it2, 
-                        first1.position(), 
+                        *it1,
+                        *it2,
+                        first1.position(),
                         first2.position(),
                         partial_digits_to_copy
                 );
                 if (digits_to_copy > partial_digits_to_copy) {
                     _bitexch<word_type1, size_type1>(
-                            *it1, 
-                            *(++it2), 
-                            first1.position() + partial_digits_to_copy, 
+                            *it1,
+                            *(++it2),
+                            first1.position() + partial_digits_to_copy,
                             0,
                             digits_to_copy - partial_digits_to_copy
                     );
@@ -84,13 +84,13 @@ constexpr bit_iterator<RandomAccessIt2> swap_ranges(
             }
             return first2 + digits_to_copy;
 
-        // first1 range spans multiple words, 
-        // but both ranges have same alignment    
+        // first1 range spans multiple words,
+        // but both ranges have same alignment
         } else if (first1.position() == first2.position()) {
             _bitexch<word_type1, size_type1>(
-                    *it1++, 
-                    *it2++, 
-                    first1.position(), 
+                    *it1++,
+                    *it2++,
+                    first1.position(),
                     digits1 - first1.position()
             );
             it2 = std::swap_ranges(it1, last1.base(), it2);
@@ -101,8 +101,8 @@ constexpr bit_iterator<RandomAccessIt2> swap_ranges(
             //}
             if (!is_last1_aligned) {
                 _bitexch<word_type1, size_type1>(
-                        *it1, 
-                        *it2, 
+                        *it1,
+                        *it2,
                         0,
                         last1.position()
                 );
@@ -115,25 +115,25 @@ constexpr bit_iterator<RandomAccessIt2> swap_ranges(
             size_type1 digits_to_copy = digits1 - first1.position();
             if (first1.position() > first2.position()) {
                 _bitexch<word_type1, size_type1>(
-                        *it1++, 
-                        *it2, 
-                        first1.position(), 
+                        *it1++,
+                        *it2,
+                        first1.position(),
                         first2.position(),
                         digits_to_copy
                 );
             } else {
                 size_type1 partial_digits_to_copy = digits2 - first2.position();
                 _bitexch<word_type1, size_type1>(
-                        *it1, 
-                        *it2++, 
-                        first1.position(), 
+                        *it1,
+                        *it2++,
+                        first1.position(),
                         first2.position(),
                         partial_digits_to_copy
                 );
                 _bitexch<word_type1, size_type1>(
-                        *it1++, 
-                        *it2, 
-                        first1.position() + partial_digits_to_copy, 
+                        *it1++,
+                        *it2,
+                        first1.position() + partial_digits_to_copy,
                         0,
                         digits_to_copy - partial_digits_to_copy
                 );

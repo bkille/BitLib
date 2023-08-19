@@ -34,7 +34,7 @@ class bit_reference
     // Friendship
     template <class> friend class bit_reference;
     friend class bit_pointer<WordType>;
-    
+
     // Types
     public:
     using word_type = WordType;
@@ -42,7 +42,7 @@ class bit_reference
 
     // Lifecycle
     public:
-    template <class T> 
+    template <class T>
     constexpr bit_reference(const bit_reference<T>& other) noexcept;
     constexpr bit_reference(const bit_reference& other) noexcept;
     explicit constexpr bit_reference(word_type& ref) noexcept;
@@ -51,7 +51,7 @@ class bit_reference
     // Assignment
     public:
     constexpr bit_reference& operator=(const bit_reference& other) noexcept;
-    template <class T> 
+    template <class T>
     constexpr bit_reference& operator=(const bit_reference<T>& other) noexcept;
     constexpr bit_reference& operator=(bit_value val) noexcept;
     constexpr bit_reference& assign(word_type val) noexcept;
@@ -62,7 +62,7 @@ class bit_reference
     constexpr bit_reference& operator&=(bit_value other) noexcept;
     constexpr bit_reference& operator|=(bit_value other) noexcept;
     constexpr bit_reference& operator^=(bit_value other) noexcept;
-    
+
     // Conversion
     public:
     explicit constexpr operator bool() const noexcept;
@@ -70,10 +70,10 @@ class bit_reference
     // Access
     public:
     constexpr bit_pointer<WordType> operator&() const noexcept;
-    
+
     // Swap members
     public:
-    template <class T> 
+    template <class T>
     void swap(bit_reference<T> other);
     void swap(bit_value& other);
 
@@ -138,7 +138,7 @@ std::basic_ostream<CharT, Traits>& operator<<(
 // ------------------------ BIT REFERENCE: LIFECYCLE ------------------------ //
 // Implicitly constructs a bit reference from another bit reference
 template <class WordType>
-template <class T> 
+template <class T>
 constexpr bit_reference<WordType>::bit_reference(
     const bit_reference<T>& other
 ) noexcept
@@ -169,7 +169,7 @@ constexpr bit_reference<WordType>::bit_reference(
 // Explicitly constructs an unaligned bit reference
 template <class WordType>
 constexpr bit_reference<WordType>::bit_reference(
-    word_type& ref, 
+    word_type& ref,
     size_type pos
 )
 : _ptr((assert(pos < binary_digits<word_type>::value), &ref))
@@ -193,7 +193,7 @@ constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
 
 // Assigns a bit reference to the bit reference
 template <class WordType>
-template <class T> 
+template <class T>
 constexpr bit_reference<WordType>& bit_reference<WordType>::operator=(
     const bit_reference<T>& other
 ) noexcept
@@ -225,7 +225,7 @@ constexpr bit_reference<WordType>& bit_reference<WordType>::assign(
 // Assigns an unaligned bit of a value to the bit reference
 template <class WordType>
 constexpr bit_reference<WordType>& bit_reference<WordType>::assign(
-    word_type val, 
+    word_type val,
     size_type pos
 )
 {
@@ -368,7 +368,7 @@ constexpr bit_reference<WordType>& bit_reference<WordType>::flip(
 // ------------------- BIT REFERENCE: UNDERLYING DETAILS -------------------- //
 // Returns a pointer to the underlying word
 template <class WordType>
-constexpr typename bit_reference<WordType>::word_type* 
+constexpr typename bit_reference<WordType>::word_type*
 bit_reference<WordType>::address(
 ) const noexcept
 {
@@ -518,7 +518,7 @@ constexpr bit_reference<WordType>::bit_reference(
 , _mask()
 {
 }
-    
+
 // Privately explicitly constructs an aligned bit reference from a pointer
 template <class WordType>
 constexpr bit_reference<WordType>::bit_reference(
@@ -532,7 +532,7 @@ constexpr bit_reference<WordType>::bit_reference(
 // Privately explicitly constructs an unaligned bit reference from a pointer
 template <class WordType>
 constexpr bit_reference<WordType>::bit_reference(
-    word_type* ptr, 
+    word_type* ptr,
     size_type pos
 )
 : _ptr((assert(pos < binary_digits<word_type>::value), ptr))

@@ -22,13 +22,13 @@
 namespace bit {
 // ========================================================================== //
 
-// Rotates a range by copying [first...n_first) to the stack, then shifting 
+// Rotates a range by copying [first...n_first) to the stack, then shifting
 // the range to the left and appending the copied section to the end.
 //
 // Note: distance(first, n_first) <= 3*digits
 template <class ForwardIt, int BufferSize>
 bit_iterator<ForwardIt> _rotate_via_copy_begin(
-   bit_iterator<ForwardIt> first, 
+   bit_iterator<ForwardIt> first,
    bit_iterator<ForwardIt> n_first,
    bit_iterator<ForwardIt> last
 ) {
@@ -39,7 +39,7 @@ bit_iterator<ForwardIt> _rotate_via_copy_begin(
 
     size_type k = distance(first, n_first);
     assert(k <= BufferSize*digits);
-    word_type copy_arr[BufferSize]; 
+    word_type copy_arr[BufferSize];
     copy_arr[0] = *first.base();
     ForwardIt it = ++first.base();
     short unsigned int pos = 1;
@@ -50,9 +50,9 @@ bit_iterator<ForwardIt> _rotate_via_copy_begin(
     }
     bit_iterator<ForwardIt> ret = shift_left(first, last, k);
     copy(
-        bit_iterator<word_type*>(copy_arr, first.position()), 
+        bit_iterator<word_type*>(copy_arr, first.position()),
         bit_iterator<word_type*>(
-                copy_arr, 
+                copy_arr,
                 first.position()
         ) + k,
         ret
@@ -60,13 +60,13 @@ bit_iterator<ForwardIt> _rotate_via_copy_begin(
     return ret;
 }
 
-// Rotates a range by copying [n_first, last) to the stack, then shifting 
+// Rotates a range by copying [n_first, last) to the stack, then shifting
 // the range to the right and prepending the copied section to the beginning.
 //
 // Note: distance(n_first, last) <= 3*digits
 template <class ForwardIt, int BufferSize>
 bit_iterator<ForwardIt> _rotate_via_copy_end(
-   bit_iterator<ForwardIt> first, 
+   bit_iterator<ForwardIt> first,
    bit_iterator<ForwardIt> n_first,
    bit_iterator<ForwardIt> last
 ) {
@@ -77,7 +77,7 @@ bit_iterator<ForwardIt> _rotate_via_copy_end(
 
     size_type k = distance(n_first, last);
     assert(k <= BufferSize*digits);
-    word_type copy_arr[BufferSize]; 
+    word_type copy_arr[BufferSize];
     copy_arr[0] = *n_first.base();
     ForwardIt it = ++n_first.base();
     short unsigned int pos = 1;
@@ -88,9 +88,9 @@ bit_iterator<ForwardIt> _rotate_via_copy_end(
     }
     bit_iterator<ForwardIt> ret = shift_right(first, last, k);
     copy(
-        bit_iterator<word_type*>(copy_arr, n_first.position()), 
+        bit_iterator<word_type*>(copy_arr, n_first.position()),
         bit_iterator<word_type*>(
-                copy_arr, 
+                copy_arr,
                 n_first.position()
         ) + k,
         first
@@ -102,7 +102,7 @@ bit_iterator<ForwardIt> _rotate_via_copy_end(
 // implementation
 template <class RandomAccessIt>
 bit_iterator<RandomAccessIt> _rotate_via_raw(
-   bit_iterator<RandomAccessIt> first, 
+   bit_iterator<RandomAccessIt> first,
    bit_iterator<RandomAccessIt> n_first,
    bit_iterator<RandomAccessIt> last,
    std::random_access_iterator_tag
@@ -110,13 +110,13 @@ bit_iterator<RandomAccessIt> _rotate_via_raw(
     // Types and constants
     using word_type = typename bit_iterator<RandomAccessIt>::word_type;
     using size_type = typename bit_iterator<RandomAccessIt>::size_type;
-    using difference_type = 
+    using difference_type =
         typename bit_iterator<RandomAccessIt>::difference_type;
     constexpr difference_type digits = binary_digits<word_type>::value;
 
     difference_type k = n_first - first;
     difference_type n = last - first;
-    
+
     if (k == n - k) {
         swap_ranges(first, n_first, n_first);
         return n_first;
@@ -184,7 +184,7 @@ bit_iterator<RandomAccessIt> _rotate_via_raw(
 // Main function for implementing the bit overload of std::rotate.
 template <class ForwardIt>
 bit_iterator<ForwardIt> rotate(
-   bit_iterator<ForwardIt> first, 
+   bit_iterator<ForwardIt> first,
    bit_iterator<ForwardIt> n_first,
    bit_iterator<ForwardIt> last
 ) {
@@ -198,7 +198,7 @@ bit_iterator<ForwardIt> rotate(
     // Types and constants
     using word_type = typename bit_iterator<ForwardIt>::word_type;
     using size_type = typename bit_iterator<ForwardIt>::size_type;
-    using difference_type = 
+    using difference_type =
         typename bit_iterator<ForwardIt>::difference_type;
     constexpr difference_type digits = binary_digits<word_type>::value;
 
@@ -209,9 +209,9 @@ bit_iterator<ForwardIt> rotate(
     // Within the same word
     if (std::next(first.base(), is_last_aligned) == last.base()) {
         if (is_first_aligned && is_last_aligned) {
-            *first.base() = 
+            *first.base() =
                 (*first.base() >> n_first.position())
-                | 
+                |
                 static_cast<word_type>(
                         *first.base() << (digits - n_first.position())
             );
@@ -221,10 +221,10 @@ bit_iterator<ForwardIt> rotate(
             size_type k = n_first.position() - first.position();
             size_type p = last_pos - n_first.position();
             size_type d = last_pos - first.position();
-            
+
             word_type mask = ((1ULL << d) - 1) << first.position();
             word_type rotated = *first.base() & mask;
-            rotated = static_cast<word_type>(rotated >> k) 
+            rotated = static_cast<word_type>(rotated >> k)
                 | static_cast<word_type>(rotated << p);
             *first.base() = _bitblend<word_type>(
                 *first.base(),
@@ -236,7 +236,7 @@ bit_iterator<ForwardIt> rotate(
         }
     }
 
-    // Single word subcases 
+    // Single word subcases
     if (is_within<digits>(first, n_first)) {
         size_type k = distance(first, n_first);
         word_type temp = get_word(first, k);
@@ -251,8 +251,8 @@ bit_iterator<ForwardIt> rotate(
         return new_last;
     }
     return _rotate_via_raw(
-            first, 
-            n_first, 
+            first,
+            n_first,
             last,
             typename std::iterator_traits<ForwardIt>::iterator_category()
     );

@@ -32,7 +32,7 @@ class bit_iterator
     private:
     using _traits_t = _cv_iterator_traits<Iterator>;
     static_assert(binary_digits<typename _traits_t::value_type>::value, "");
-    
+
     // Types
     public:
     using iterator_type = Iterator;
@@ -47,7 +47,7 @@ class bit_iterator
     // Lifecycle
     public:
     constexpr bit_iterator();
-    template <class T> 
+    template <class T>
     constexpr bit_iterator(const bit_iterator<T>& other);
     explicit constexpr bit_iterator(iterator_type i);
     constexpr bit_iterator(iterator_type i, size_type pos);
@@ -104,32 +104,32 @@ class bit_iterator
     public:
     template <class T, class U>
     friend constexpr bool operator==(
-        const bit_iterator<T>& lhs, 
+        const bit_iterator<T>& lhs,
         const bit_iterator<U>& rhs
     );
     template <class T, class U>
     friend constexpr bool operator!=(
-        const bit_iterator<T>& lhs, 
+        const bit_iterator<T>& lhs,
         const bit_iterator<U>& rhs
     );
     template <class T, class U>
     friend constexpr bool operator<(
-        const bit_iterator<T>& lhs, 
+        const bit_iterator<T>& lhs,
         const bit_iterator<U>& rhs
     );
     template <class T, class U>
     friend constexpr bool operator<=(
-        const bit_iterator<T>& lhs, 
+        const bit_iterator<T>& lhs,
         const bit_iterator<U>& rhs
     );
     template <class T, class U>
     friend constexpr bool operator>(
-        const bit_iterator<T>& lhs, 
+        const bit_iterator<T>& lhs,
         const bit_iterator<U>& rhs
     );
     template <class T, class U>
     friend constexpr bool operator>=(
-        const bit_iterator<T>& lhs, 
+        const bit_iterator<T>& lhs,
         const bit_iterator<U>& rhs
     );
 };
@@ -149,7 +149,7 @@ constexpr bit_iterator<Iterator>::bit_iterator(
 
 // Implicitly constructs a bit iterator from another bit iterator
 template <class Iterator>
-template <class T> 
+template <class T>
 constexpr bit_iterator<Iterator>::bit_iterator(
     const bit_iterator<T>& other
 )
@@ -171,7 +171,7 @@ constexpr bit_iterator<Iterator>::bit_iterator(
 // Explicitly constructs an unaligned bit iterator from an iterator
 template <class Iterator>
 constexpr bit_iterator<Iterator>::bit_iterator(
-    const iterator_type i, 
+    const iterator_type i,
     size_type pos
 )
 : _current(i)
@@ -185,7 +185,7 @@ constexpr bit_iterator<Iterator>::bit_iterator(
 // ------------------------ BIT ITERATOR: ASSIGNMENT ------------------------ //
 // Assigns a bit iterator to the bit iterator
 template <class Iterator>
-template <class T> 
+template <class T>
 constexpr bit_iterator<Iterator>& bit_iterator<Iterator>::operator=(
     const bit_iterator<T>& other
 )
@@ -201,7 +201,7 @@ constexpr bit_iterator<Iterator>& bit_iterator<Iterator>::operator=(
 // -------------------------- BIT ITERATOR: ACCESS -------------------------- //
 // Gets a bit reference from the bit iterator
 template <class Iterator>
-constexpr typename bit_iterator<Iterator>::reference 
+constexpr typename bit_iterator<Iterator>::reference
 bit_iterator<Iterator>::operator*(
 ) const noexcept
 {
@@ -210,7 +210,7 @@ bit_iterator<Iterator>::operator*(
 
 // Gets a pointer to a bit
 template <class Iterator>
-constexpr typename bit_iterator<Iterator>::pointer 
+constexpr typename bit_iterator<Iterator>::pointer
 bit_iterator<Iterator>::operator->(
 ) const noexcept
 {
@@ -219,7 +219,7 @@ bit_iterator<Iterator>::operator->(
 
 // Gets a bit reference, decrementing or incrementing the iterator
 template <class Iterator>
-constexpr typename bit_iterator<Iterator>::reference 
+constexpr typename bit_iterator<Iterator>::reference
 bit_iterator<Iterator>::operator[](
     difference_type n
 ) const
@@ -345,7 +345,7 @@ constexpr bit_iterator<Iterator>& bit_iterator<Iterator>::operator-=(
 // -------------------- BIT ITERATOR: UNDERLYING DETAILS -------------------- //
 // Returns a copy of the underlying iterator
 template <class Iterator>
-constexpr typename bit_iterator<Iterator>::iterator_type 
+constexpr typename bit_iterator<Iterator>::iterator_type
 bit_iterator<Iterator>::base(
 ) const
 {
@@ -364,7 +364,7 @@ bit_iterator<Iterator>::position(
 // Returns a mask corresponding to the bit associated with the iterator
 template <class Iterator>
 constexpr typename std::remove_cv<
-    typename bit_iterator<Iterator>::word_type 
+    typename bit_iterator<Iterator>::word_type
 >::type bit_iterator<Iterator>::mask(
 ) const noexcept
 {
@@ -415,7 +415,7 @@ constexpr typename std::common_type<
 // Checks if the left hand side is equal to the right hand side
 template <class T, class U>
 constexpr bool operator==(
-    const bit_iterator<T>& lhs, 
+    const bit_iterator<T>& lhs,
     const bit_iterator<U>& rhs
 )
 {
@@ -425,7 +425,7 @@ constexpr bool operator==(
 // Checks if the left hand side is non equal to the right hand side
 template <class T, class U>
 constexpr bool operator!=(
-    const bit_iterator<T>& lhs, 
+    const bit_iterator<T>& lhs,
     const bit_iterator<U>& rhs
 )
 {
@@ -435,44 +435,44 @@ constexpr bool operator!=(
 // Checks if the left hand side is less than the right hand side
 template <class T, class U>
 constexpr bool operator<(
-    const bit_iterator<T>& lhs, 
+    const bit_iterator<T>& lhs,
     const bit_iterator<U>& rhs
 )
 {
-    return lhs._current < rhs._current 
+    return lhs._current < rhs._current
         || (lhs._current == rhs._current && lhs._position < rhs._position);
 }
 
 // Checks if the left hand side is less than or equal to the right hand side
 template <class T, class U>
 constexpr bool operator<=(
-    const bit_iterator<T>& lhs, 
+    const bit_iterator<T>& lhs,
     const bit_iterator<U>& rhs
 )
 {
-    return lhs._current < rhs._current 
+    return lhs._current < rhs._current
         || (lhs._current == rhs._current && lhs._position <= rhs._position);
 }
 
 // Checks if the left hand side is greater than the right hand side
 template <class T, class U>
 constexpr bool operator>(
-    const bit_iterator<T>& lhs, 
+    const bit_iterator<T>& lhs,
     const bit_iterator<U>& rhs
 )
 {
-    return lhs._current > rhs._current 
+    return lhs._current > rhs._current
         || (lhs._current == rhs._current && lhs._position > rhs._position);
 }
 
 // Checks if the left hand side is greater than or equal to the right hand side
 template <class T, class U>
 constexpr bool operator>=(
-    const bit_iterator<T>& lhs, 
+    const bit_iterator<T>& lhs,
     const bit_iterator<U>& rhs
 )
 {
-    return lhs._current > rhs._current 
+    return lhs._current > rhs._current
         || (lhs._current == rhs._current && lhs._position >= rhs._position);
 }
 // -------------------------------------------------------------------------- //

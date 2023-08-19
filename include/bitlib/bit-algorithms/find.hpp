@@ -46,7 +46,7 @@ constexpr bit_iterator<RandomAccessIt> find(
 
     if (!is_first_aligned) {
         word_type shifted_first = *first.base() >> first.position();
-        size_type num_trailing_complementary_bits = (bv == bit0) 
+        size_type num_trailing_complementary_bits = (bv == bit0)
             ? _tzcnt(static_cast<word_type>(~shifted_first))
             : _tzcnt(static_cast<word_type>(shifted_first));
         if (std::next(first.base(), is_last_aligned) == last.base()) {
@@ -70,7 +70,7 @@ constexpr bit_iterator<RandomAccessIt> find(
             continue;
         }
 
-        size_type num_trailing_complementary_bits = (bv == bit0) 
+        size_type num_trailing_complementary_bits = (bv == bit0)
             ? _tzcnt(static_cast<word_type>(~*it))
             : _tzcnt(static_cast<word_type>(*it));
         return bit_iterator(it, (size_type) num_trailing_complementary_bits);
@@ -90,7 +90,7 @@ constexpr bit_iterator<RandomAccessIt> find(
         if (! hn::AllFalse(d, found))
         {
             it += hn::FindKnownFirstTrue(d, found);
-            size_type num_trailing_complementary_bits = (bv == bit0) 
+            size_type num_trailing_complementary_bits = (bv == bit0)
                 ? _tzcnt(static_cast<word_type>(~*it))
                 : _tzcnt(static_cast<word_type>(*it));
             return bit_iterator(it, (size_type) num_trailing_complementary_bits);
@@ -105,15 +105,15 @@ constexpr bit_iterator<RandomAccessIt> find(
             continue;
         }
 
-        size_type num_trailing_complementary_bits = (bv == bit0) 
+        size_type num_trailing_complementary_bits = (bv == bit0)
             ? _tzcnt(static_cast<word_type>(~*it))
             : _tzcnt(static_cast<word_type>(*it));
         return bit_iterator(it, (size_type) num_trailing_complementary_bits);
-    } 
+    }
 
     // Deal with any unaligned boundaries
     if (!is_last_aligned) {
-        size_type num_trailing_complementary_bits = (bv == bit0) 
+        size_type num_trailing_complementary_bits = (bv == bit0)
             ? _tzcnt(static_cast<word_type>(~*it))
             : _tzcnt(static_cast<word_type>(*it));
         return bit_iterator(it, (size_type) std::min(num_trailing_complementary_bits, last.position()));

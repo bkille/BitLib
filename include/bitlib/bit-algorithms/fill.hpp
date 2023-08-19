@@ -1,7 +1,7 @@
 // ================================= FILL =================================== //
 // Project:         The Experimental Bit Algorithms Library
 // Name:            fill.hpp
-// Description:     bit_iterator overloads for std::fill 
+// Description:     bit_iterator overloads for std::fill
 // Creator:         Vincent Reverdy
 // Contributor(s):  Vincent Reverdy [2019]
 //                  Bryce Kille [2019]
@@ -36,7 +36,7 @@ namespace hn = hwy::HWY_NAMESPACE;
 
 // Status: needs revisions
 template <class RandomAccessIt>
-void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last, 
+void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
     bit::bit_value bv) {
     // Assertions
     _assert_range_viability(first, last);
@@ -70,7 +70,7 @@ void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
         const auto fill_vec = bv == bit0 ? hn::Set(d, 0) : hn::Set(d, ones);
         for (; std::distance(it, last.base()) >= hn::Lanes(d); it += hn::Lanes(d))
         {
-            hn::Store(fill_vec, d, &*it);  
+            hn::Store(fill_vec, d, &*it);
         }
 #endif
         std::fill(it, last.base(), fill_word);

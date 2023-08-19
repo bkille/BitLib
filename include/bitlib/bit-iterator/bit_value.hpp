@@ -29,29 +29,29 @@ class bit_value
 {
     // Friendship
     template <class> friend class bit_reference;
-    
+
     // Types
     public:
     using size_type = std::size_t;
-    
+
     // Lifecycle
     public:
     constexpr bit_value() noexcept;
-    template <class T> 
+    template <class T>
     constexpr bit_value(bit_reference<T> ref) noexcept;
-    template <class WordType> 
+    template <class WordType>
     explicit constexpr bit_value(WordType val) noexcept;
     explicit constexpr bit_value(bool val) noexcept;
-    template <class WordType> 
+    template <class WordType>
     constexpr bit_value(WordType val, size_type pos);
-    
+
     // Assignment
     public:
-    template <class T> 
+    template <class T>
     constexpr bit_value& operator=(bit_reference<T> ref) noexcept;
-    template <class WordType> 
+    template <class WordType>
     constexpr bit_value& assign(WordType val) noexcept;
-    template <class WordType> 
+    template <class WordType>
     constexpr bit_value& assign(WordType val, size_type pos);
 
     // Bitwise assignment operators
@@ -63,11 +63,11 @@ class bit_value
     // Conversion
     public:
     explicit constexpr operator bool() const noexcept;
-    
+
     // Swap members
     public:
     void swap(bit_value& other) noexcept;
-    template <class T> 
+    template <class T>
     void swap(bit_reference<T> other) noexcept;
 
     // Bit manipulation
@@ -80,49 +80,49 @@ class bit_value
     // Implementation details: data members
     private:
     bool _value;
-    
+
     // Bitwise operators
     public:
     friend constexpr bit_value operator~(
         bit_value rhs
     ) noexcept;
     friend constexpr bit_value operator&(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bit_value operator|(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bit_value operator^(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
 
     // Comparison operators
     public:
     friend constexpr bool operator==(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bool operator!=(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bool operator<(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bool operator<=(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bool operator>(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
     friend constexpr bool operator>=(
-        bit_value lhs, 
+        bit_value lhs,
         bit_value rhs
     ) noexcept;
 };
@@ -153,7 +153,7 @@ constexpr bit_value::bit_value(
 }
 
 // Implicitly constructs a bit value from a bit reference
-template <class T> 
+template <class T>
 constexpr bit_value::bit_value(
     bit_reference<T> ref
 ) noexcept
@@ -168,7 +168,7 @@ constexpr bit_value::bit_value(
 : _value(b)
 {
 }
-    
+
 // Explicitly constructs an aligned bit value
 template <class WordType>
 constexpr bit_value::bit_value(
@@ -180,9 +180,9 @@ constexpr bit_value::bit_value(
 }
 
 // Explicitly constructs an unaligned bit value
-template <class WordType> 
+template <class WordType>
 constexpr bit_value::bit_value(
-    WordType val, 
+    WordType val,
     size_type pos
 )
 : _value((assert(pos < binary_digits<WordType>::value), val >> pos & 1))
@@ -195,7 +195,7 @@ constexpr bit_value::bit_value(
 
 // ------------------------- BIT VALUE: ASSIGNMENT -------------------------- //
 // Assigns a bit reference to the bit value
-template <class T> 
+template <class T>
 constexpr bit_value& bit_value::operator=(
     bit_reference<T> ref
 ) noexcept
@@ -205,7 +205,7 @@ constexpr bit_value& bit_value::operator=(
 }
 
 // Assigns the aligned bit of a value to the bit value
-template <class WordType> 
+template <class WordType>
 constexpr bit_value& bit_value::assign(
     WordType val
 ) noexcept
@@ -216,9 +216,9 @@ constexpr bit_value& bit_value::assign(
 }
 
 // Assigns an unaligned bit of a value to the bit value
-template <class WordType> 
+template <class WordType>
 constexpr bit_value& bit_value::assign(
-    WordType val, 
+    WordType val,
     size_type pos
 )
 {
@@ -335,7 +335,7 @@ constexpr bit_value& bit_value::flip(
 
 // ---------------------- BIT VALUE: BITWISE OPERATORS ---------------------- //
 // Returns the result of a bitwise not on the right hand side
-constexpr bit_value operator~( 
+constexpr bit_value operator~(
     bit_value rhs
 ) noexcept
 {
@@ -345,7 +345,7 @@ constexpr bit_value operator~(
 
 // Returns the result of a bitwise and between the left and right hand sides
 constexpr bit_value operator&(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -355,7 +355,7 @@ constexpr bit_value operator&(
 
 // Returns the result of a bitwise or between the left and right hand sides
 constexpr bit_value operator|(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -365,7 +365,7 @@ constexpr bit_value operator|(
 
 // Returns the result of a bitwise xor between the left and right hand sides
 constexpr bit_value operator^(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -379,7 +379,7 @@ constexpr bit_value operator^(
 // -------------------- BIT VALUE: COMPARISON OPERATORS --------------------- //
 // Checks if the left hand side is equal to the right hand side
 constexpr bool operator==(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -388,7 +388,7 @@ constexpr bool operator==(
 
 // Checks if the left hand side is non equal to the right hand side
 constexpr bool operator!=(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -397,7 +397,7 @@ constexpr bool operator!=(
 
 // Checks if the left hand side is less than the right hand side
 constexpr bool operator<(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -406,7 +406,7 @@ constexpr bool operator<(
 
 // Checks if the left hand side is less than or equal to the right hand side
 constexpr bool operator<=(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -415,7 +415,7 @@ constexpr bool operator<=(
 
 // Checks if the left hand side is greater than the right hand side
 constexpr bool operator>(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {
@@ -424,7 +424,7 @@ constexpr bool operator>(
 
 // Checks if the left hand side is greater than or equal to the right hand side
 constexpr bool operator>=(
-    bit_value lhs, 
+    bit_value lhs,
     bit_value rhs
 ) noexcept
 {

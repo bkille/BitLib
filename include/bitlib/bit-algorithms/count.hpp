@@ -73,7 +73,7 @@ count(
                 result += hn::ReduceSum(d, popcntV);
             }
 
-            // Remaining 
+            // Remaining
             for (; it != last.base(); ++it) {
                 result += _popcnt(*it);
             }
@@ -81,10 +81,10 @@ count(
 #endif
         {
             result += std::transform_reduce(
-                    it, 
-                    last.base(), 
-                    0, 
-                    std::plus{}, 
+                    it,
+                    last.base(),
+                    0,
+                    std::plus{},
                     [](word_type word) {return _popcnt(word); }
             );
         }
@@ -95,7 +95,7 @@ count(
     // Computation when bits belong to the same underlying word
     } else {
         result = _popcnt(
-            _bextr<word_type>(*first.base(), first.position(), last.position() 
+            _bextr<word_type>(*first.base(), first.position(), last.position()
               - first.position())
         );
     }

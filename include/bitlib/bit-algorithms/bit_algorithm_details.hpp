@@ -1,7 +1,7 @@
 // ========================= BIT ALGORITHM DETAILS  ========================= //
 // Project: The Experimental Bit Algorithms Library
 // Name: bit_algorithm_details.hpp
-// Description: A set of utilities to assist in writing algorithms 
+// Description: A set of utilities to assist in writing algorithms
 // Creator: Vincent Reverdy
 // Contributor(s): Vincent Reverdy [2019]
 //                 Collin Gress [2019]
@@ -26,19 +26,19 @@ namespace bit {
 
 
 // -------------------------- Iterator Algorithms --------------------------- //
-// Returns the number of increments needed to get to last from first. 
+// Returns the number of increments needed to get to last from first.
 // May be negative if last comes before first (Only when input is RAI)
 template <class InputIt>
-typename bit_iterator<InputIt>::difference_type 
+typename bit_iterator<InputIt>::difference_type
     distance(bit_iterator<InputIt> first,
              bit_iterator<InputIt> last
 )
 {
-    _assert_range_viability(first, last); 
+    _assert_range_viability(first, last);
     using word_type = typename bit_iterator<InputIt>::word_type;
     using size_type = typename bit_iterator<InputIt>::size_type;
     constexpr size_type digits = binary_digits<word_type>::value;
-    return std::distance(first.base(), last.base())*digits 
+    return std::distance(first.base(), last.base())*digits
            + (last.position() - first.position());
 }
 
@@ -46,13 +46,13 @@ typename bit_iterator<InputIt>::difference_type
 template <class InputIt, class Distance>
 void advance(bit_iterator<InputIt>& first, Distance n)
 {
-    first += n;    
+    first += n;
 }
 
 template<class ForwardIt>
 bit_iterator<ForwardIt> next(
-        bit_iterator<ForwardIt> bit_it, 
-        typename bit_iterator<ForwardIt>::difference_type n = 1 
+        bit_iterator<ForwardIt> bit_it,
+        typename bit_iterator<ForwardIt>::difference_type n = 1
 ) {
     return bit_it + n;
 }
@@ -94,7 +94,7 @@ constexpr bool is_within(
             || is_within<N-digits>(first + digits, last)
         ;
     } else if (remainder_bits >= 0) {
-        return (first.base() == last.base() 
+        return (first.base() == last.base()
                 && first.position() + remainder_bits >= last.position()
                ) || (std::next(first.base()) == last.base()
                    && (static_cast<int>(first.position()) + remainder_bits - digits >= static_cast<int>(last.position()))
@@ -108,15 +108,15 @@ template <class T, class InputIt>
 T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
 {
     using native_word_type = typename bit_iterator<InputIt>::word_type;
-    constexpr T digits = binary_digits<native_word_type>::value; 
+    constexpr T digits = binary_digits<native_word_type>::value;
     assert(digits >= len);
     T offset = digits - first.position();
     T ret_word = *first.base() >> first.position();
 
     // We've already assigned enough bits
-    if (len <= offset) { 
+    if (len <= offset) {
         return ret_word;
-    } 
+    }
 
     InputIt it = std::next(first.base());
     len -= offset;
@@ -124,8 +124,8 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     // TODO define a mask and use the _bitblend that takes in the extra mask
     while (len > digits) {
         ret_word = _bitblend(
-                ret_word,      
-                static_cast<T>(static_cast<T>(*it) << offset),   
+                ret_word,
+                static_cast<T>(static_cast<T>(*it) << offset),
                 offset,
                 digits
         );
@@ -135,8 +135,8 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     }
     // Assign remaining len bits of last word
     ret_word = _bitblend(
-            ret_word,            
-            static_cast<T>(static_cast<T>(*it) << offset),   
+            ret_word,
+            static_cast<T>(static_cast<T>(*it) << offset),
             offset,
             len
     );
@@ -152,16 +152,16 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
         //)
 //{
     //using native_word_type = typename bit_iterator<InputIt>::word_type;
-    //constexpr T native_digits = binary_digits<native_word_type>::value; 
-    //constexpr T ret_digits = binary_digits<T>::value; 
+    //constexpr T native_digits = binary_digits<native_word_type>::value;
+    //constexpr T ret_digits = binary_digits<T>::value;
     //assert(ret_digits >= len);
     //bits_read = native_digits - first.position();
     //T ret_word = *first.base() >> first.position();
 
-    //// TODO vincent mentioned that we should aim for only 1 return function 
+    //// TODO vincent mentioned that we should aim for only 1 return function
     //// per function. However I'm not sure how that can be accomplished here
     //// without suffering a minor performance loss
-   
+
     //// We have reached the last iterator
     //if (first.base() == last.base()) {
         //bits_read -= (native_digits - last.position());
@@ -170,7 +170,7 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     //// We've already assigned enough bits
     //if (len <= bits_read) {
         //return ret_word;
-    //} 
+    //}
 
     //InputIt it = std::next(first.base());
     //len -= bits_read;
@@ -178,8 +178,8 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     //// TODO define a mask and use the _bitblend that takes in the extra mask
     //while (len > native_digits && it != last.base()) {
         //ret_word = _bitblend(
-                //ret_word,      
-                //static_cast<T>(static_cast<T>(*it) << bits_read),   
+                //ret_word,
+                //static_cast<T>(static_cast<T>(*it) << bits_read),
                 //bits_read,
                 //native_digits
         //);
@@ -192,15 +192,15 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     //if (it == last.base()) {
         //bits_read -= (native_digits - last.position());
         //ret_word = _bitblend(
-                //ret_word,            
-                //static_cast<T>(static_cast<T>(*it) << bits_read),   
+                //ret_word,
+                //static_cast<T>(static_cast<T>(*it) << bits_read),
                 //bits_read,
                 //last.position()
         //);
-    //} else { 
+    //} else {
         //ret_word = _bitblend(
-                //ret_word,            
-                //static_cast<T>(static_cast<T>(*it) << bits_read),   
+                //ret_word,
+                //static_cast<T>(static_cast<T>(*it) << bits_read),
                 //bits_read,
                 //len
         //);
@@ -211,13 +211,13 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
 
 // Writes len bits from src beginning at dstIt
 template <class src_type, class OutputIt>
-void write_word(src_type src, bit_iterator<OutputIt> dst_bit_it, 
+void write_word(src_type src, bit_iterator<OutputIt> dst_bit_it,
         src_type len=binary_digits<src_type>::value
         )
 {
     using dst_type = typename bit_iterator<OutputIt>::word_type;
-    constexpr dst_type dst_digits = binary_digits<dst_type>::value; 
-    constexpr dst_type src_digits = binary_digits<src_type>::value; 
+    constexpr dst_type dst_digits = binary_digits<dst_type>::value;
+    constexpr dst_type src_digits = binary_digits<src_type>::value;
 
     if constexpr (dst_digits >= src_digits) {
         if (dst_bit_it.position() == 0 && len == dst_digits) {
@@ -229,12 +229,12 @@ void write_word(src_type src, bit_iterator<OutputIt> dst_bit_it,
                    src << dst_bit_it.position(),
                    dst_bit_it.position(),
                    std::min<src_type>(
-                       dst_digits - dst_bit_it.position(), 
+                       dst_digits - dst_bit_it.position(),
                        len
                    )
-            ); 
+            );
             if (len > dst_digits - dst_bit_it.position()) {
-                OutputIt overflow_dst = std::next(dst_bit_it.base()); 
+                OutputIt overflow_dst = std::next(dst_bit_it.base());
                 *overflow_dst = _bitblend<src_type>(
                         *overflow_dst,
                         src >> (dst_digits - dst_bit_it.position()),
@@ -311,7 +311,7 @@ ForwardIt word_shift_right_dispatch(ForwardIt first,
     std::rotate(first, it, last);
     it = first;
     std::advance(it, n);
-    std::fill(first, it, 0); 
+    std::fill(first, it, 0);
     return std::next(first, n);
 }
 
@@ -327,7 +327,7 @@ ForwardIt word_shift_right_dispatch(ForwardIt first,
     ForwardIt it = first;
     std::advance(it, d-n);
     auto ret = std::copy_backward(first, it, last);
-    std::fill(first, ret, 0); 
+    std::fill(first, ret, 0);
     return ret;
 }
 
@@ -338,16 +338,16 @@ ForwardIt word_shift_right(ForwardIt first,
 )
 {
     return word_shift_right_dispatch(
-        first, 
+        first,
         last,
         n,
         typename std::iterator_traits<ForwardIt>::iterator_category());
 }
 
-// returns a word consisting of all one bits 
+// returns a word consisting of all one bits
 constexpr auto _all_ones() {
     return -1;
-} 
+}
 
 // returns a word consisting of all zero bits
 constexpr auto _all_zeros() {
@@ -362,9 +362,9 @@ bool _is_aligned_lsb(bit_iterator<It> iter) {
 
 // checks that maybe_end is one position past the last bit of base
 template <class ForwardIt>
-bool _is_one_past_last_bit(bit_iterator<ForwardIt> maybe_end, 
+bool _is_one_past_last_bit(bit_iterator<ForwardIt> maybe_end,
     ForwardIt base) {
-    return maybe_end.position() == 0 && std::next(base) == maybe_end.base(); 
+    return maybe_end.position() == 0 && std::next(base) == maybe_end.base();
 }
 
 // checks that two bit iterators point to the same word
@@ -376,8 +376,8 @@ constexpr bool _in_same_word(bit_iterator<It> lhs, bit_iterator<It> rhs) {
 // simple alias for right shift
 template <class WordType>
 WordType _shift_towards_lsb(WordType word, std::size_t n) {
-    return word >> n; 
-} 
+    return word >> n;
+}
 
 // simple alias for left shift
 template <class WordType>
@@ -386,14 +386,14 @@ WordType _shift_towards_msb(WordType word, std::size_t n) {
 }
 
 /* Used to read partial/full words and pad any missing digits. Will not
- * read outside of the word pointed to by the first iterator (see case 4) 
+ * read outside of the word pointed to by the first iterator (see case 4)
  *
  * Case 0: 01011101
  *        L       F
  * Case 1: 01011101 -> padded with 0s -> 00001101
  *            L   F
- * Case 2: 01011101 -> padded with 1s -> 01011111 
- *        L    F 
+ * Case 2: 01011101 -> padded with 1s -> 01011111
+ *        L    F
  * Case 3: 01011101 -> padded with 0s -> 00011100
  *           L  F
  * Case 4: 01011101 11111111 -> treated as 01011101
@@ -404,7 +404,7 @@ WordType _shift_towards_msb(WordType word, std::size_t n) {
  * is undefined
  */
 template <class It>
-typename bit_iterator<It>::word_type _padded_read(bit_iterator<It> first, 
+typename bit_iterator<It>::word_type _padded_read(bit_iterator<It> first,
     bit_iterator<It> last, const bit::bit_value bv) {
 
     using word_type = typename bit_iterator<It>::word_type;
@@ -424,7 +424,7 @@ typename bit_iterator<It>::word_type _padded_read(bit_iterator<It> first,
                 mask = _shift_towards_lsb(all_ones, num_digits - last_position);
                 return read & mask;
             } else {
-                mask = _shift_towards_msb(all_ones, last_position); 
+                mask = _shift_towards_msb(all_ones, last_position);
                 return read | mask;
             }
         } else {
@@ -435,16 +435,16 @@ typename bit_iterator<It>::word_type _padded_read(bit_iterator<It> first,
         if (!_in_same_word(first, last)) {
             // Case 2
             if (bv == bit0) {
-                mask = _shift_towards_msb(all_ones, first_position); 
+                mask = _shift_towards_msb(all_ones, first_position);
                 return read & mask;
             } else {
-                mask = _shift_towards_lsb(all_ones, num_digits - first_position); 
+                mask = _shift_towards_lsb(all_ones, num_digits - first_position);
                 return read | mask;
             }
         } else {
             // Case 3
             if (bv == bit0) {
-                mask = _shift_towards_msb(all_ones, first_position); 
+                mask = _shift_towards_msb(all_ones, first_position);
                 mask &= _shift_towards_lsb(all_ones, num_digits - last_position);
                 return read & mask;
             } else {
@@ -452,7 +452,7 @@ typename bit_iterator<It>::word_type _padded_read(bit_iterator<It> first,
                 mask |= _shift_towards_msb(all_ones, last_position);
                 return read | mask;
             }
-        } 
+        }
     }
 }
 // -------------------------------------------------------------------------- //
