@@ -13,25 +13,6 @@
 #define _BIT_ALGORITHM_HPP_INCLUDED
 #define _Bit_Algorithm_VERSION_MAJOR @Bit_Algorithm_VERSION_MAJOR@
 #define _Bit_Algorithm_VERSION_MINOR @Bit_Algorithm_VERSION_MINOR@
-#if __AVX512BW__
-#   define SIMDPP_ARCH_X86_AVX512BW true
-#elif __AVX512DQ__
-#   define SIMDPP_ARCH_X86_AVX512DQ true
-#elif __AVX512VL__
-#   define SIMDPP_ARCH_X86_AVX512VL true
-#elif __AVX512F__
-#   define SIMDPP_ARCH_X86_AVX512DQ true
-#elif __AVX2__
-#   define SIMDPP_ARCH_X86_AVX2 true
-#elif __AVX__
-#   define SIMDPP_ARCH_X86_AVX true
-#elif __SSE4_1__
-#   define SIMDPP_ARCH_X86_SSE4_1 true
-#elif __SSE3__
-#   define SIMDPP_ARCH_X86_SSE3 true
-#elif __SSE2__
-#   define SIMDPP_ARCH_X86_SSE2 true
-#endif
 // ========================================================================== //
 
 
