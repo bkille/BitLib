@@ -278,6 +278,14 @@ int main(int argc, char** argv) {
             BM_BitCount, 
             "bit::count (small) (AA)",
             size_small);
+    register_word_containers<decltype(BM_DynamicBitsetCount), std::vector>(
+            BM_DynamicBitsetCount, 
+            "dynamic_bitset::count (small)",
+            size_small);
+    register_word_containers<decltype(BM_BitArrayCount), std::vector>(
+            BM_BitArrayCount, 
+            "bitarray::count (small)",
+            size_small);
     register_bool_containers<decltype(BM_BoolCount), std::vector>(
             BM_BoolCount, 
             "std::count (small)",
@@ -285,6 +293,14 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitCount), std::vector>(
             BM_BitCount, 
             "bit::count (huge) (AA)",
+            size_huge);
+    register_word_containers<decltype(BM_DynamicBitsetCount), std::vector>(
+            BM_DynamicBitsetCount, 
+            "dynamic_bitset::count (huge)",
+            size_huge);
+    register_word_containers<decltype(BM_BitArrayCount), std::vector>(
+            BM_BitArrayCount, 
+            "bitarray::count (huge)",
             size_huge);
     register_bool_containers<decltype(BM_BoolCount), std::vector>(
             BM_BoolCount, 
