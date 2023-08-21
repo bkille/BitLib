@@ -4,7 +4,7 @@
 #include <math.h>
 #include "bitlib/bitlib.hpp"
 #include "bit_array.h"
-#include <sul/dynamic_bitset.hpp>
+#include "sul/dynamic_bitset.hpp"
 
 
 auto BM_BitShiftLeft = [](benchmark::State& state, auto input) {

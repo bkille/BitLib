@@ -394,6 +394,14 @@ int main(int argc, char** argv) {
             BM_BitFill, 
             "bit::fill (small) (UU)",
             size_small);
+    register_bool_containers<decltype(BM_DynamicBitsetFill), std::vector>(
+            BM_DynamicBitsetFill, 
+            "dynamic_bitset::fill (small)",
+            size_small);
+    register_bool_containers<decltype(BM_BitArrayFill), std::vector>(
+            BM_BitArrayFill, 
+            "bitarray::fill (small)",
+            size_small);
     register_bool_containers<decltype(BM_BoolFill), std::vector>(
             BM_BoolFill, 
             "std::fill (small)",
@@ -401,6 +409,14 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitFill), std::vector>(
             BM_BitFill, 
             "bit::fill (huge) (UU)",
+            size_huge);
+    register_bool_containers<decltype(BM_DynamicBitsetFill), std::vector>(
+            BM_DynamicBitsetFill, 
+            "dynamic_bitset::fill (huge)",
+            size_huge);
+    register_bool_containers<decltype(BM_BitArrayFill), std::vector>(
+            BM_BitArrayFill, 
+            "bitarray::fill (huge)",
             size_huge);
     register_bool_containers<decltype(BM_BoolFill), std::vector>(
             BM_BoolFill, 
