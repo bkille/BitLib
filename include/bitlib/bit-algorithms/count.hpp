@@ -13,6 +13,7 @@
 #include <numeric>
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
+#include "bitlib/bit-algorithms//libpopcnt.h"
 // Third-party libraries
 #ifdef BITLIB_HWY
 #include "hwy/highway.h"
@@ -56,37 +57,39 @@ count(
             result = _popcnt(first_value);
             ++it;
         }
-#ifdef BITLIB_HWY
-        // ReduceSum not implemented for unsigned char
-        if constexpr (digits > 8)
-        {
-            // Align to boundary
-            for (; it != last.base() && !is_aligned(&(*it), 64); ++it) {
-                result += _popcnt(*it);
-            }
+// The SIMD implementation here is actually slower than the standard
+//#ifdef BITLIB_HWY
+        //// ReduceSum not implemented for unsigned char
+        //if constexpr (digits > 8)
+        //{
+            //// Align to boundary
+            //for (; it != last.base() && !is_aligned(&(*it), 64); ++it) {
+                //result += _popcnt(*it);
+            //}
 
-            // SIMD
-            hn::ScalableTag<word_type> d;
-            for (; std::distance(it, last.base()) >= hn::Lanes(d); it += hn::Lanes(d))
-            {
-                const auto popcntV = hn::PopulationCount(hn::Load(d, &*it));
-                result += hn::ReduceSum(d, popcntV);
-            }
+            //// SIMD
+            //hn::ScalableTag<word_type> d;
+            //for (; std::distance(it, last.base()) >= hn::Lanes(d); it += hn::Lanes(d))
+            //{
+                //const auto popcntV = hn::PopulationCount(hn::Load(d, &*it));
+                //result += hn::ReduceSum(d, popcntV);
+            //}
 
-            // Remaining
-            for (; it != last.base(); ++it) {
-                result += _popcnt(*it);
-            }
-        } else
-#endif
+            //// Remaining
+            //for (; it != last.base(); ++it) {
+                //result += _popcnt(*it);
+            //}
+        //} else
+//#endif
         {
-            result += std::transform_reduce(
-                    it,
-                    last.base(),
-                    0,
-                    std::plus{},
-                    [](word_type word) {return _popcnt(word); }
-            );
+            //result += std::transform_reduce(
+                    //it,
+                    //last.base(),
+                    //0,
+                    //std::plus{},
+                    //[](word_type word) {return popcnt(word); }
+            //);
+            result += popcnt(&*it, std::distance(it, last.base()));
         }
         if (last.position() != 0) {
             word_type last_value = *last.base() << (digits - last.position());
