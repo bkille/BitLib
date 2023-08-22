@@ -20,6 +20,7 @@
 // Third-party libraries
 #ifdef BITLIB_HWY
 #include "hwy/highway.h"
+HWY_BEFORE_NAMESPACE();
 #endif
 // Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
@@ -83,5 +84,8 @@ void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
 
 // ========================================================================== //
 } // namespace bit
+#ifdef BITLIB_HWY
+HWY_AFTER_NAMESPACE();
+#endif
 #endif // _FILL_HPP_INCLUDED
 // ========================================================================== //

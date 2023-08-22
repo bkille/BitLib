@@ -17,6 +17,7 @@
 // Third-party libraries
 #ifdef BITLIB_HWY
 #include "hwy/highway.h"
+HWY_BEFORE_NAMESPACE();
 #endif
 // Miscellaneous
 
@@ -113,6 +114,9 @@ count(
 }
 
 } // namespace bit
+#ifdef BITLIB_HWY
+HWY_AFTER_NAMESPACE();
+#endif
 
 // ========================================================================== //
 #endif // _COUNT_HPP_INCLUDED

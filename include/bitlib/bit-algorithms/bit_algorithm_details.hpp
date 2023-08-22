@@ -105,7 +105,7 @@ constexpr bool is_within(
 
 // Get next len bits beginning at start and store them in a word of type T
 template <class T, class InputIt>
-T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
+T get_word(bit_iterator<InputIt> first, size_t len=binary_digits<T>::value)
 {
     using native_word_type = typename bit_iterator<InputIt>::word_type;
     constexpr T digits = binary_digits<native_word_type>::value;
