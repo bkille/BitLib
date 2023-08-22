@@ -13,6 +13,7 @@
 // ============================== PREAMBLE ================================== //
 // C++ standard library
 #include <functional>
+#include <type_traits>
 // Project sources
 #include "bitlib/bit-iterator/bit.hpp"
 // Third-party libraries
@@ -73,14 +74,40 @@ constexpr bit_iterator<RandomAccessIt> transform(
         advance(first, partial_bits_to_op);
         it++;
     }
+    auto firstIt = first.base();
     if (remaining_bits_to_op > 0) {
         const bool is_first_aligned = first.position() == 0;
         //size_type words_to_op = ::std::ceil(remaining_bits_to_op / static_cast<float>(digits));
         // d_first will be aligned at this point
         if (is_first_aligned && remaining_bits_to_op > digits) {
-            auto N = ::std::distance(first.base(), last.base());
-            it = std::transform(first.base(), last.base(), it, unary_op);
-            first += digits * N;
+            auto N = ::std::distance(firstIt, last.base());
+#ifdef BITLIB_HWY
+            if constexpr (std::is_same_v<UnaryOperation, std::bit_not<word_type>>)
+            {
+                // Align to 64 bit boundary
+                for (; firstIt != last.base() && !is_aligned(&*firstIt, 64); firstIt++, it++) {
+                    *it = unary_op(*firstIt);
+                }
+
+                bool out_is_aligned = is_aligned(&*it, 64);
+
+                constexpr hn::ScalableTag<word_type> d;
+                for (; std::distance(firstIt, last.base()) >= hn::Lanes(d); firstIt += hn::Lanes(d), it += hn::Lanes(d))
+                {
+                    const auto v = hn::Not(hn::Load(d, &*firstIt));
+                    if (out_is_aligned)
+                    {
+                        hn::Store(v, d, &*it);
+                    } else {
+                        hn::StoreU(v, d, &*it);
+                    }
+                }
+            }
+#endif
+            size_t std_dist = ::std::distance(firstIt, last.base());
+            it = std::transform(firstIt, last.base(), it, unary_op);
+            firstIt += std_dist;
+            first = bit_iterator<RandomAccessIt>(firstIt);
             remaining_bits_to_op -= digits * N;
         } else {
             while (remaining_bits_to_op >= digits) {
