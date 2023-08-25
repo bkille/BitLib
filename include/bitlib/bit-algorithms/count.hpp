@@ -83,14 +83,17 @@ count(
         //} else
 //#endif
         {
+            // std:: version
             //result += std::transform_reduce(
                     //it,
                     //last.base(),
                     //0,
                     //std::plus{},
-                    //[](word_type word) {return popcnt(word); }
+                    //[](word_type word) {return _popcnt(word); }
             //);
-            result += popcnt(&*it, std::distance(it, last.base()));
+
+            // libpopcnt
+            result += popcnt(&*it, (digits / 8) * std::distance(it, last.base()));
         }
         if (last.position() != 0) {
             word_type last_value = *last.base() << (digits - last.position());
