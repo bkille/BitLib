@@ -123,7 +123,7 @@ T get_word(bit_iterator<InputIt> first, size_t len=binary_digits<T>::value)
     // Fill up ret_word starting at bit [offset] using it
     // TODO define a mask and use the _bitblend that takes in the extra mask
     while (len > digits) {
-        ret_word = _bitblend(
+        ret_word = _bitblend<T>(
                 ret_word,
                 static_cast<T>(static_cast<T>(*it) << offset),
                 offset,
@@ -134,7 +134,7 @@ T get_word(bit_iterator<InputIt> first, size_t len=binary_digits<T>::value)
         len -= digits;
     }
     // Assign remaining len bits of last word
-    ret_word = _bitblend(
+    ret_word = _bitblend<T>(
             ret_word,
             static_cast<T>(static_cast<T>(*it) << offset),
             offset,
