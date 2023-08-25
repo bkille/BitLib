@@ -120,7 +120,7 @@ bit_iterator<RandomAccessIt> shift_left(
         }
 
         const hn::ScalableTag<word_type> d;
-        for (; std::distance(it, new_last_base) >= hn::Lanes(d) + !is_last_aligned; it += hn::Lanes(d))
+        for (; std::distance(it, new_last_base) >= hn::Lanes(d) + 1 + !is_last_aligned; it += hn::Lanes(d))
         {
             const auto v = hn::ShiftRightSame(hn::Load(d, &*it), remaining_bitshifts);
             const auto v_plus1 = hn::ShiftLeftSame(hn::LoadU(d, &*(it+1)), digits - remaining_bitshifts);
