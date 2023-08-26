@@ -115,7 +115,7 @@ auto BM_BitTransformBinaryAA = [](benchmark::State& state, auto input) {
     auto bitvec2 = get_random_vec<WordType>(container_size);
     auto first2 = bit::bit_iterator<decltype(std::begin(bitvec2))>(std::begin(bitvec2));
 
-    auto binary_op = std::bit_and<WordType>();
+    constexpr auto binary_op = std::bit_and<WordType>();
     for (auto _ : state)
     {
         bit::transform(
@@ -140,7 +140,7 @@ auto BM_BitTransformBinaryUU = [](benchmark::State& state, auto input) {
     auto bitvec2 = get_random_vec<WordType>(container_size);
     auto first2 = bit::bit_iterator<decltype(std::begin(bitvec2))>(std::begin(bitvec2));
 
-    auto binary_op = std::bit_and<WordType>();
+    constexpr auto binary_op = std::bit_and<WordType>();
     for (auto _ : state)
     {
         bit::transform(
