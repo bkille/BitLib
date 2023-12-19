@@ -98,9 +98,9 @@ void register_bool_containers(F test_lambda_f, std::string func_name, unsigned i
 //BENCHMARK_MAIN();
 int main(int argc, char** argv) {
     unsigned int size_small = 1 << 8;
-    unsigned int size_medium = 1 << 8;
-    unsigned int size_large = 1 << 16;
-    unsigned int size_huge = 1 << 25;
+    unsigned int size_medium = 1 << 16;
+    unsigned int size_large = 1 << 24;
+    unsigned int size_huge = 1 << 31;
     
     // Read/write benchmarks
     register_word_containers<decltype(BM_BitSet), std::vector>(
