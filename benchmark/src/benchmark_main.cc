@@ -207,6 +207,10 @@ int main(int argc, char** argv) {
             BM_BitReverse_UU, 
             "bit::reverse (small) (UU)",
             size_small);
+    register_word_containers<decltype(BM_BitArrayReverse_UU), std::vector>(
+            BM_BitArrayReverse_UU, 
+            "bitarray::reverse (small) (UU)",
+            size_small);
     register_bool_containers<decltype(BM_BoolReverse), std::vector>(
             BM_BoolReverse, 
             "std::reverse (small)",
@@ -218,6 +222,14 @@ int main(int argc, char** argv) {
     register_word_containers<decltype(BM_BitReverse_UU), std::vector>(
             BM_BitReverse_UU, 
             "bit::reverse (huge) (UU)",
+            size_huge);
+    register_word_containers<decltype(BM_BitArrayReverse), std::vector>(
+            BM_BitArrayReverse, 
+            "bitarray::reverse (huge)",
+            size_huge);
+    register_word_containers<decltype(BM_BitArrayReverse_UU), std::vector>(
+            BM_BitArrayReverse_UU, 
+            "bitarray::reverse (huge) (UU)",
             size_huge);
     register_bool_containers<decltype(BM_BoolReverse), std::vector>(
             BM_BoolReverse, 
