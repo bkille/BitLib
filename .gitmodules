@@ -1,0 +1,9 @@
+[submodule "benchmark/ext/BitArray"]
+	path = benchmark/ext/BitArray
+	url = https://github.com/noporpoise/BitArray.git
+[submodule "benchmark/ext/itsy_bitsy"]
+	path = benchmark/ext/itsy_bitsy
+	url = https://github.com/ThePhD/itsy_bitsy.git
+[submodule "benchmark/ext/dynamic_bitset"]
+	path = benchmark/ext/dynamic_bitset
+	url = https://github.com/pinam45/dynamic_bitset.git
