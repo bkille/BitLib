@@ -32,6 +32,30 @@ auto BM_BitReverse_UU = [](benchmark::State& state, auto input) {
     }
 };
 
+auto BM_BitArrayReverse = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    BIT_ARRAY* bitarr = bit_array_create(total_bits);
+    for (auto _ : state) {
+        bit_array_reverse(bitarr);
+        benchmark::ClobberMemory();
+    }
+    bit_array_free(bitarr);
+};
+
+auto BM_BitArrayReverse_UU = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    BIT_ARRAY* bitarr = bit_array_create(total_bits);
+    for (auto _ : state) {
+        bit_array_reverse_region(bitarr, 2, total_bits - 5);
+        benchmark::ClobberMemory();
+    }
+    bit_array_free(bitarr);
+};
+
 auto BM_BoolReverse = [](benchmark::State& state, auto input) {
     using container_type = std::vector<bool>;
     using num_type = typename container_type::value_type;

@@ -15,6 +15,7 @@
 // Third-party libraries
 #ifdef BITLIB_HWY
 #include "hwy/highway.h"
+HWY_BEFORE_NAMESPACE();
 #endif
 
 // Miscellaneous
@@ -98,13 +99,13 @@ constexpr bit_iterator<RandomAccessIt> find(
     }
 #endif
 
-    // Finish out the remainder with typical for loop
-    while (it != last.base()) {
-        if ((bv == bit1 && (*it == 0)) || (bv == bit0 && (*it == static_cast<word_type>(-1)))) {
-            ++it;
-            continue;
-        }
+    if (bv == bit1) {
+        it = std::find_if(it, last.base(), [](word_type a) {return a != 0;});
+    } else {
+        it = std::find_if(it, last.base(), [](word_type a) {return a != static_cast<word_type>(-1);});
+    }
 
+    if (it != last.base()) {
         size_type num_trailing_complementary_bits = (bv == bit0)
             ? _tzcnt(static_cast<word_type>(~*it))
             : _tzcnt(static_cast<word_type>(*it));
@@ -123,6 +124,9 @@ constexpr bit_iterator<RandomAccessIt> find(
 
 // ========================================================================== //
 } // namespace bit
+#ifdef BITLIB_HWY
+HWY_AFTER_NAMESPACE();
+#endif
 
 #endif // _FIND_HPP_INCLUDED
 // ========================================================================== //
