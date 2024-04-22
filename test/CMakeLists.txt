@@ -23,7 +23,7 @@ endif()
 
 # specify test-specific libraries
 include_directories(${googletest_SOURCE_DIR}/googletest/include/gtest src/utils)
-target_link_libraries(bitlib-tests PUBLIC gtest gtest_main -pthread -lgcov --coverage)
+target_link_libraries(bitlib-tests PUBLIC GTest::gtest GTest::gtest_main -pthread -lgcov --coverage)
 
 set(BITLIB_GTEST_REPEAT 1)
 
