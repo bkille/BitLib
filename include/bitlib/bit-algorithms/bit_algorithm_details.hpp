@@ -278,18 +278,17 @@ void write_word(src_type src, bit_iterator<OutputIt> dst_bit_it,
 
 // Shifts the range [first, last) to the left by n, filling the empty
 // bits with 0
-// NOT OPTIMIZED. Will be replaced with std::shift eventually.
-template <class ForwardIt>
-ForwardIt word_shift_left(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n
+template <class RandomAccessIt>
+RandomAccessIt word_shift_left(RandomAccessIt first,
+                          RandomAccessIt last,
+                          typename RandomAccessIt::difference_type n
 )
 {
     if (n <= 0) return last;
     if (n >= distance(first, last)) return first;
-    ForwardIt mid = first + n;
+    RandomAccessIt mid = first + n;
     auto ret = std::move(mid, last, first);
-    std::fill(ret, last, 0);
+    //std::fill(ret, last, 0);
     return ret;
 }
 
