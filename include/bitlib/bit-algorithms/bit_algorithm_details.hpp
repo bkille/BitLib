@@ -288,7 +288,6 @@ RandomAccessIt word_shift_left(RandomAccessIt first,
     if (n >= distance(first, last)) return first;
     RandomAccessIt mid = first + n;
     auto ret = std::move(mid, last, first);
-    //std::fill(ret, last, 0);
     return ret;
 }
 
@@ -296,51 +295,17 @@ RandomAccessIt word_shift_left(RandomAccessIt first,
 // Shifts the range [first, right) to the left by n, filling the empty
 // bits with 0
 // NOT OPTIMIZED. Will be replaced with std::shift eventually.
-template <class ForwardIt>
-ForwardIt word_shift_right_dispatch(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n,
-                          std::forward_iterator_tag
-) {
-        auto d = distance(first, last);
-    if (n <= 0) return first;
-    if (n >= d) return last;
-    ForwardIt it = first;
-    std::advance(it, d-n);
-    std::rotate(first, it, last);
-    it = first;
-    std::advance(it, n);
-    std::fill(first, it, 0);
-    return std::next(first, n);
-}
-
-template <class ForwardIt>
-ForwardIt word_shift_right_dispatch(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n,
-                          std::random_access_iterator_tag
-) {
+template <class RandomAccessIt>
+RandomAccessIt word_shift_right(RandomAccessIt first,
+                          RandomAccessIt last,
+                          typename RandomAccessIt::difference_type n
+)
+{
     auto d = distance(first, last);
     if (n <= 0) return first;
     if (n >= d) return last;
-    ForwardIt it = first;
-    std::advance(it, d-n);
-    auto ret = std::copy_backward(first, it, last);
-    std::fill(first, ret, 0);
-    return ret;
-}
-
-template <class ForwardIt>
-ForwardIt word_shift_right(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n
-)
-{
-    return word_shift_right_dispatch(
-        first,
-        last,
-        n,
-        typename std::iterator_traits<ForwardIt>::iterator_category());
+    std::move_backward(first, last-n, last);
+    return std::next(first, n);
 }
 
 // returns a word consisting of all one bits
