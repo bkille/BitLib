@@ -152,6 +152,10 @@ bit_iterator<RandomAccessIt> shift_left(
             );
             first += bits_left;
         }
+        // https://en.cppreference.com/w/cpp/algorithm/shift
+        // "Elements that are in the original range but not the new range 
+        // are left in a valid but unspecified state."
+        //
         //bit::fill(first, last, bit::bit0);
         return first;
     }
@@ -162,7 +166,6 @@ bit_iterator<RandomAccessIt> shift_left(
     const size_type offset = middle.position();
 
     // At this point, first is aligned
-    // Can we juse use std::shift?
     if (offset == 0)
     {
         first = bit::bit_iterator<RandomAccessIt>(
@@ -176,6 +179,10 @@ bit_iterator<RandomAccessIt> shift_left(
             write_word<word_type, RandomAccessIt>(*last.base(), first, last.position());
             first += last.position();
         }
+        // https://en.cppreference.com/w/cpp/algorithm/shift
+        // "Elements that are in the original range but not the new range 
+        // are left in a valid but unspecified state."
+        //
         //bit::fill(first, last, bit::bit0);
         return first;
     }
@@ -249,7 +256,8 @@ bit_iterator<RandomAccessIt> shift_right(
     const bool is_first_aligned = first.position() == 0;
     const bool is_last_aligned = last.position() == 0;
     constexpr auto digits = binary_digits<word_type>::value;
-    auto d = distance(first, last);
+    auto d = bit::distance(first, last);
+    bit_iterator<RandomAccessIt> middle = last - n;
 
     // Out of range cases
     if (n <= 0) return first;
@@ -267,83 +275,103 @@ bit_iterator<RandomAccessIt> shift_right(
                 first.position(),
                 (is_last_aligned ? digits : last.position()) - first.position()
         );
-        return bit_iterator<RandomAccessIt>(
-                first.base(),
-                first.position() +  n
-        );
+        return first + n;
+    }
+
+    // Align last
+    if (last.position() != 0)
+    {
+        const size_type bits_to_align = std::min<size_type>(
+                last.position(), 
+                bit::distance(first, middle));
+        const word_type word_to_write = get_word<word_type, RandomAccessIt>(
+                middle - bits_to_align, 
+                bits_to_align);
+        write_word<word_type, RandomAccessIt>(
+                word_to_write,
+                last - bits_to_align, 
+                bits_to_align);
+        middle -= bits_to_align;
+        last   -= bits_to_align;
+
+        // Nothing left to do
+        if (middle == first)
+            return first + n;
     }
 
     // More initialization
-    size_type word_shifts = n / digits;
-    size_type remaining_bitshifts = n - digits*(word_shifts);
+    const size_type word_shifts = n / digits;
+    const size_type offset = middle.position();
 
-    // Multiple word case
-    word_type first_value = *first.base();
-    word_type last_value = !is_last_aligned ? *last.base() : 0;
-    word_type mask = is_first_aligned ?
-        static_cast<word_type>(-1)
-        :
-        static_cast<word_type>(
-                (static_cast<word_type>(1) << (digits - first.position())) - 1
-        ) << first.position();
-    *first.base() = *first.base() & mask;
-    // Shift words to the right
-    RandomAccessIt new_first_base = STD_SHIFT_RIGHT(
-        first.base(),
-        std::next(
-            last.base(),
-            !is_last_aligned),
-        word_shifts
-    );
-    bit_iterator<RandomAccessIt> d_first(new_first_base, first.position());
     // Shift bit sequence to the msb
-    if (remaining_bitshifts) {
-        auto it = is_last_aligned ? last.base() - 1 : last.base();
+    if (offset == 0) {
+        auto new_first = bit::bit_iterator<RandomAccessIt>(
+                STD_SHIFT_RIGHT(
+                    first.base(),
+                    last.base(),
+                    word_shifts),
+                first.position()
+        );
+        // https://en.cppreference.com/w/cpp/algorithm/shift
+        // "Elements that are in the original range but not the new range 
+        // are left in a valid but unspecified state."
+        //
+        //bit::fill(first, new_first, bit::bit0);
+        return first + n;
+    }
 
+    if (bit::distance(first, middle) >= digits)
+    {
 #ifdef BITLIB_HWY
         // Align to 64 bit boundary
         const hn::ScalableTag<word_type> d;
-        for (; it != new_first_base  && !is_aligned(&*(it - hn::Lanes(d) + 1), 64); it--) {
-            *it = _shld<word_type>(*it, *(it - 1), remaining_bitshifts);
+        while (std::prev(middle.base()) > first.base() && !is_aligned(&*(last.base() - hn::Lanes(d)), 64)) {
+            *std::prev(last.base()) = _shrd<word_type>(*std::prev(middle.base()), *middle.base(), offset);
+            last -= digits;
+            middle -= digits;
         }
 
-        for (; std::distance(new_first_base, it) >= hn::Lanes(d); it -= hn::Lanes(d))
+        while (std::distance(first.base(), middle.base()) > hn::Lanes(d) + 1)
         {
-            const auto v = hn::ShiftLeftSame(
-                    hn::Load(d, &*(it - hn::Lanes(d) + 1)),
-                    remaining_bitshifts);
-            const auto v_plus1 = hn::ShiftRightSame(
-                    hn::LoadU(d, &*(it - hn::Lanes(d))),
-                    digits - remaining_bitshifts);
-            hn::Store(v | v_plus1, d, &*(it - hn::Lanes(d) + 1));
+            const auto v = hn::ShiftRightSame(
+                    hn::LoadU(d, &*(middle.base() - hn::Lanes(d))),
+                    offset);
+            const auto v_plus1 = hn::ShiftLeftSame(
+                    hn::LoadU(d, &*(middle.base() - hn::Lanes(d) + 1)),
+                    digits - offset);
+            hn::Store(v | v_plus1, d, &*(last.base() - hn::Lanes(d)));
+
+            last -= digits * hn::Lanes(d);
+            middle -= digits * hn::Lanes(d);
         }
 #endif
 
-        for(; it != new_first_base; --it) {
-            *it = _shld<word_type>(*it, *(it - 1), remaining_bitshifts);
+        auto last_base_prev   = std::prev(last.base());
+        auto middle_base_prev = std::prev(middle.base());
+
+        while (middle_base_prev + (first.position() <= middle.position())  > first.base()) {
+            *last_base_prev = _shrd<word_type>(*middle_base_prev, *std::next(middle_base_prev), offset);
+            last_base_prev--;
+            middle_base_prev--;
         }
-        *it <<= remaining_bitshifts;
+
+        last = bit_iterator<RandomAccessIt>(std::next(last_base_prev), last.position());
+        middle = bit_iterator<RandomAccessIt>(std::next(middle_base_prev), middle.position());
     }
-    // Blend bits of the first element
-    if (!is_first_aligned) {
-        *first.base() = _bitblend<word_type>(
-                first_value,
-                *first.base(),
-                first.position(),
-                digits - first.position()
-        );
+
+    if (first.position() != middle.position())
+    {
+        const size_type bits_to_align = bit::distance(first, middle);
+        const word_type word_to_write = get_word<word_type, RandomAccessIt>(
+                first, 
+                bits_to_align);
+        write_word<word_type, RandomAccessIt>(
+                word_to_write,
+                last - bits_to_align, 
+                bits_to_align);
     }
-    // Blend bits of the last element
-    if (!is_last_aligned) {
-        *last.base() = _bitblend<word_type>(
-                *last.base(),
-                last_value,
-                last.position(),
-                digits - last.position()
-        );
-    }
-    advance(d_first, remaining_bitshifts);
-    return d_first;
+
+    return first + n;
 }
 // -------------------------------------------------------------------------- //
 
