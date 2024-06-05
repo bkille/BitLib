@@ -1,10 +1,7 @@
-// =============================== TEST ROOT ================================ //
+// ================================ PROFILE ================================= //
 // Project:         The Experimental Bit Algorithms Library
-// Name:            test_root.cc
-// Description:     Brings in all of the test headers into an object to be linked
-//                  with the test main 
-// Creator:         Vincent Reverdy
-// Contributor(s):  Bryce Kille [2019]
+// Description:     Used for profiling specific functions/algorithms
+// Creator:         Bryce Kille
 // License:         BSD 3-Clause License
 // ========================================================================== //
 
