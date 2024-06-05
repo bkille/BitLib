@@ -88,10 +88,7 @@ bit_iterator<RandomAccessIt> shift_left(
                 first.position(),
                 (is_last_aligned ? digits : last.position()) - first.position()
         );
-        return bit_iterator<RandomAccessIt>(
-                first.base(),
-                first.position() + d - n
-        );
+        return first + d - n;
     }
 
     // Triggered if all remaining bits can fit in a word
@@ -99,8 +96,7 @@ bit_iterator<RandomAccessIt> shift_left(
     {
         word_type new_word = get_word<word_type, RandomAccessIt>(middle, d - n);
         write_word<word_type, RandomAccessIt>(new_word, first, d - n);
-        first += d - n;
-        return first;
+        return first + d - n;
     }
     // Multiple word case
     word_type first_value = *first.base();
@@ -349,7 +345,14 @@ bit_iterator<RandomAccessIt> shift_right(
         auto last_base_prev   = std::prev(last.base());
         auto middle_base_prev = std::prev(middle.base());
 
-        while (middle_base_prev + (first.position() <= middle.position())  > first.base()) {
+        while (middle_base_prev > first.base()) {
+            *last_base_prev = _shrd<word_type>(*middle_base_prev, *std::next(middle_base_prev), offset);
+            last_base_prev--;
+            middle_base_prev--;
+        }
+
+        if (first.position() <= middle.position())
+        {
             *last_base_prev = _shrd<word_type>(*middle_base_prev, *std::next(middle_base_prev), offset);
             last_base_prev--;
             middle_base_prev--;
