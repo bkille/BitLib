@@ -2,9 +2,7 @@
 // Project: The Experimental Bit Algorithms Library
 // Name: bit_algorithm_details.hpp
 // Description: A set of utilities to assist in writing algorithms
-// Creator: Vincent Reverdy
 // Contributor(s): Vincent Reverdy [2019]
-//                 Collin Gress [2019]
 //                 Bryce Kille [2019]
 // License: BSD 3-Clause License
 // ========================================================================== //
@@ -105,7 +103,7 @@ constexpr bool is_within(
 
 // Get next len bits beginning at start and store them in a word of type T
 template <class T, class InputIt>
-T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
+T get_word(bit_iterator<InputIt> first, size_t len=binary_digits<T>::value)
 {
     using native_word_type = typename bit_iterator<InputIt>::word_type;
     constexpr T digits = binary_digits<native_word_type>::value;
@@ -123,7 +121,7 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
     // Fill up ret_word starting at bit [offset] using it
     // TODO define a mask and use the _bitblend that takes in the extra mask
     while (len > digits) {
-        ret_word = _bitblend(
+        ret_word = _bitblend<T>(
                 ret_word,
                 static_cast<T>(static_cast<T>(*it) << offset),
                 offset,
@@ -134,7 +132,7 @@ T get_word(bit_iterator<InputIt> first, T len=binary_digits<T>::value)
         len -= digits;
     }
     // Assign remaining len bits of last word
-    ret_word = _bitblend(
+    ret_word = _bitblend<T>(
             ret_word,
             static_cast<T>(static_cast<T>(*it) << offset),
             offset,
@@ -278,18 +276,16 @@ void write_word(src_type src, bit_iterator<OutputIt> dst_bit_it,
 
 // Shifts the range [first, last) to the left by n, filling the empty
 // bits with 0
-// NOT OPTIMIZED. Will be replaced with std::shift eventually.
-template <class ForwardIt>
-ForwardIt word_shift_left(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n
+template <class RandomAccessIt>
+RandomAccessIt word_shift_left(RandomAccessIt first,
+                          RandomAccessIt last,
+                          typename RandomAccessIt::difference_type n
 )
 {
     if (n <= 0) return last;
     if (n >= distance(first, last)) return first;
-    ForwardIt mid = first + n;
+    RandomAccessIt mid = first + n;
     auto ret = std::move(mid, last, first);
-    std::fill(ret, last, 0);
     return ret;
 }
 
@@ -297,51 +293,17 @@ ForwardIt word_shift_left(ForwardIt first,
 // Shifts the range [first, right) to the left by n, filling the empty
 // bits with 0
 // NOT OPTIMIZED. Will be replaced with std::shift eventually.
-template <class ForwardIt>
-ForwardIt word_shift_right_dispatch(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n,
-                          std::forward_iterator_tag
-) {
-        auto d = distance(first, last);
-    if (n <= 0) return first;
-    if (n >= d) return last;
-    ForwardIt it = first;
-    std::advance(it, d-n);
-    std::rotate(first, it, last);
-    it = first;
-    std::advance(it, n);
-    std::fill(first, it, 0);
-    return std::next(first, n);
-}
-
-template <class ForwardIt>
-ForwardIt word_shift_right_dispatch(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n,
-                          std::random_access_iterator_tag
-) {
+template <class RandomAccessIt>
+RandomAccessIt word_shift_right(RandomAccessIt first,
+                          RandomAccessIt last,
+                          typename RandomAccessIt::difference_type n
+)
+{
     auto d = distance(first, last);
     if (n <= 0) return first;
     if (n >= d) return last;
-    ForwardIt it = first;
-    std::advance(it, d-n);
-    auto ret = std::copy_backward(first, it, last);
-    std::fill(first, ret, 0);
-    return ret;
-}
-
-template <class ForwardIt>
-ForwardIt word_shift_right(ForwardIt first,
-                          ForwardIt last,
-                          typename ForwardIt::difference_type n
-)
-{
-    return word_shift_right_dispatch(
-        first,
-        last,
-        n,
-        typename std::iterator_traits<ForwardIt>::iterator_category());
+    std::move_backward(first, last-n, last);
+    return std::next(first, n);
 }
 
 // returns a word consisting of all one bits

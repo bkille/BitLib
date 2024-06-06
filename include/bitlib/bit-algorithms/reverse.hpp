@@ -2,7 +2,6 @@
 // Project: The Experimental Bit Algorithms Library
 // Name: copy.hpp
 // Description: Implementation of reverse
-// Creator: Vincent Reverdy
 // Contributor: Vincent Reverdy [2019]
 // License: BSD 3-Clause License
 // ========================================================================== //

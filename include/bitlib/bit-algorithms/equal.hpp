@@ -1,7 +1,6 @@
 // ================================= EQUAL =================================== //
 // Project:     The Experimental Bit Algorithms Library
 // Name:        equal.hpp
-// Creator:     Vincent Reverdy
 // Contributor: Bryce Kille [2019]
 // License:     BSD 3-Clause License
 // ========================================================================== //

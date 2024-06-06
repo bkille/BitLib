@@ -2,8 +2,7 @@
 // Project:     The Experimental Bit Algorithms Library
 // \file        bit_vector.hpp
 // Description: Implementation of bit_vector
-// Creator:     Vincent Reverdy
-// Contributor: Bryce Kille [2019]
+// Contributor: Bryce Kille 
 // License:     BSD 3-Clause License
 // ========================================================================== //
 #ifndef _BIT_VECTOR_HPP_INCLUDED

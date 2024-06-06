@@ -2,6 +2,8 @@
 #include <math.h>
 #include "test_utils.hpp"
 #include "bitlib/bit-algorithms/count.hpp"
+#include "bit_array.h"
+#include "sul/dynamic_bitset.hpp"
 
 auto BM_BitCount = [](benchmark::State& state, auto input) {
     using container_type = typename std::tuple_element<0, decltype(input)>::type;
@@ -18,6 +20,29 @@ auto BM_BitCount = [](benchmark::State& state, auto input) {
     }
 };
 
+
+auto BM_BitArrayCount = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    BIT_ARRAY* bitarr = bit_array_create(total_bits);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(bit_array_num_bits_set(bitarr));
+        benchmark::ClobberMemory();
+    }
+    bit_array_free(bitarr);
+};
+
+auto BM_DynamicBitsetCount = [](benchmark::State& state, auto input) {
+    using container_type = typename std::tuple_element<0, decltype(input)>::type;
+    using word_type = typename std::tuple_element<1, decltype(input)>::type;
+    unsigned int total_bits = std::get<2>(input);
+    sul::dynamic_bitset<> bitset1(total_bits, 1);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(bitset1.count());
+        benchmark::ClobberMemory();
+    }
+};
 
 auto BM_BoolCount = [](benchmark::State& state, auto input) {
     using container_type = std::vector<bool>;

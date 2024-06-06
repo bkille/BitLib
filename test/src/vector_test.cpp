@@ -1,7 +1,7 @@
 // =============================== FIXTURES ================================= //
 // Project:         The Experimental Bit Algorithms Library
 // Description:     Fixtures for testing 
-// Creator:         Bryce Kille [2019]
+// Contributor(s):  Bryce Kille
 // License:         BSD 3-Clause License
 // ========================================================================== //
 

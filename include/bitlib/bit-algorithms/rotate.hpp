@@ -2,7 +2,6 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            rotate.hpp
 // Description:     bit_iterator overloads for std::rotate
-// Creator:         Vincent Reverdy
 // Contributor(s):  Bryce Kille [2019]
 // License:         BSD 3-Clause License
 // ========================================================================== //
@@ -239,13 +238,13 @@ bit_iterator<ForwardIt> rotate(
     // Single word subcases
     if (is_within<digits>(first, n_first)) {
         size_type k = distance(first, n_first);
-        word_type temp = get_word(first, k);
+        word_type temp = get_word<word_type>(first, k);
         bit_iterator<ForwardIt> new_last = shift_left(first, last, k);
         write_word<word_type, ForwardIt>(temp, new_last, static_cast<word_type>(k));
         return new_last;
     } else if (is_within<digits>(n_first, last)) {
         size_type p = distance(n_first, last);
-        word_type temp = get_word(n_first, p);
+        word_type temp = get_word<word_type>(n_first, p);
         auto new_last = shift_right(first, last, p);
         write_word(temp, first, static_cast<word_type>(p));
         return new_last;

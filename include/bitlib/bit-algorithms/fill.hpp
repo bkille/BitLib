@@ -2,9 +2,8 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            fill.hpp
 // Description:     bit_iterator overloads for std::fill
-// Creator:         Vincent Reverdy
-// Contributor(s):  Vincent Reverdy [2019]
-//                  Bryce Kille [2019]
+// Contributor(s):  Bryce Kille
+//                  Vincent Reverdy [2019]
 // License:         BSD 3-Clause License
 // ========================================================================== //
 #ifndef _FILL_HPP_INCLUDED
@@ -20,6 +19,7 @@
 // Third-party libraries
 #ifdef BITLIB_HWY
 #include "hwy/highway.h"
+HWY_BEFORE_NAMESPACE();
 #endif
 // Miscellaneous
 #define is_aligned(POINTER, BYTE_COUNT) \
@@ -83,5 +83,8 @@ void fill(bit_iterator<RandomAccessIt> first, bit_iterator<RandomAccessIt> last,
 
 // ========================================================================== //
 } // namespace bit
+#ifdef BITLIB_HWY
+HWY_AFTER_NAMESPACE();
+#endif
 #endif // _FILL_HPP_INCLUDED
 // ========================================================================== //

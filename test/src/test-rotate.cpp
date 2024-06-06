@@ -2,8 +2,7 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            rotate.hpp
 // Description:     Tests for rotate algorithms 
-// Creator:         Vincent Reverdy
-// Contributor(s):  Bryce Kille [2019]
+// Contributor(s):  Bryce Kille
 // License:         BSD 3-Clause License
 // ========================================================================== //
 
