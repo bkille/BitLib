@@ -60,7 +60,18 @@ target_link_libraries(example bitlib::bitlib)
 ## Manual include
 Alternatively, you can copy the `include/bitlib` directory to somewhere in your include path.
 
+## SIMD support, testing and benchmarking
 
+SIMD support (enabled via Google's [highway](https://github.com/google/highway) library) can be enabled by defining `BITLIB_HWY`. For example, with `cmake`, you can run `cmake -DBITLIB_HWY=1`. Other options can be found in the `CMakeLists.txt` file:
+
+```cmake
+option(BITLIB_HWY "Build with google highway SIMD extensions" OFF)
+option(BITLIB_BENCHMARK "Build bitlib benchmarks" OFF)
+option(BITLIB_EXAMPLE "Build bitlib examples" OFF)
+option(BITLIB_TEST "Build bitlib tests" OFF)
+option(BITLIB_PROFILE "Buid simple example for profiling" OFF)
+option(BITLIB_COVERAGE "Compute test coverage" OFF)
+```
 
 # Usage
 The goal of BitLib is to be as similar to the C++ STL as possible. The interface of most functions and classes are the same as they are in the STL. Instead of the values being `bool`, we have `bit::bit_value`, which can take on either `bit::bit0` or `bit::bit1`. 
