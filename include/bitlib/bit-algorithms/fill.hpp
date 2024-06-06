@@ -2,9 +2,8 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            fill.hpp
 // Description:     bit_iterator overloads for std::fill
-// Creator:         Vincent Reverdy
-// Contributor(s):  Vincent Reverdy [2019]
-//                  Bryce Kille [2019]
+// Contributor(s):  Bryce Kille
+//                  Vincent Reverdy [2019]
 // License:         BSD 3-Clause License
 // ========================================================================== //
 #ifndef _FILL_HPP_INCLUDED

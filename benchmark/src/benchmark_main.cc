@@ -1,10 +1,9 @@
 // =============================== TEST ROOT ================================ //
 // Project:         The Experimental Bit Algorithms Library
-// Name:            test_root.cc
+// Name:            benchmark_main.cc
 // Description:     Brings in all of the test headers into an object to be linked
 //                  with the test main 
-// Creator:         Vincent Reverdy
-// Contributor(s):  Bryce Kille [2019]
+// Contributor(s):  Bryce Kille
 // License:         BSD 3-Clause License
 // ========================================================================== //
 

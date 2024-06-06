@@ -2,7 +2,6 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            type_traits.hpp
 // Description:     Type traits for bits
-// Creator:         Vincent Reverdy
 // Contributor(s):  Vincent Reverdy [2019]
 // License:         BSD 3-Clause License
 // ========================================================================== //

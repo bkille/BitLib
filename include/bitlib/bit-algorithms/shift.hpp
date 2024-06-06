@@ -2,7 +2,6 @@
 // Project:         The Experimental Bit Algorithms Library
 // Name:            shift.hpp
 // Description:     Implementation of shift_left and shift_right
-// Creator:         Vincent Reverdy
 // Contributor(s):  Bryce Kille [2019]
 // License:         BSD 3-Clause License
 // ========================================================================== //

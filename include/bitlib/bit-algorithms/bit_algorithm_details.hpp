@@ -2,9 +2,7 @@
 // Project: The Experimental Bit Algorithms Library
 // Name: bit_algorithm_details.hpp
 // Description: A set of utilities to assist in writing algorithms
-// Creator: Vincent Reverdy
 // Contributor(s): Vincent Reverdy [2019]
-//                 Collin Gress [2019]
 //                 Bryce Kille [2019]
 // License: BSD 3-Clause License
 // ========================================================================== //
