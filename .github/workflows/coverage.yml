@@ -81,7 +81,7 @@ jobs:
       shell: bash -l {0}
       run: |
         lcov --directory build/test/CMakeFiles/bitlib-tests.dir/src --gcov-tool /usr/bin/gcov-11 --output-file lcov.out --include "*bitlib*" -c
-        lcov -r lcov.out "*/usr/*" -r lcov.out "*_deps/*" -r lcov.out "*unit-tests*" -r lcov.out "*ext/*" -o lcov_filtered.out
+        lcov -r lcov.out "*/usr/*" -r lcov.out "*_deps/*" -r lcov.out "*unit-tests*" -r lcov.out "*ext/*" -r lcov.out "*libpopcnt*" -o lcov_filtered.out 
 
     #- name: Code Coverage Report
       #uses: romeovs/lcov-reporter-action@v0.2.11
