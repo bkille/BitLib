@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
-project(Bit-Vector VERSION 0.1.1)
+project(Bit-Vector VERSION 0.3.0)
 
 # set output directory of builds
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
